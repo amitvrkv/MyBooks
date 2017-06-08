@@ -6,9 +6,12 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
 
 
 public class Welcome extends AppCompatActivity {
+
+    ImageView imageView;
 
 
     @Override
@@ -16,9 +19,8 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-
         final Handler mHandler = new Handler();
-        final Runnable mRunnable = new Runnable() {
+        Runnable mRunnable = new Runnable() {
             @Override
             public void run() {
                     startActivity(new Intent(getApplicationContext(), LoginActivity.class));

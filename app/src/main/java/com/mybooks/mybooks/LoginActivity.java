@@ -17,13 +17,10 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
-
-    // UI references.
     private EditText mEmailSignIn, mPasswordSignIn, mEmailSignUp, mPasswordSignUpOne, mPasswordSignUpTwo;
     private Button mEmailSignInButton, mEmailSignUpButton;
     private TextView mSignUpRed, mSignInRed;
     private View mSignInForm, mSignUpForm;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +56,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mEmailSignUpButton.setOnClickListener(this);
 
     }
-
 
     @Override
     public void onClick(View v) {
