@@ -9,10 +9,11 @@
 
     <ImageView
         android:id="@+id/app_logo"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/Logo_transparent"
+        android:src="@drawable/logo_transparent"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
 
     <ProgressBar
@@ -22,6 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
         />
+
 
 </RelativeLayout>
 
