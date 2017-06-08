@@ -13,6 +13,5 @@ public class Welcome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
     }
 }

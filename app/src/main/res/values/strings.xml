@@ -1,8 +1,6 @@
 <resources>
     <!-- Start -->
-    <string name="app_name">My Books</string><!-- End -->
-
-
+    <string name="app_name">My Books</string>   <!-- End -->
 
 
     <string name="title_activity_login">Sign in</string>

@@ -8,6 +8,6 @@
     <color name="colorTextIcon">#FFFFFF</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
-    <color name="colorDivider">#BDBDBD</color>
-    <!-- End -->
+    <color name="colorDivider">#BDBDBD</color>    <!-- End -->
+
 </resources>

@@ -9,7 +9,7 @@
 
     <ImageView
         android:id="@+id/app_logo"
-        android:src="@drawable/logo_transparent"
+        android:src="@mipmap/ic_launcher_round"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
