@@ -1,6 +1,7 @@
 package com.mybooks.mybooks;
 
 
+import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
 
 
         //Sign In form
@@ -112,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     private void attemptSignin() {
-        Toast.makeText(getApplicationContext(), "Signed In", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Sign In successful.", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
     
     private boolean verifySignUp() {
@@ -156,7 +160,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
     
     private void attemptSignup() {
-        Toast.makeText(getApplicationContext(), "Signed Up", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Sign Up successful.", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
     }
 
 }
