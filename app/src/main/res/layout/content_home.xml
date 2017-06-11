@@ -8,4 +8,10 @@
     tools:context="com.mybooks.mybooks.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
+    <View
+        android:alpha="0.3"
+        android:background="@drawable/logo_texture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </android.support.constraint.ConstraintLayout>

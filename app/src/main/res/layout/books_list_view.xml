@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@color/colorLightPrimary"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/bookImage"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/logo_primarycolour" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/bookTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Empire of Mughal"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/bookAuthor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="E. Balagury Swamy"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/bookClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="BCA : 1st semester"
+            android:textSize="16dp" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bookSellingPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\u20B9 100"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/bookMarketPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/bookSellingPrice"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/bookSellingPrice"
+                android:gravity="center"
+                android:text="150"
+                android:textSize="22dp" />
+
+            <Button
+                android:id="@+id/bookBuy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@color/colorPrimary"
+                android:text="buy"
+                android:textColor="@color/colorTextIcon" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

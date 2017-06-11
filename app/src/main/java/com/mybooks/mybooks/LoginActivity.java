@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
 
 
         //Sign In form

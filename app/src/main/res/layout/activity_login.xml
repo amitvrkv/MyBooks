@@ -8,6 +8,13 @@
     android:id="@+id/parentLayout"
     >
 
+    <ImageView
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/app_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
 
     <!-- Sign in form -->
     <LinearLayout
