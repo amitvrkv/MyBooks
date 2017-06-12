@@ -1,5 +1,7 @@
 package com.mybooks.mybooks;
 
+import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +38,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Books");
 
-
         mToolbar = (LinearLayout) findViewById(R.id.toolbar);
 
         mbackButton = (ImageView) findViewById(R.id.backButton);
@@ -44,6 +46,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mBookList = (RecyclerView) findViewById(R.id.recyclerView);
         mBookList.setHasFixedSize(true);
         mBookList.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     @Override
