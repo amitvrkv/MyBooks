@@ -57,6 +57,10 @@
             <item
                 android:title="My Account" />
 
+            <item
+                android:id="@+id/logoutMenu"
+                android:title="Logout" />
+
         </menu>
     </item>
 

@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -97,9 +99,20 @@ public class HomeActivity extends AppCompatActivity
 
         }*/
 
-        if (id == R.id.orderBookMenu) {
-            startActivity(new Intent(getApplicationContext(), BooksListPage.class));
+        switch (item.getItemId()) {
+            case R.id.orderBookMenu :
+                startActivity(new Intent(getApplicationContext(), BooksListPage.class));
+                break;
+
+            case R.id.logoutMenu :
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+                break;
         }
+
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

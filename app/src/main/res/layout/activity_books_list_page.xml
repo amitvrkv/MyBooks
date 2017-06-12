@@ -19,7 +19,7 @@
             android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:padding="10dp"
+            android:padding="12dp"
             android:src="@drawable/ic_arrow_back_white_24dp" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:gravity="center"
             android:text="Order Books"
             android:textColor="@color/colorTextIcon"
-            android:textSize="26dp" />
+            android:textSize="22dp" />
 
 
     </LinearLayout>
@@ -70,10 +70,11 @@
 
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/booksList"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="match_parent"/>
 
 
 </LinearLayout>
