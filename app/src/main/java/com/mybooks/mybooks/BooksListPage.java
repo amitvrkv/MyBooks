@@ -37,6 +37,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_books_list_page);
 
         mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Books");
+        mdatabaseReference.keepSynced(true);
 
         mToolbar = (LinearLayout) findViewById(R.id.toolbar);
 
