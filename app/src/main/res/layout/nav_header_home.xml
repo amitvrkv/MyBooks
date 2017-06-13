@@ -39,21 +39,21 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:paddingBottom="16dp"
             android:id="@+id/welcomeMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="Hello, Adsfsg"
-            android:textSize="21dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:paddingBottom="16dp"
+            android:text="Welcome to MY BOOKS"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textSize="21dp" />
 
         <ImageView
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/app_icon"
             android:layout_width="70dp"
-            android:layout_height="70dp" />
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/app_icon" />
 
     </RelativeLayout>
 
