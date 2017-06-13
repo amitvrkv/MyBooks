@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:paddingBottom="16dp"
-            android:text="Welcome to MY BOOKS"
+            android:text="WELCOME"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="21dp" />
 
