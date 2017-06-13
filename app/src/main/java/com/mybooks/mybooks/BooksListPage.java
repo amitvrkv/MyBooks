@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class BooksListPage extends AppCompatActivity implements View.OnClickListener{
 
@@ -29,7 +30,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     private RecyclerView mBookList;
 
-    private DatabaseReference mdatabaseReference;
+    //private DatabaseReference mdatabaseReference;
+    private Query mdatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_books_list_page);
 
         mdatabaseReference = FirebaseDatabase.getInstance().getReference().child("Books");
+        //mdatabaseReference.orderByChild("course").equalTo("BCA");
+
         mdatabaseReference.keepSynced(true);
 
         mToolbar = (LinearLayout) findViewById(R.id.toolbar);
