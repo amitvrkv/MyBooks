@@ -30,7 +30,7 @@ public class Welcome extends AppCompatActivity {
             }
         };
 
-        mHandler.postDelayed(mRunnable, 1000);*/
+        mHandler.postDelayed(mRunnable, 2000);*/
 
     }
 }

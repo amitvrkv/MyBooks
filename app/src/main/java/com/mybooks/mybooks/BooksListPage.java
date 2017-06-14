@@ -48,6 +48,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     //private DatabaseReference mdatabaseQuery;
     private Query mdatabaseQuery;
+    private FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter;
     //private DatabaseReference mdatabaseReference;
 
     @Override
@@ -65,11 +66,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mdoneFilter = (Button) findViewById(R.id.doneFilter);
         mdoneFilter.setOnClickListener(this);
 
-        mclearFilter = (Button) findViewById(R.id.clearFilter);
-        mclearFilter.setOnClickListener(this);
-
         filterView = (RelativeLayout) findViewById(R.id.filterView);
-        filterView.setVisibility(View.GONE);
+        //filterView.setVisibility(View.GONE);
 
         //Course selector
         mcousrseSelecter = (Spinner) findViewById(R.id.courseSelecter);
@@ -89,6 +87,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         msemSelecter = (Spinner) findViewById(R.id.semesterSelecter);
         List<String> semList = new ArrayList<String>();
         semList.add(0, "select Semester");
+        semList.add(1, "All Semester");
         semList.add("1st sem");
         semList.add("2nd sem");
         semList.add("3rd sem");
@@ -106,7 +105,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         //Fire base
         mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books");
         //mdatabaseQuery.orderByChild("course").equalTo("BCA");
-
         mdatabaseQuery.keepSynced(true);
 
         mToolbar = (LinearLayout) findViewById(R.id.toolbar);
@@ -123,7 +121,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
+        Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
+        /*FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
                 BookList.class,
                 R.layout.books_list_view,
                 BookListHolder.class,
@@ -140,8 +139,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.setavlcopy(model.getAvlcopy());
             }
         };
-
-        mBookList.setAdapter(firebaseRecyclerAdapter);
+        mBookList.setAdapter(firebaseRecyclerAdapter);*/
     }
 
 
@@ -187,7 +185,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         public void setavlcopy(int mavlcopy) {
             ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
             Button mbookbuy = (Button) mview.findViewById(R.id.bookBuy);
-            if ( mavlcopy <= 0) {
+            if (mavlcopy <= 0) {
                 outofstockimg.setVisibility(View.VISIBLE);
                 mbookbuy.setVisibility(View.GONE);
             } else {
@@ -207,18 +205,23 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.filter:
-                if (filterView.getVisibility() == View.VISIBLE)
-                    filterView.setVisibility(View.GONE);
-                else
+                if (filterView.getVisibility() == View.VISIBLE ) {
+                    if(mcousrseSelecter.getSelectedItem().toString().equals("select Course"))
+                        Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
+                    else {
+                        filterView.setVisibility(View.GONE);
+                        doneFilter();
+                    }
+                }
+                else {
                     filterView.setVisibility(View.VISIBLE);
+                }
                 break;
 
             case R.id.doneFilter:
                 doneFilter();
                 break;
 
-            case R.id.clearFilter:
-                break;
 
             case R.id.checkout:
                 break;
@@ -226,15 +229,42 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     }
 
     public void doneFilter() {
-        filterView.setVisibility(View.GONE);
-        switch (mcousrseSelecter.getSelectedItem().toString()) {
-            case "BCA":
-                mdatabaseQuery.orderByChild("course").equalTo("BCA");
-                break;
+        String course = mcousrseSelecter.getSelectedItem().toString();
+        final String sem = msemSelecter.getSelectedItem().toString();
 
-            default:
-                //mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books");
+        if (course.equals("select Course")) {
+            Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
+            return;
         }
+        else {
+            filterView.setVisibility(View.GONE);
+            if( sem.equals("select Semester") || sem.equals("All Semester"))
+                mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
+            else
+                mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("cclass").equalTo(sem);
+        }
+
+        mdatabaseQuery.keepSynced(true);
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
+                BookList.class,
+                R.layout.books_list_view,
+                BookListHolder.class,
+                mdatabaseQuery
+        ) {
+            @Override
+            protected void populateViewHolder(BookListHolder viewHolder, BookList model, int position) {
+                    viewHolder.setauthor(model.getAuthor());
+                    viewHolder.settitle(model.getTitle());
+                    viewHolder.setCourse(model.getCourse());
+                    viewHolder.setclass(model.getCclass());
+                    viewHolder.setsellingprice(model.getSellingprice());
+                    viewHolder.setmarketprice(model.getMarketprice());
+                    viewHolder.setavlcopy(model.getAvlcopy());
+
+            }
+        };
+        mBookList.setAdapter(firebaseRecyclerAdapter);
     }
 
 }
