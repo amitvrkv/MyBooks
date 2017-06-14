@@ -93,7 +93,7 @@
         android:layout_margin="2dp"
         android:background="#f5f5f5"
         android:id="@+id/filterView"
-        android:layout_width="fill_parent"
+        android:layout_width="250dp"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/header"
@@ -104,14 +104,17 @@
             android:layout_margin="10dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/linearLayout">
 
         <Spinner
+            android:padding="10dp"
             android:id="@+id/courseSelecter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Spinner
+            android:padding="10dp"
             android:layout_marginTop="10dp"
             android:id="@+id/semesterSelecter"
             android:layout_width="match_parent"
@@ -124,12 +127,12 @@
             android:id="@+id/clearFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
             android:background="@color/colorPrimary"
             android:text="Clear"
-            android:textColor="@color/colorTextIcon" />
+            android:textColor="@color/colorTextIcon"
+            android:layout_alignBottom="@+id/linearLayout"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignStart="@+id/linearLayout" />
 
         <Button
             android:id="@+id/doneFilter"

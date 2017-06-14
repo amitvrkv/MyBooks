@@ -23,9 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +71,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         filterView = (RelativeLayout) findViewById(R.id.filterView);
         filterView.setVisibility(View.GONE);
 
+        //Course selector
         mcousrseSelecter = (Spinner) findViewById(R.id.courseSelecter);
         List<String> courseList = new ArrayList<String>();
         courseList.add("BCA");
@@ -81,17 +85,18 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         courseDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mcousrseSelecter.setAdapter(courseDataAdapter);
 
+        //Semester selector
         msemSelecter = (Spinner) findViewById(R.id.semesterSelecter);
         List<String> semList = new ArrayList<String>();
         semList.add(0, "select Semester");
-        semList.add("Semester 1");
-        semList.add("Semester 2");
-        semList.add("Semester 3");
-        semList.add("Semester 4");
-        semList.add("Semester 5");
-        semList.add("Semester 6");
-        semList.add("Semester 7");
-        semList.add("Semester 8");
+        semList.add("1st sem");
+        semList.add("2nd sem");
+        semList.add("3rd sem");
+        semList.add("4th sem");
+        semList.add("5th sem");
+        semList.add("6th sem");
+        semList.add("7th sem");
+        semList.add("8th sem");
         ArrayAdapter<String> semDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semList);
         semDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         msemSelecter.setAdapter(semDataAdapter);
@@ -132,6 +137,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.setclass(model.getCclass());
                 viewHolder.setsellingprice(model.getSellingprice());
                 viewHolder.setmarketprice(model.getMarketprice());
+                viewHolder.setavlcopy(model.getAvlcopy());
             }
         };
 
@@ -178,6 +184,18 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             mmarket.setText(mmarprice);
         }
 
+        public void setavlcopy(int mavlcopy) {
+            ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
+            Button mbookbuy = (Button) mview.findViewById(R.id.bookBuy);
+            if ( mavlcopy <= 0) {
+                outofstockimg.setVisibility(View.VISIBLE);
+                mbookbuy.setVisibility(View.GONE);
+            } else {
+                outofstockimg.setVisibility(View.GONE);
+                mbookbuy.setVisibility(View.VISIBLE);
+            }
+        }
+
     }
 
 
@@ -196,7 +214,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.doneFilter:
-                filterView.setVisibility(View.GONE);
+                doneFilter();
                 break;
 
             case R.id.clearFilter:
@@ -207,5 +225,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void doneFilter() {
+        filterView.setVisibility(View.GONE);
+        switch (mcousrseSelecter.getSelectedItem().toString()) {
+            case "BCA":
+                mdatabaseQuery.orderByChild("course").equalTo("BCA");
+                break;
+
+            default:
+                //mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books");
+        }
+    }
 
 }

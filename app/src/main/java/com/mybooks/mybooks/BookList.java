@@ -11,18 +11,20 @@ public class BookList {
     private String course;
     private String sellingprice;
     private String marketprice;
+    private int avlcopy;
 
     public BookList(){
 
     }
 
-    public BookList(String title, String author, String cclass, String sellingprice, String marketprice, String course) {
+    public BookList(String title, String author, String cclass, String sellingprice, String marketprice, String course, int avlcopy) {
         this.title = title;
         this.author = author;
         this.cclass = cclass;
         this.sellingprice = sellingprice;
         this.marketprice = marketprice;
         this.course = course;
+        this.avlcopy = avlcopy;
     }
 
     public String getTitle() {
@@ -72,5 +74,11 @@ public class BookList {
 
     public void setMarketprice(String marketprice) {
         this.marketprice = marketprice;
+    }
+
+    public int getAvlcopy() { return avlcopy; }
+
+    public void setAvlcopy(int avlcopy) {
+        this.avlcopy = avlcopy;
     }
 }

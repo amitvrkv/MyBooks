@@ -19,7 +19,9 @@ public class Welcome extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        final Handler mHandler = new Handler();
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+
+        /*final Handler mHandler = new Handler();
         Runnable mRunnable = new Runnable() {
             @Override
             public void run() {
@@ -28,7 +30,7 @@ public class Welcome extends AppCompatActivity {
             }
         };
 
-        mHandler.postDelayed(mRunnable, 1000);
+        mHandler.postDelayed(mRunnable, 1000);*/
 
     }
 }
