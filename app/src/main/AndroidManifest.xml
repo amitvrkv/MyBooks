@@ -3,8 +3,6 @@
     package="com.mybooks.mybooks">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".MyBooks"
@@ -28,7 +26,10 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity android:name=".BooksListPage" />
-        <activity android:name=".BookPreview"></activity>
+        <activity
+            android:name=".MyCart"
+            android:label="@string/title_activity_my_cart"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

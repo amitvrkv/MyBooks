@@ -301,7 +301,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(View v) {
                         Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
-                        insertDataToCart(model.getCourse(), model.getKey());
+                        insertDataToCart(model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getKey(), model.getSellingprice());
                     }
                 });
             }
@@ -309,10 +309,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mBookList.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public void insertDataToCart(String course, String key) {
+    public void insertDataToCart(String title, String author, String course, String sem, String key, String price) {
         sqLiteDatabase = openOrCreateDatabase("MYBOOKS", MODE_PRIVATE, null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS cart(course VARCHAR,key VARCHAR);");
-        sqLiteDatabase.execSQL("INSERT INTO cart VALUES('"+ course +"','"+ key +"');");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS cart(title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR,key VARCHAR, price VARCHAR);");
+        sqLiteDatabase.execSQL("INSERT INTO cart VALUES('"+ title +"','"+ author +"','"+ course +"','"+ sem +"', '"+ key +"', '"+ price +"');");
     }
 
 }

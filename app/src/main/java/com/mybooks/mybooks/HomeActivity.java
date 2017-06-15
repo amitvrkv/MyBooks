@@ -107,12 +107,17 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(new Intent(getApplicationContext(), BooksListPage.class));
                 break;
 
+            case R.id.myCartMenu :
+                startActivity(new Intent(getApplicationContext(), MyCart.class));
+                break;
+
             case R.id.logoutMenu :
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
                 break;
+
         }
 
 

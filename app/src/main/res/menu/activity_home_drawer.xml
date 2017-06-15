@@ -49,6 +49,7 @@
     <item android:title="My Account details:">
         <menu>
             <item
+                android:id="@+id/myCartMenu"
                 android:title="My Cart" />
 
             <item
