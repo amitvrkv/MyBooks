@@ -5,9 +5,10 @@ package com.mybooks.mybooks;
  */
 
 public class BookList {
+    private String key;
     private String title;
     private String author;
-    private String cclass;
+    private String sem;
     private String course;
     private String sellingprice;
     private String marketprice;
@@ -17,14 +18,16 @@ public class BookList {
 
     }
 
-    public BookList(String title, String author, String cclass, String sellingprice, String marketprice, String course, int avlcopy) {
+    public BookList(String title, String author, String sem, String sellingprice, String marketprice, String course, int avlcopy, String key) {
         this.title = title;
         this.author = author;
-        this.cclass = cclass;
+        this.sem = sem;
         this.sellingprice = sellingprice;
         this.marketprice = marketprice;
         this.course = course;
         this.avlcopy = avlcopy;
+        this.key = key;
+
     }
 
     public String getTitle() {
@@ -51,13 +54,13 @@ public class BookList {
         this.course = course;
     }
 
-    public String getCclass() {
-        return cclass;
+    public String getSem() {
+        return sem;
 
     }
 
-    public void setCclass(String cclass) {
-        this.cclass = cclass;
+    public void setSem(String sem) {
+        this.sem = sem;
     }
 
     public String getSellingprice() {
@@ -81,4 +84,13 @@ public class BookList {
     public void setAvlcopy(int avlcopy) {
         this.avlcopy = avlcopy;
     }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
 }

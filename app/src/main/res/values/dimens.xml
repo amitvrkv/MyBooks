@@ -8,4 +8,9 @@
     <dimen name="nav_header_height">100dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- toolbar -->
+    <dimen name="toolbarHeight">56dp</dimen>
+    <dimen name="toolbarTextSize">22dp</dimen>
+    <dimen name="backButtonPadding">12dp</dimen><!-- toolbar -->
 </resources>
