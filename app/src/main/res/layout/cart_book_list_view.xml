@@ -32,12 +32,24 @@
                 android:text="Author"
                 android:textSize="14dp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:text="Qty:" />
+                android:layout_alignParentRight="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Qty:" />
+
+                <Spinner
+                    android:id="@+id/quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:entries="@array/quantity" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -47,52 +59,75 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp">
 
-            <TextView
-                android:id="@+id/cbookCourse"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Course"
-                android:textSize="16dp" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_centerHorizontal="true"
-                android:id="@+id/cbookClass"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Class"
-                android:textSize="14dp" />
+                <TextView
+                    android:id="@+id/cbookCourse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Course"
+                    android:textSize="16dp" />
 
-            <Spinner
-                android:entries="@array/quantity"
+                <TextView
+                    android:id="@+id/cbookClass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="Class"
+                    android:textSize="14dp" />
+
+            </LinearLayout>
+
+            <CheckBox
+                android:paddingRight="5dp"
+                android:id="@+id/checkBoxNewBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:text="New Book" />
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/cbookSellingPrice"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="\u20B9 Sell"
-                android:textColor="@color/colorPrimaryText"
-                android:textSize="16dp" />
+                android:layout_marginTop="3dp">
+
+                <TextView
+                    android:id="@+id/cbookSellingPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\u20B9 Sell"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/cbookMarketPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:text="Market"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/cbookMarketPrice"
+                android:id="@+id/totalIndividual"
+                android:textColor="@android:color/holo_red_dark"
+                android:text="Total: \u20B9 "
+                android:layout_margin="5dp"
+                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:text="Market"
-                android:textSize="16dp" />
+                android:layout_height="wrap_content" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -109,6 +144,7 @@
             android:text="X"
             android:textColor="@android:color/holo_red_dark"
             android:textSize="18dp" />
+
 
     </RelativeLayout>
 
