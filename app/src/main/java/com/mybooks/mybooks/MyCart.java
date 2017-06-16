@@ -202,11 +202,11 @@ public class MyCart extends AppCompatActivity {
                         total.add(position, priceOld.get(position));
                     }
 
-                    int t = 0;
+                    /*int t = 0;
                     int qty = Integer.parseInt(spinner.getSelectedItem().toString());
                     int price = Integer.parseInt(total.get(position));
                     t = qty * price;
-                    total.add(position, "" + t);
+                    total.add(position, "" + t);*/
 
                     mtotalIndividual.setText("Total: \u20B9 " + total.get(position));
                     //setGrandTotal();
