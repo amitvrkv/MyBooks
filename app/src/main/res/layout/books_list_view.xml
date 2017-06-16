@@ -187,7 +187,6 @@
                     android:text="Market"
                     android:textSize="16dp" />
 
-
                 <Button
                     android:id="@+id/bookBuy"
                     android:layout_width="wrap_content"

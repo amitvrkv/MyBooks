@@ -19,6 +19,8 @@ import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +59,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     private FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter;
     //private DatabaseReference mdatabaseReference;
 
-    SQLiteDatabase sqLiteDatabase;
+    //SQLiteDatabase sqLiteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         semList.add("6th sem");
         semList.add("7th sem");
         semList.add("8th sem");
+        semList.add("9th sem");
+        semList.add("10th sem");
         ArrayAdapter<String> semDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semList);
         semDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         msemSelecter.setAdapter(semDataAdapter);
@@ -131,33 +136,22 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
-        /*FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
-                BookList.class,
-                R.layout.books_list_view,
-                BookListHolder.class,
-                mdatabaseQuery
-        ) {
-            @Override
-            protected void populateViewHolder(BookListHolder viewHolder, BookList model, int position) {
-                viewHolder.setauthor(model.getAuthor());
-                viewHolder.settitle(model.getTitle());
-                viewHolder.setCourse(model.getCourse());
-                viewHolder.setclass(model.getCclass());
-                viewHolder.setsellingprice(model.getSellingprice());
-                viewHolder.setmarketprice(model.getMarketprice());
-                viewHolder.setavlcopy(model.getAvlcopy());
-            }
-        };
-        mBookList.setAdapter(firebaseRecyclerAdapter);*/
     }
 
 
-    public  static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         View mview;
         Button buyButton;
-        String key;
+
+        String title;
+        String author;
         String course;
+        String sem;
+        String key;
+        String priceMRP;
+        String priceOld;
+        String priceNew;
 
         public BookListHolder(View itemView) {
             super(itemView);
@@ -170,11 +164,13 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         public void settitle(String title) {
             TextView mtitle = (TextView) mview.findViewById(R.id.bookTitle);
             mtitle.setText(title);
+            this.title = title;
         }
 
         public void setauthor(String author) {
             TextView mauthor = (TextView) mview.findViewById(R.id.bookAuthor);
             mauthor.setText(author);
+            this.author = author;
         }
 
         public void setCourse(String course) {
@@ -186,16 +182,19 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         public void setSem(String sem) {
             TextView msem = (TextView) mview.findViewById(R.id.bookClass);
             msem.setText(sem);
+            this.sem = sem;
         }
 
-        public void setsellingprice(String msellprice) {
-            TextView msell = (TextView) mview.findViewById(R.id.bookSellingPrice);
-            msell.setText("\u20B9 " + msellprice);
-        }
-
-        public void setmarketprice(String mmarprice) {
+        public void setpriceMRP(String priceMRP) {
             TextView mmarket = (TextView) mview.findViewById(R.id.bookMarketPrice);
-            mmarket.setText(mmarprice);
+            mmarket.setText(priceMRP);
+            this.priceMRP = priceMRP;
+        }
+
+        public void setpriceOld(String priceOld) {
+            TextView msell = (TextView) mview.findViewById(R.id.bookSellingPrice);
+            msell.setText("\u20B9 " + priceOld);
+            this.priceOld = priceOld;
         }
 
         public void setavlcopy(int mavlcopy) {
@@ -215,14 +214,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             this.key = key;
         }
 
+        public void setPriceNew(String priceNew) {
+            this.priceNew = priceNew;
+        }
+
         //Adding books to cart
         @Override
         public void onClick(View v) {
             if (v.getId() == buyButton.getId()) {
-                Toast.makeText(v.getContext(), course + "  " + key , Toast.LENGTH_SHORT).show();
-                /*SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase("MyBooks" ,null);
-                sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS cart(course VARCHAR,key VARCHAR);");
-                sqLiteDatabase.execSQL("INSERT INTO cart VALUES('" + course + "','" + key + "');");*/
+                BooksListPage bk = new BooksListPage();
+                bk.insertDataToCart(v.getContext(), key, title, author, course, sem, priceMRP, priceNew, priceOld);
             }
         }
     }
@@ -232,7 +233,9 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.backButton:
-                finish();
+                //finish();
+                SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                db.execSQL("DROP TABLE IF EXISTS CART");
                 break;
 
             case R.id.filter:
@@ -254,10 +257,11 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
 
             case R.id.checkout:
-
-                Cursor cursor = sqLiteDatabase.rawQuery("Select * from cart", null);
+                SQLiteDatabase sqLiteDatabase;
+                sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
                 cursor.moveToFirst();
-                Toast.makeText(getApplicationContext(), cursor.getString(0) + cursor.getString(1), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), cursor.getString(0) + cursor.getString(1) + cursor.getString(2) + cursor.getString(3) + cursor.getString(4) + cursor.getString(5) + cursor.getString(6) + cursor.getString(7), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -291,8 +295,9 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.settitle(model.getTitle());
                 viewHolder.setCourse(model.getCourse());
                 viewHolder.setSem(model.getSem());
-                viewHolder.setsellingprice(model.getSellingprice());
-                viewHolder.setmarketprice(model.getMarketprice());
+                viewHolder.setpriceMRP(model.getPriceMRP());
+                viewHolder.setpriceOld(model.getPriceOld());
+                viewHolder.setPriceNew(model.getPriceNew());
                 viewHolder.setavlcopy(model.getAvlcopy());
                 viewHolder.setKey(model.getKey());
 
@@ -300,8 +305,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.mview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
-                        insertDataToCart(model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getKey(), model.getSellingprice());
+                        //Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
+                        //insertDataToCart(model.getKey(), model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getPriceMRP(), model.getPriceNew(), model.getPriceOld());
                     }
                 });
             }
@@ -309,10 +314,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mBookList.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public void insertDataToCart(String title, String author, String course, String sem, String key, String price) {
-        sqLiteDatabase = openOrCreateDatabase("MYBOOKS", MODE_PRIVATE, null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS cart(title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR,key VARCHAR, price VARCHAR);");
-        sqLiteDatabase.execSQL("INSERT INTO cart VALUES('"+ title +"','"+ author +"','"+ course +"','"+ sem +"', '"+ key +"', '"+ price +"');");
+    public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR,title VARCHAR,author VARCHAR,course VARCHAR,sem VARCHAR,priceMRP VARCHAR,priceNew VARCHAR,priceOld VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART WHERE key = '" + key + "'", null);
+
+        if (cursor.getCount() <= 0) {
+                sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "');");
+                Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
+        } else
+            Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
     }
 
 }

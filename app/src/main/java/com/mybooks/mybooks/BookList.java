@@ -10,24 +10,25 @@ public class BookList {
     private String author;
     private String sem;
     private String course;
-    private String sellingprice;
-    private String marketprice;
+    private String priceOld;
+    private String priceMRP;
+    private String priceNew;
     private int avlcopy;
 
     public BookList(){
 
     }
 
-    public BookList(String title, String author, String sem, String sellingprice, String marketprice, String course, int avlcopy, String key) {
+    public BookList(String title, String author, String sem, String priceOld, String priceMRP, String getPriceNew,String course, int avlcopy, String key) {
         this.title = title;
         this.author = author;
         this.sem = sem;
-        this.sellingprice = sellingprice;
-        this.marketprice = marketprice;
+        this.priceOld = priceOld;
+        this.priceMRP = priceMRP;
         this.course = course;
         this.avlcopy = avlcopy;
         this.key = key;
-
+        this.priceNew = priceNew;
     }
 
     public String getTitle() {
@@ -63,20 +64,28 @@ public class BookList {
         this.sem = sem;
     }
 
-    public String getSellingprice() {
-        return sellingprice;
+    public String getPriceOld() {
+        return priceOld;
     }
 
-    public void setSellingprice(String sellingprice) {
-        this.sellingprice = sellingprice;
+    public void setPriceOld(String priceOld) {
+        this.priceOld = priceOld;
     }
 
-    public String getMarketprice() {
-        return marketprice;
+    public String getPriceMRP() {
+        return priceMRP;
     }
 
-    public void setMarketprice(String marketprice) {
-        this.marketprice = marketprice;
+    public void setPriceMRP(String priceMRP) {
+        this.priceMRP = priceMRP;
+    }
+
+    public String getPriceNew() {
+        return priceNew;
+    }
+
+    public void setPriceNew(String priceNew) {
+        this.priceNew = priceNew;
     }
 
     public int getAvlcopy() { return avlcopy; }
