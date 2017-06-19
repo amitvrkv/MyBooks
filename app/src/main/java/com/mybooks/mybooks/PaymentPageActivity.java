@@ -2,6 +2,7 @@ package com.mybooks.mybooks;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -60,8 +61,9 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.placeOrderBtn:
-                if (mModeCOD.isChecked())
-                    Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_SHORT).show();
+                if (mModeCOD.isChecked()) {
+                    orderPlacedSuccessfully();
+                }
                 else
                     Toast.makeText(getApplicationContext(), "Please select mode of payments", Toast.LENGTH_SHORT).show();
                 break;
@@ -78,5 +80,13 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         address = address + " - " + sharedPreferences.getString("pincode", null);
         address = address + "\n" + sharedPreferences.getString("state", null);
         mDeliveryAddress.setText(address);
+    }
+
+    public void orderPlacedSuccessfully(){
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS CART");
+        Toast.makeText(getApplicationContext(), "Order Placed", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+        finish();
     }
 }

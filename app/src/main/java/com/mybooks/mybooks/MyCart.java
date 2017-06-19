@@ -117,11 +117,11 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
                     Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
                 } else {
                     startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
+                    finish();
                 }
                 break;
         }
     }
-
 
     public class listViewCustomAdapter extends BaseAdapter {
 
