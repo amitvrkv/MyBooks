@@ -56,6 +56,7 @@
                 android:title="My Order" />
 
             <item
+                android:id="@+id/myAccMenu"
                 android:title="My Account" />
 
             <item

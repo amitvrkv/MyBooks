@@ -117,7 +117,9 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
                 break;
-
+            case R.id.myAccMenu:
+                startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+                break;
         }
 
 

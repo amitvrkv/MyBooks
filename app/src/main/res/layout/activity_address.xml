@@ -49,6 +49,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/delName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Name*" />
@@ -60,6 +61,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/delmobileNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Phone No.*" />
@@ -87,6 +89,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/delHouseNameNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Flat no., Building name*" />
@@ -98,6 +101,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/delLocality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Locality, area or street*" />
@@ -133,6 +137,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/delPincode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Pincode*" />
@@ -145,9 +150,10 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/delSaveBtn"
         android:textColor="@color/colorTextIcon"
         android:background="@color/colorPrimary"
-        android:text="Deliver here"
+        android:text="Save"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

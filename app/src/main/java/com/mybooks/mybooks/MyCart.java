@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,7 +31,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MyCart extends AppCompatActivity {
+public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
     private ListView cartList;
     SQLiteDatabase sqLiteDatabase;
@@ -40,6 +41,7 @@ public class MyCart extends AppCompatActivity {
     private TextView mGrandTotal;
     private RelativeLayout footer;
     private Button mContinueBtn;
+    private ImageView mbackBtn;
 
 
     @Override
@@ -51,16 +53,11 @@ public class MyCart extends AppCompatActivity {
         footer = (RelativeLayout) findViewById(R.id.footer);
 
         mContinueBtn = (Button) findViewById(R.id.continueBtn);
-        mContinueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if( mGrandTotal.getText().toString().equals("Total: \u20B9 0")) {
-                    Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
-                } else {
-                    startActivity(new Intent(getApplicationContext(), AddressActivity.class));
-                }
-            }
-        });
+        mContinueBtn.setOnClickListener(this);
+
+        mbackBtn = (ImageView) findViewById(R.id.cartBackButton);
+        mbackBtn.setOnClickListener(this);
+
 
         cartList = (ListView) findViewById(R.id.cartList);
 
@@ -106,6 +103,23 @@ public class MyCart extends AppCompatActivity {
             //mGrandTotal.setText("Total: \u20B9 " + total);
         }
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.cartBackButton:
+                finish();
+                break;
+
+            case R.id.continueBtn:
+                if( mGrandTotal.getText().toString().equals("Total: \u20B9 0")) {
+                    Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+                }
+                break;
+        }
     }
 
 
