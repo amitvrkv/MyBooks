@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
@@ -37,6 +38,8 @@ public class MyCart extends AppCompatActivity {
     int total = 0;
 
     private TextView mGrandTotal;
+    private RelativeLayout footer;
+    private Button mContinueBtn;
 
 
     @Override
@@ -45,6 +48,19 @@ public class MyCart extends AppCompatActivity {
         setContentView(R.layout.activity_my_cart);
 
         mGrandTotal = (TextView) findViewById(R.id.grandTotalPrice);
+        footer = (RelativeLayout) findViewById(R.id.footer);
+
+        mContinueBtn = (Button) findViewById(R.id.continueBtn);
+        mContinueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if( mGrandTotal.getText().toString().equals("0")) {
+                    Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
+                } else {
+
+                }
+            }
+        });
 
         cartList = (ListView) findViewById(R.id.cartList);
 
@@ -65,9 +81,9 @@ public class MyCart extends AppCompatActivity {
 
         if (cursor.moveToFirst() == false) {
             Toast.makeText(getApplicationContext(), "Your Cart is empty!", Toast.LENGTH_SHORT).show();
-            RelativeLayout footer = (RelativeLayout) findViewById(R.id.footer);
-            footer.setVisibility(View.GONE);
+            //footer.setVisibility(View.GONE);
         } else {
+            //footer.setVisibility(View.VISIBLE);
             do {
                 key.add(cursor.getString(cursor.getColumnIndex("key")));
                 title.add(cursor.getString(cursor.getColumnIndex("title")));
@@ -83,7 +99,7 @@ public class MyCart extends AppCompatActivity {
             } while (cursor.moveToNext());
 
             cartList.setAdapter(new listViewCustomAdapter(this, key, title, author, course, sem, priceMRP, priceNew, priceOld));
-            mGrandTotal.setText("Total: \u20B9 " + total);
+            //mGrandTotal.setText("Total: \u20B9 " + total);
         }
 
     }
@@ -138,6 +154,8 @@ public class MyCart extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
+            final int final_pos = position;
+
             final View view = inflater.inflate(R.layout.cart_book_list_view, null);
 
             TextView mtitle = (TextView) view.findViewById(R.id.cbookTitle);
@@ -161,10 +179,10 @@ public class MyCart extends AppCompatActivity {
             final TextView mtotalIndividual = (TextView) view.findViewById(R.id.totalIndividual);
             mtotalIndividual.setText("Total: \u20B9 " + priceOld.get(position));
 
-            total.add(priceOld.get(position));
+            total.add("0");
 
             final TextView mremoveBtn = (TextView) view.findViewById(R.id.cremoveBtn);
-            CheckBox newBookCheck = (CheckBox) view.findViewById(R.id.checkBoxNewBook);
+            final CheckBox newBookCheck = (CheckBox) view.findViewById(R.id.checkBoxNewBook);
             final Spinner spinner = (Spinner) view.findViewById(R.id.quantity);
 
             mremoveBtn.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +204,7 @@ public class MyCart extends AppCompatActivity {
                     total.remove(position);
 
                     listViewCustomAdapter.this.notifyDataSetChanged();
+
                     setGrandTotal();
                 }
             });
@@ -194,22 +213,28 @@ public class MyCart extends AppCompatActivity {
             newBookCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    int bookPrice = 0;
+                    int qty = 1;
+                    int totalPrice = 0;
+
                     if (isChecked) {
                         mpriceSell.setText("\u20B9 " + priceNew.get(position));
-                        total.add(position, priceNew.get(position));
+                        bookPrice = Integer.parseInt(priceNew.get(position));
                     } else {
                         mpriceSell.setText("\u20B9 " + priceOld.get(position));
-                        total.add(position, priceOld.get(position));
+                        bookPrice = Integer.parseInt(priceOld.get(position));
                     }
 
-                    /*int t = 0;
-                    int qty = Integer.parseInt(spinner.getSelectedItem().toString());
-                    int price = Integer.parseInt(total.get(position));
-                    t = qty * price;
-                    total.add(position, "" + t);*/
+                    qty = Integer.parseInt(spinner.getSelectedItem().toString());
 
-                    mtotalIndividual.setText("Total: \u20B9 " + total.get(position));
-                    //setGrandTotal();
+                    totalPrice = bookPrice * qty;
+
+                    total.set(final_pos, String.valueOf(totalPrice));
+
+                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
+
+                    setGrandTotal();
                 }
             });
 
@@ -218,14 +243,24 @@ public class MyCart extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    int t = 0;
-                    int qty = Integer.parseInt(spinner.getSelectedItem().toString());
-                    int price = Integer.parseInt(priceOld.get(position));
-                    t = qty * price;
-                    total.add(position, "" + t);
+                    int bookPrice = 0;
+                    int totalPrice = 0;
 
-                    mtotalIndividual.setText("Total: \u20B9 " + total.get(position));
-                    //setGrandTotal();
+                    int qty = Integer.parseInt(spinner.getSelectedItem().toString());
+
+                    if(newBookCheck.isChecked()) {
+                        bookPrice = Integer.parseInt(priceNew.get(final_pos));
+                    } else {
+                        bookPrice = Integer.parseInt(priceOld.get(final_pos));
+                    }
+
+                    totalPrice = bookPrice * qty;
+
+                    total.set(final_pos, String.valueOf(totalPrice));
+
+                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
+
+                    setGrandTotal();
                 }
 
                 @Override
@@ -240,10 +275,14 @@ public class MyCart extends AppCompatActivity {
         public void setGrandTotal() {
             int gtotal = 0;
 
+            String list = null;
+
             for (int i = 0; i < total.size(); i++) {
                 gtotal = gtotal + Integer.parseInt(total.get(i));
+                list = list + " " + total.get(i);
             }
 
+            //Toast.makeText(getApplicationContext(), list, Toast.LENGTH_SHORT).show();
             mGrandTotal.setText("Total: \u20B9 " + gtotal);
         }
     }
