@@ -7,29 +7,29 @@
     tools:context="com.mybooks.mybooks.AddressActivity">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbarHeight">
+            android:layout_height="@dimen/toolbarHeight"
+            android:background="@color/colorPrimary">
 
             <ImageView
                 android:id="@+id/backButton"
-                android:padding="@dimen/backButtonPadding"
-                android:src="@drawable/ic_arrow_back_white_24dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:padding="@dimen/backButtonPadding"
+                android:src="@drawable/ic_arrow_back_white_24dp" />
 
             <TextView
-                android:textColor="@color/colorTextIcon"
-                android:gravity="center"
-                android:textSize="@dimen/toolbarTextSize"
-                android:text="Delivery Address"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Delivery Address"
+                android:textColor="@color/colorTextIcon"
+                android:textSize="@dimen/toolbarTextSize" />
 
         </LinearLayout>
 
@@ -52,7 +52,8 @@
                         android:id="@+id/delName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Name*" />
+                        android:hint="Name*"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -64,7 +65,9 @@
                         android:id="@+id/delmobileNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Phone No.*" />
+                        android:hint="Phone No.*"
+                        android:inputType="number"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -92,7 +95,8 @@
                         android:id="@+id/delHouseNameNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Flat no., Building name*" />
+                        android:hint="Flat no., Building name*"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -104,7 +108,8 @@
                         android:id="@+id/delLocality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Locality, area or street*" />
+                        android:hint="Locality, area or street*"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -116,6 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
+                        android:maxLines="1"
                         android:text="Bangaluru" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -128,6 +134,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
+                        android:maxLines="1"
                         android:text="Karnataka" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -140,7 +147,9 @@
                         android:id="@+id/delPincode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Pincode*" />
+                        android:hint="Pincode*"
+                        android:inputType="number"
+                        android:maxLines="1" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -151,11 +160,11 @@
 
     <Button
         android:id="@+id/delSaveBtn"
-        android:textColor="@color/colorTextIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:text="Save"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textColor="@color/colorTextIcon" />
 
 </RelativeLayout>

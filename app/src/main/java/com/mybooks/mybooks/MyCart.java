@@ -116,7 +116,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
                 if( mGrandTotal.getText().toString().equals("Total: \u20B9 0")) {
                     Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
                 } else {
-                    //startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+                    startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
                 }
                 break;
         }

@@ -29,7 +29,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         mDelSaveBtn = (Button) findViewById(R.id.delSaveBtn);
         mDelSaveBtn.setOnClickListener(this);
 
-        sharedPreferences = getSharedPreferences("delivery_address", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
         if ( sharedPreferences.getString("Name", null) == null) {
             mDelName.setText("");
