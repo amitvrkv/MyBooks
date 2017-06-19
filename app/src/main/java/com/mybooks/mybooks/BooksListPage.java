@@ -1,42 +1,26 @@
 package com.mybooks.mybooks;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.media.Image;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -233,9 +217,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.backButton:
-                //finish();
-                SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-                db.execSQL("DROP TABLE IF EXISTS CART");
+                finish();
                 break;
 
             case R.id.filter:
@@ -257,11 +239,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
 
             case R.id.checkout:
-                SQLiteDatabase sqLiteDatabase;
-                sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-                Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
-                cursor.moveToFirst();
-                Toast.makeText(getApplicationContext(), cursor.getString(0) + cursor.getString(1) + cursor.getString(2) + cursor.getString(3) + cursor.getString(4) + cursor.getString(5) + cursor.getString(6) + cursor.getString(7), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), MyCart.class));
                 break;
         }
     }
@@ -316,11 +294,11 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR,title VARCHAR,author VARCHAR,course VARCHAR,sem VARCHAR,priceMRP VARCHAR,priceNew VARCHAR,priceOld VARCHAR);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR,title VARCHAR,author VARCHAR,course VARCHAR,sem VARCHAR,priceMRP VARCHAR,priceNew VARCHAR,priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART WHERE key = '" + key + "'", null);
 
         if (cursor.getCount() <= 0) {
-                sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "');");
+                sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
                 Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
         } else
             Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();

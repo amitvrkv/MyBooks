@@ -54,10 +54,10 @@ public class MyCart extends AppCompatActivity {
         mContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if( mGrandTotal.getText().toString().equals("0")) {
+                if( mGrandTotal.getText().toString().equals("Total: \u20B9 0")) {
                     Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();
                 } else {
-
+                    startActivity(new Intent(getApplicationContext(), AddressActivity.class));
                 }
             }
         });
@@ -72,9 +72,11 @@ public class MyCart extends AppCompatActivity {
         ArrayList<String> priceOld = new ArrayList<>();
         ArrayList<String> priceNew = new ArrayList<>();
         ArrayList<String> key = new ArrayList<>();
+        ArrayList<String> booktype = new ArrayList<>();
+        ArrayList<String> quantity = new ArrayList<>();
 
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR, title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR, priceMRP VARCHAR, priceNew VARCHAR, priceOld VARCHAR);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR, title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR, priceMRP VARCHAR, priceNew VARCHAR, priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
 
         //cursor.moveToFirst();
@@ -93,12 +95,14 @@ public class MyCart extends AppCompatActivity {
                 priceMRP.add(cursor.getString(cursor.getColumnIndex("priceMRP")));
                 priceNew.add(cursor.getString(cursor.getColumnIndex("priceNew")));
                 priceOld.add(cursor.getString(cursor.getColumnIndex("priceOld")));
+                booktype.add(cursor.getString(cursor.getColumnIndex("booktype")));
+                quantity.add(cursor.getString(cursor.getColumnIndex("qty")));
 
                 //total = total + Integer.parseInt(cursor.getString(cursor.getColumnIndex("priceOld")));
 
             } while (cursor.moveToNext());
 
-            cartList.setAdapter(new listViewCustomAdapter(this, key, title, author, course, sem, priceMRP, priceNew, priceOld));
+            cartList.setAdapter(new listViewCustomAdapter(this, key, title, author, course, sem, priceMRP, priceNew, priceOld, booktype, quantity));
             //mGrandTotal.setText("Total: \u20B9 " + total);
         }
 
@@ -118,10 +122,12 @@ public class MyCart extends AppCompatActivity {
         ArrayList<String> priceOld = new ArrayList<>();
         ArrayList<String> priceNew = new ArrayList<>();
         ArrayList<String> key = new ArrayList<>();
+        ArrayList<String> booktype = new ArrayList<>();
+        ArrayList<String> quantity = new ArrayList<>();
 
         public LayoutInflater inflater = null;
 
-        public listViewCustomAdapter(Context context, ArrayList<String> key, ArrayList<String> title, ArrayList<String> author, ArrayList<String> course, ArrayList<String> sem, ArrayList<String> priceMRP, ArrayList<String> priceNew, ArrayList<String> priceOld) {
+        public listViewCustomAdapter(Context context, ArrayList<String> key, ArrayList<String> title, ArrayList<String> author, ArrayList<String> course, ArrayList<String> sem, ArrayList<String> priceMRP, ArrayList<String> priceNew, ArrayList<String> priceOld, ArrayList<String> booktype, ArrayList<String> quantity) {
             this.key = key;
             this.context = context;
             this.title = title;
@@ -131,6 +137,8 @@ public class MyCart extends AppCompatActivity {
             this.priceMRP = priceMRP;
             this.priceOld = priceOld;
             this.priceNew = priceNew;
+            this.booktype = booktype;
+            this.quantity = quantity;
 
             inflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -182,8 +190,16 @@ public class MyCart extends AppCompatActivity {
             total.add("0");
 
             final TextView mremoveBtn = (TextView) view.findViewById(R.id.cremoveBtn);
+
             final CheckBox newBookCheck = (CheckBox) view.findViewById(R.id.checkBoxNewBook);
+            if(booktype.get(position).equals("new"))
+                newBookCheck.setChecked(true);
+            else
+                newBookCheck.setChecked(false);
+
             final Spinner spinner = (Spinner) view.findViewById(R.id.quantity);
+            int q = Integer.parseInt(String.valueOf(quantity.get(position)));
+            spinner.setSelection(q - 1);
 
             mremoveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,6 +216,8 @@ public class MyCart extends AppCompatActivity {
                     priceMRP.remove(position);
                     priceOld.remove(position);
                     priceNew.remove(position);
+                    booktype.remove(position);
+                    quantity.remove(position);
 
                     total.remove(position);
 
@@ -221,9 +239,11 @@ public class MyCart extends AppCompatActivity {
                     if (isChecked) {
                         mpriceSell.setText("\u20B9 " + priceNew.get(position));
                         bookPrice = Integer.parseInt(priceNew.get(position));
+                        updateDatabase("booktype", "new", key.get(position));
                     } else {
                         mpriceSell.setText("\u20B9 " + priceOld.get(position));
                         bookPrice = Integer.parseInt(priceOld.get(position));
+                        updateDatabase("booktype", "old", key.get(position));
                     }
 
                     qty = Integer.parseInt(spinner.getSelectedItem().toString());
@@ -261,6 +281,7 @@ public class MyCart extends AppCompatActivity {
                     mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
 
                     setGrandTotal();
+                    updateDatabase("qty", spinner.getSelectedItem().toString() , key.get(final_pos));
                 }
 
                 @Override
@@ -284,6 +305,11 @@ public class MyCart extends AppCompatActivity {
 
             //Toast.makeText(getApplicationContext(), list, Toast.LENGTH_SHORT).show();
             mGrandTotal.setText("Total: \u20B9 " + gtotal);
+        }
+
+        public void updateDatabase(String column, String value, String key) {
+            sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("UPDATE CART SET " + column + "='" + value + "' WHERE key='" + key + "'");
         }
     }
 
