@@ -42,21 +42,21 @@
                 android:text="Date and Time: " />
 
             <TextView
-                android:id="@+id/orderamount"
+                android:id="@+id/oamount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Total amount: " />
 
             <TextView
-                android:id="@+id/orderStatus"
+                android:id="@+id/oStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Status: " />
 
             <TextView
-                android:id="@+id/orderComment"
+                android:id="@+id/oComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
