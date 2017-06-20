@@ -85,7 +85,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
         public void setDate(String date) {
             TextView mDate = (TextView) mView.findViewById(R.id.odate);
-            mDate.setText("Data and Time" + date);
+            mDate.setText("Data and Time: " + date);
         }
 
         public void setAmount(String amt) {
@@ -95,7 +95,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
         public void setStatus(String status) {
             TextView mStatus = (TextView) mView.findViewById(R.id.oStatus);
-            mStatus.setText("Order status" + status);
+            mStatus.setText("Order Status: " + status);
         }
 
         public void setComment(String comment) {
