@@ -7,26 +7,33 @@
     tools:context="com.mybooks.mybooks.OrderPageActivity">
 
     <LinearLayout
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbarHeight">
+        android:layout_height="@dimen/toolbarHeight"
+        android:background="@color/colorPrimary"
+        android:id="@+id/linearLayout2">
 
         <ImageView
             android:id="@+id/oderBackBtn"
-            android:padding="@dimen/backButtonPadding"
-            android:src="@drawable/ic_arrow_back_white_24dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/backButtonPadding"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
 
         <TextView
-            android:textColor="@color/colorTextIcon"
-            android:gravity="center"
-            android:textSize="@dimen/toolbarTextSize"
-            android:text="My Orders"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="My Orders"
+            android:textColor="@color/colorTextIcon"
+            android:textSize="@dimen/toolbarTextSize" />
 
     </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/orderRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:layout_below="@+id/linearLayout2" />
 
 </RelativeLayout>

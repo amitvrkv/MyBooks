@@ -19,7 +19,7 @@ public class BookList {
 
     }
 
-    public BookList(String title, String author, String sem, String priceOld, String priceMRP, String getPriceNew,String course, int avlcopy, String key) {
+    public BookList(String title, String author, String sem, String priceOld, String priceMRP, String priceNew,String course, int avlcopy, String key) {
         this.title = title;
         this.author = author;
         this.sem = sem;

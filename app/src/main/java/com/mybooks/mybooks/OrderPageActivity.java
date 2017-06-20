@@ -1,21 +1,35 @@
 package com.mybooks.mybooks;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-public class OrderPageActivity extends AppCompatActivity implements View.OnClickListener{
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    FirebaseDatabase firebaseDatabase;
+public class OrderPageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView mOderBackBtn;
 
@@ -27,27 +41,18 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
         mOderBackBtn = (ImageView) findViewById(R.id.oderBackBtn);
         mOderBackBtn.setOnClickListener(this);
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.getReference().child("Order").orderByKey().equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid().toString()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.oderBackBtn:
                 startActivity(new Intent(this, HomeActivity.class));
                 finish();
                 break;
         }
     }
+
 }
+

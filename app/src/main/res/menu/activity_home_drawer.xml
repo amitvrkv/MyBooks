@@ -42,6 +42,7 @@
             android:title="Order Books" />
 
         <item
+            android:id="@+id/customiseOrderMenu"
             android:title="Customise Order" />
 
     </group>
@@ -53,6 +54,7 @@
                 android:title="My Cart" />
 
             <item
+                android:id="@+id/myOrder"
                 android:title="My Order" />
 
             <item

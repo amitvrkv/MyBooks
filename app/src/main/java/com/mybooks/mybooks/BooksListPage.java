@@ -1,9 +1,11 @@
 package com.mybooks.mybooks;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,30 +40,25 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     private RecyclerView mBookList;
 
-    //private DatabaseReference mdatabaseQuery;
     private Query mdatabaseQuery;
     private FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter;
-    //private DatabaseReference mdatabaseReference;
 
-    //SQLiteDatabase sqLiteDatabase;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list_page);
 
-        //sqLiteDatabase = openOrCreateDatabase("MYBOOKS", MODE_PRIVATE, null);
+        progressDialog = new ProgressDialog(this);
 
         ///////filter start
         mfilter = (TextView) findViewById(R.id.filter);
         mfilter.setOnClickListener(this);
-
         mcheckout = (TextView) findViewById(R.id.checkout);
         mcheckout.setOnClickListener(this);
-
         mdoneFilter = (Button) findViewById(R.id.doneFilter);
         mdoneFilter.setOnClickListener(this);
-
         filterView = (RelativeLayout) findViewById(R.id.filterView);
         //filterView.setVisibility(View.GONE);
 
@@ -245,6 +242,11 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     }
 
     public void doneFilter() {
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setMessage("Searching books...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         String course = mcousrseSelecter.getSelectedItem().toString();
         final String sem = msemSelecter.getSelectedItem().toString();
 
@@ -290,6 +292,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             }
         };
         mBookList.setAdapter(firebaseRecyclerAdapter);
+
+        progressDialog.dismiss();
     }
 
     public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
@@ -300,8 +304,12 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         if (cursor.getCount() <= 0) {
                 sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
                 Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
-        } else
+        } else {
             Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
+            //View view = findViewById(R.id.bookListParentView);
+            //Snackbar.make(view, "Already added to your Cart",  Snackbar.LENGTH_SHORT).show();
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.mybooks.mybooks;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -317,7 +318,11 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
                 list = list + " " + total.get(i);
             }
 
-            //Toast.makeText(getApplicationContext(), list, Toast.LENGTH_SHORT).show();
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("GrandTotal", String.valueOf(gtotal));
+            editor.commit();
+
             mGrandTotal.setText("Total: \u20B9 " + gtotal);
         }
 

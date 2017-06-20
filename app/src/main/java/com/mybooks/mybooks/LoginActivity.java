@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
                             FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
-                            DatabaseReference mRef = mdatabase.getReference().child("User").child(mAuth.getCurrentUser().getUid());
+                            DatabaseReference mRef = mdatabase.getReference().child("User").child(mAuth.getCurrentUser().getEmail().replace(".", "*"));
                             mRef.child("name").setValue("NA");
                             mRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
                             mRef.child("contact").setValue("NA");
