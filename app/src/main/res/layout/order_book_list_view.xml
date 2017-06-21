@@ -13,15 +13,6 @@
         android:padding="15dp">
 
         <TextView
-            android:id="@+id/oid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Order No.: "
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="14dp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/obookTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,15 +97,6 @@
                 android:text="Total Price: \u20B9 " />
 
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/ostatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="Order Status: "
-            android:textColor="@android:color/holo_blue_bright"
-            android:textSize="14dp" />
 
     </LinearLayout>
 

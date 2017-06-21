@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
@@ -69,18 +70,30 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    public static class OrderBookListHolder extends RecyclerView.ViewHolder{
+    public static class OrderBookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         View mView;
+
+        //TextView orderId;
+        String ordId;
 
         public OrderBookListHolder(View itemView) {
             super(itemView);
             mView = itemView;
+
+            //orderId = (TextView) mView.findViewById(R.id.osid);
+
+            TextView mcancelOrderBtn = (TextView) itemView.findViewById(R.id.cancelOrder);
+            mcancelOrderBtn.setOnClickListener(this);
+
+            TextView mGetOrderDetailsBtn = (TextView) itemView.findViewById(R.id.getOrderDetails);
+            mGetOrderDetailsBtn.setOnClickListener(this);
         }
 
         public void setOrderId(String id){
             TextView orderId = (TextView) mView.findViewById(R.id.osid);
             orderId.setText("Order ID: " + id);
+            this.ordId = id;
         }
 
         public void setDate(String date) {
@@ -96,11 +109,32 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
         public void setStatus(String status) {
             TextView mStatus = (TextView) mView.findViewById(R.id.oStatus);
             mStatus.setText("Order Status: " + status);
+
+            TextView mcancelOrderBtn = (TextView) itemView.findViewById(R.id.cancelOrder);
+            if (status.contains("cancelled") || status.contains("delivered")) {
+                mcancelOrderBtn.setText("");
+            } else {
+                mcancelOrderBtn.setText("CANCEL ORDER");
+            }
         }
 
         public void setComment(String comment) {
             TextView mComment = (TextView) mView.findViewById(R.id.oComment);
             mComment.setText("Comment: " + comment);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.cancelOrder:
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId).child("status");
+                    databaseReference.setValue("Order cancelled by user.");
+                    break;
+
+                case R.id.getOrderDetails:
+
+                    break;
+            }
         }
     }
 
