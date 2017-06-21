@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
                 } else {
 
                 }
