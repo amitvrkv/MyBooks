@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/customTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Book Title" />
@@ -62,6 +63,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/customAuthor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Book Author" />
@@ -73,6 +75,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/customCourse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Course" />
@@ -84,6 +87,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/customDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Description" />
@@ -93,6 +97,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/customPlaceOrder"
                 android:background="#ededed"
                 android:padding="7dp"
                 android:textSize="18dp"
