@@ -99,7 +99,7 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.customiseOrderMenu:
-                //Toast.makeText(getApplicationContext(), getDate() , Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
                 break;
 
             case R.id.myCartMenu :
