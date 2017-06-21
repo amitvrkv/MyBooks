@@ -32,7 +32,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".AddressActivity" />
         <activity android:name=".PaymentPageActivity" />
-        <activity android:name=".OrderPageActivity"></activity>
+        <activity android:name=".OrderPageActivity" />
+        <activity android:name=".OrderDetailsActivity"></activity>
     </application>
 
 </manifest>

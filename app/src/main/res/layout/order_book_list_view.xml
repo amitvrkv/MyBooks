@@ -89,6 +89,7 @@
                 android:textColor="@color/colorPrimaryText" />
 
             <TextView
+                android:textColor="@android:color/holo_red_dark"
                 android:id="@+id/ototalIndividual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

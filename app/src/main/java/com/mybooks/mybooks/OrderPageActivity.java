@@ -46,7 +46,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                 databaseReference
         ) {
             @Override
-            protected void populateViewHolder(OrderBookListHolder viewHolder, OrderBookList model, int position) {
+            protected void populateViewHolder(OrderBookListHolder viewHolder, final OrderBookList model, int position) {
                 viewHolder.setOrderId(model.getOrderid());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setAmount(model.getGrandtotal());
@@ -132,7 +132,9 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                     break;
 
                 case R.id.getOrderDetails:
-
+                    Intent intent = new Intent(mView.getContext(), OrderDetailsActivity.class);
+                    intent.putExtra("orderId", ordId);
+                    mView.getContext().startActivity(intent);
                     break;
             }
         }
