@@ -38,6 +38,7 @@
     <group android:checkableBehavior="single">
 
         <item
+            android:icon="@drawable/ic_library_books_black_24dp"
             android:id="@+id/orderBookMenu"
             android:title="Order Books" />
 
@@ -50,6 +51,7 @@
     <item android:title="My Account details:">
         <menu>
             <item
+                android:icon="@drawable/ic_shopping_cart_black_24dp"
                 android:id="@+id/myCartMenu"
                 android:title="My Cart" />
 
@@ -58,10 +60,12 @@
                 android:title="My Order" />
 
             <item
+                android:icon="@drawable/ic_settings_black_24dp"
                 android:id="@+id/myAccMenu"
                 android:title="My Account" />
 
             <item
+                android:icon="@drawable/ic_lock_open_black_24dp"
                 android:id="@+id/logoutMenu"
                 android:title="Logout" />
 

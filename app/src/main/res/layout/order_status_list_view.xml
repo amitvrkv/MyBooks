@@ -74,7 +74,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@+id/view"
-                    android:background="#ededed"
+                    android:background="#e0f2f1"
                     android:gravity="center"
                     android:text="CANCEL ORDER" />
 
@@ -86,7 +86,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_toEndOf="@+id/cancelOrder"
                     android:layout_toRightOf="@+id/cancelOrder"
-                    android:background="#ededed"
+                    android:background="#e0f2f1"
                     android:gravity="center"
                     android:text="GET ORDER DETAILS" />
 

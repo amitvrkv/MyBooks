@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private EditText mEmailSignIn, mPasswordSignIn, mEmailSignUp, mPasswordSignUpOne, mPasswordSignUpTwo;
     private Button mEmailSignInButton, mEmailSignUpButton;
-    private TextView mSignUpRed, mSignInRed;
+    private TextView mSignUpRed, mSignInRed, mresetPassword;
     private View mSignInForm, mSignUpForm;
 
     private ProgressDialog mprogressDialog;
@@ -76,6 +76,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mEmailSignUpButton = (Button) findViewById(R.id.email_sign_up_button);
         mEmailSignUpButton.setOnClickListener(this);
 
+        mresetPassword = (TextView) findViewById(R.id.forgotPassword);
+        mresetPassword.setOnClickListener(this);
+
         //Firebase
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -83,9 +86,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    finish();
-                } else {
+                    checkIfEmailVerified();
+                    /*if (checkIfEmailVerified()) {
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        finish();
+                    } else {
+                        mAuth.signOut();
+                        sendVerificationEmail();
+                        Toast.makeText(getApplicationContext(), "Please verify your email", Toast.LENGTH_SHORT).show();
+                    }*/
 
                 }
             }
@@ -120,13 +129,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
 
             case R.id.email_sign_up_button:
-                if(verifySignUp())
+                if (verifySignUp())
                     attemptSignup();
                 break;
 
             case R.id.email_sign_in_button:
                 if (verifySignin())
                     attemptSignin();
+                break;
+
+            case R.id.forgotPassword:
+                sendResetPassword();
                 break;
         }
     }
@@ -170,17 +183,24 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            finish();
+                        if (task.isSuccessful()) {
+                            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user.isEmailVerified()) {
+                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                                finish();
+                            } else {
+                                sendVerificationEmail();
+                                Toast.makeText(getApplicationContext(), "Please verify your email", Toast.LENGTH_SHORT).show();
+                            }*/
+                            //checkIfEmailVerified();
                         } else {
-                            Toast.makeText(getApplicationContext(), "Wrong Username or Password." , Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Wrong Username or Password.", Toast.LENGTH_SHORT).show();
                         }
                         mprogressDialog.dismiss();
                     }
                 });
     }
-    
+
     private boolean verifySignUp() {
         RelativeLayout parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
 
@@ -212,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             return false;
         }
 
-        if( ! passwordOne.equals(passwordTwo)) {
+        if (!passwordOne.equals(passwordTwo)) {
             Snackbar snackbar = Snackbar.make(parentLayout, "Passwords do not match.", Snackbar.LENGTH_SHORT);
             snackbar.show();
             return false;
@@ -220,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         return true;
     }
-    
+
     private void attemptSignup() {
         mprogressDialog.setTitle("Please wait.");
         mprogressDialog.setMessage("Creating your account...");
@@ -231,23 +251,77 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
+                        if (task.isSuccessful()) {
+                            /*FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
                             DatabaseReference mRef = mdatabase.getReference().child("User").child(mAuth.getCurrentUser().getEmail().replace(".", "*"));
                             mRef.child("name").setValue("NA");
                             mRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
                             mRef.child("contact").setValue("NA");
-                            mRef.child("address").setValue("NA");
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            finish();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Failed to sign-up. Try again!" , Toast.LENGTH_SHORT).show();
+                            mRef.child("address").setValue("NA");*/
+                            //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            //finish();
+                            //sendVerificationEmailToUser();
+                            //FirebaseAuth.getInstance().signOut();
+                            //FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
+                            //FirebaseAuth.getInstance().signOut();
+
+                            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            if (user != null) {
+                                checkIfEmailVerified();
+                            }*/
+
+                            //Toast.makeText(getApplicationContext(), "Successfully signed up. Please verify your email address.", Toast.LENGTH_SHORT).show();
+
+                            mSignInForm.setVisibility(View.VISIBLE);
+                            mSignUpForm.setVisibility(View.GONE);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to sign-up. Try again!", Toast.LENGTH_SHORT).show();
                         }
                         mprogressDialog.dismiss();
                     }
                 });
     }
 
+
+    private void checkIfEmailVerified() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user.isEmailVerified()) {
+            //return true;
+            FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
+            DatabaseReference mRef = mdatabase.getReference().child("User").child(mAuth.getCurrentUser().getEmail().replace(".", "*"));
+            mRef.child("name").setValue("NA");
+            mRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
+            mRef.child("contact").setValue("NA");
+            mRef.child("address").setValue("NA");
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            finish();
+        } else {
+            //return false;
+            sendVerificationEmailToUser();
+            Toast.makeText(getApplicationContext(), "You have successfully signed up.\nPlease verify your email address.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sendVerificationEmailToUser() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.sendEmailVerification();
+        FirebaseAuth.getInstance().signOut();
+    }
+
+    public void sendResetPassword() {
+        mEmailSignIn.setError(null);
+        String email = mEmailSignIn.getText().toString();
+
+        if (TextUtils.isEmpty(email)) {
+            mEmailSignIn.setError(getString(R.string.error_field_required));
+            return;
+        } else if (!email.contains("@")) {
+            mEmailSignIn.setError(getString(R.string.error_invalid_email));
+            return;
+        }
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email);
+        Toast.makeText(getApplicationContext(), "Password reset email sent successfully.", Toast.LENGTH_SHORT).show();
+    }
 }
 

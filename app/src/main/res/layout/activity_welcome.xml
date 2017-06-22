@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.mybooks.mybooks.Welcome">
 
+    <View
+        android:alpha="0.1"
+        android:background="@drawable/books_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
     <ImageView
         android:id="@+id/app_logo"

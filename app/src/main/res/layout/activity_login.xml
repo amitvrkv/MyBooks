@@ -8,7 +8,14 @@
     android:id="@+id/parentLayout"
     >
 
+    <View
+        android:alpha="0.2"
+        android:background="@drawable/books_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <ImageView
+        android:alpha="0.7"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/app_icon"
@@ -73,11 +80,20 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="right"
+            android:text="Forgot Password."
+            android:textColor="@color/colorAccent" />
+
+        <TextView
             android:id="@+id/sign_up_redirect_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:gravity="center"
+            android:gravity="right"
             android:text="New user? Sign up here."
             android:textColor="@color/colorAccent" />
 

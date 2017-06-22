@@ -100,7 +100,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public void setAddress() {
+    public String setAddress() {
         address = "";
         address = address + sharedPreferences.getString("Name", null) ;
         address = address + "\n" + sharedPreferences.getString("contact", null);
@@ -110,6 +110,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         address = address + " - " + sharedPreferences.getString("pincode", null);
         address = address + "\n" + sharedPreferences.getString("state", null);
         mDeliveryAddress.setText(address);
+        return address;
     }
 
     //Getting order number and updating
@@ -143,6 +144,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         databaseReference.child("date").setValue(String.valueOf(getDate()));
         databaseReference.child("grandtotal").setValue(grandTotal);
         databaseReference.child("status").setValue("Order placed");
+        databaseReference.child("deliveryaddress").setValue(setAddress());
         databaseReference.child("comment").setValue("na").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
