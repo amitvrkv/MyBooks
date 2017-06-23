@@ -40,12 +40,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    View parentLayoutView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        parentLayoutView = findViewById(R.id.parentLayout);
 
         mprogressDialog = new ProgressDialog(this);
 
@@ -87,15 +89,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     checkIfEmailVerified();
-                    /*if (checkIfEmailVerified()) {
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        finish();
-                    } else {
-                        mAuth.signOut();
-                        sendVerificationEmail();
-                        Toast.makeText(getApplicationContext(), "Please verify your email", Toast.LENGTH_SHORT).show();
-                    }*/
-
                 }
             }
         };
@@ -184,17 +177,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user.isEmailVerified()) {
-                                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                                finish();
-                            } else {
-                                sendVerificationEmail();
-                                Toast.makeText(getApplicationContext(), "Please verify your email", Toast.LENGTH_SHORT).show();
-                            }*/
-                            //checkIfEmailVerified();
+
                         } else {
-                            Toast.makeText(getApplicationContext(), "Wrong Username or Password.", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Wrong Username or Password.", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(parentLayoutView, "Wrong Username or Password.", Snackbar.LENGTH_SHORT).show();
                         }
                         mprogressDialog.dismiss();
                     }
@@ -233,8 +219,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
 
         if (!passwordOne.equals(passwordTwo)) {
-            Snackbar snackbar = Snackbar.make(parentLayout, "Passwords do not match.", Snackbar.LENGTH_SHORT);
-            snackbar.show();
+            Snackbar.make(parentLayout, "Passwords do not match.", Snackbar.LENGTH_SHORT).show();
             return false;
         }
 
@@ -252,31 +237,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            /*FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
-                            DatabaseReference mRef = mdatabase.getReference().child("User").child(mAuth.getCurrentUser().getEmail().replace(".", "*"));
-                            mRef.child("name").setValue("NA");
-                            mRef.child("email").setValue(mAuth.getCurrentUser().getEmail());
-                            mRef.child("contact").setValue("NA");
-                            mRef.child("address").setValue("NA");*/
-                            //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            //finish();
-                            //sendVerificationEmailToUser();
-                            //FirebaseAuth.getInstance().signOut();
-                            //FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification();
-                            //FirebaseAuth.getInstance().signOut();
-
-                            /*FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                checkIfEmailVerified();
-                            }*/
-
-                            //Toast.makeText(getApplicationContext(), "Successfully signed up. Please verify your email address.", Toast.LENGTH_SHORT).show();
 
                             mSignInForm.setVisibility(View.VISIBLE);
                             mSignUpForm.setVisibility(View.GONE);
 
                         } else {
-                            Toast.makeText(getApplicationContext(), "Failed to sign-up. Try again!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Failed to sign-up. Try again!", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(parentLayoutView, "Failed to sign-up. Try again!", Snackbar.LENGTH_SHORT).show();
                         }
                         mprogressDialog.dismiss();
                     }
@@ -299,7 +266,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         } else {
             //return false;
             sendVerificationEmailToUser();
-            Toast.makeText(getApplicationContext(), "You have successfully signed up.\nPlease verify your email address.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "You have successfully signed up.\nPlease verify your email address.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(parentLayoutView, "You have successfully signed up.\\nPlease verify your email address.", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -322,6 +290,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
         FirebaseAuth.getInstance().sendPasswordResetEmail(email);
         Toast.makeText(getApplicationContext(), "Password reset email sent successfully.", Toast.LENGTH_SHORT).show();
+        //Snackbar.make(parentLayoutView, "Password reset email sent successfully.", Snackbar.LENGTH_LONG).show();
     }
 }
 

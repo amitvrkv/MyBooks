@@ -1,13 +1,17 @@
 package com.mybooks.mybooks;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -45,6 +49,8 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     SharedPreferences sharedPreferences;
 
+    View parentLayoutView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,8 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
         progressDialog = new ProgressDialog(this);
+
+        parentLayoutView = findViewById(R.id.paymentActicityParentView);
 
         setAddress();
     }
@@ -90,12 +98,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     progressDialog.setTitle("Please wait...");
                     progressDialog.setMessage("Placing your order,\nPlease do not close the application.");
                     progressDialog.setCancelable(false);
-                    progressDialog.show();
 
                     placeOrder();
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Please select mode of payments", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Please select mode of payments", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(parentLayoutView, "Please select mode of payment", Snackbar.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -115,6 +123,21 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     //Getting order number and updating
     public void placeOrder() {
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+        if ( sharedPreferences.getString("Name", null) == null ) {
+            Toast.makeText(getApplicationContext(), "Please update your address to continue.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+            return;
+        }
+
+        if( ! haveNetworkConnection()) {
+            Snackbar.make(parentLayoutView, "Please check your internet connection.", Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        progressDialog.show();
+
         final int[] ordernumber = {0};
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks").child("order");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -221,5 +244,22 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         String dateInMilliseconds = String.valueOf(new Date().getTime());
         String dateFormat = "dd/MM/yyyy hh:mm:ss aa";
         return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }

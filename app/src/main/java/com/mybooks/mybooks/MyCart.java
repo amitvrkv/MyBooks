@@ -44,11 +44,15 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
     private Button mContinueBtn;
     private ImageView mbackBtn;
 
+    View parentView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+
+        parentView = findViewById(R.id.mycartParentView);
 
         mGrandTotal = (TextView) findViewById(R.id.grandTotalPrice);
         footer = (RelativeLayout) findViewById(R.id.footer);
@@ -77,13 +81,11 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR, title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR, priceMRP VARCHAR, priceNew VARCHAR, priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
 
-        //cursor.moveToFirst();
-
         if (cursor.moveToFirst() == false) {
-            Toast.makeText(getApplicationContext(), "Your Cart is empty!", Toast.LENGTH_SHORT).show();
-            //footer.setVisibility(View.GONE);
+            //Toast.makeText(getApplicationContext(), "Your Cart is empty!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(parentView, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
+
         } else {
-            //footer.setVisibility(View.VISIBLE);
             do {
                 key.add(cursor.getString(cursor.getColumnIndex("key")));
                 title.add(cursor.getString(cursor.getColumnIndex("title")));
@@ -96,12 +98,9 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
                 booktype.add(cursor.getString(cursor.getColumnIndex("booktype")));
                 quantity.add(cursor.getString(cursor.getColumnIndex("qty")));
 
-                //total = total + Integer.parseInt(cursor.getString(cursor.getColumnIndex("priceOld")));
-
             } while (cursor.moveToNext());
 
             cartList.setAdapter(new listViewCustomAdapter(this, key, title, author, course, sem, priceMRP, priceNew, priceOld, booktype, quantity));
-            //mGrandTotal.setText("Total: \u20B9 " + total);
         }
 
     }

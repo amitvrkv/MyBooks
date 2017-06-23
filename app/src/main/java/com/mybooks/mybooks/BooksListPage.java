@@ -23,6 +23,9 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -140,6 +143,24 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
             buyButton = (Button) itemView.findViewById(R.id.bookBuy);
             buyButton.setOnClickListener(this);
+        }
+
+        public void setImage(final String src) {
+            final ImageView mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
+            if ( ! src.equals("na")) {
+                Picasso.with(mview.getContext()).load(src).into(mBookImage);
+                /*Picasso.with(mview.getContext()).load(src).networkPolicy(NetworkPolicy.OFFLINE).into(mBookImage, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        Picasso.with(mview.getContext()).load(src).into(mBookImage);
+                    }
+                });*/
+            }
         }
 
         public void settitle(String title) {
@@ -271,6 +292,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         ) {
             @Override
             protected void populateViewHolder(BookListHolder viewHolder, final BookList model, int position) {
+                viewHolder.setImage(model.getSrc());
                 viewHolder.setauthor(model.getAuthor());
                 viewHolder.settitle(model.getTitle());
                 viewHolder.setCourse(model.getCourse());
