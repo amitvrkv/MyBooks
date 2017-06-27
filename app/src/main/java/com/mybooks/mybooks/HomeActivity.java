@@ -79,6 +79,10 @@ public class HomeActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.blogMenu) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
