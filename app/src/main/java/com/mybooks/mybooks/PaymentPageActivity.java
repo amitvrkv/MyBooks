@@ -168,6 +168,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         databaseReference.child("grandtotal").setValue(grandTotal);
         databaseReference.child("status").setValue("Order placed");
         databaseReference.child("deliveryaddress").setValue(setAddress());
+        databaseReference.child("discount").setValue("0");
         databaseReference.child("comment").setValue("na").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

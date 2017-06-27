@@ -242,7 +242,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             mSignUpForm.setVisibility(View.GONE);
 
                         } else {
-                            //Toast.makeText(getApplicationContext(), "Failed to sign-up. Try again!", Toast.LENGTH_SHORT).show();
                             Snackbar.make(parentLayoutView, "Failed to sign-up. Try again!", Snackbar.LENGTH_SHORT).show();
                         }
                         mprogressDialog.dismiss();

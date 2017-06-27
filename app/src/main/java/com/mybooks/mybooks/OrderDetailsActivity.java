@@ -60,7 +60,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 viewHolder.setCourse(model.getCourse());
                 viewHolder.setSem(model.getSem());
                 viewHolder.setBookType(model.getBooktype());
-                viewHolder.setSellingandTotalPrice(model.getPrice(), model.getQuantity());
+                viewHolder.setSellinGrandTotalPrice(model.getPrice(), model.getQuantity());
             }
         };
 
@@ -106,7 +106,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             mType.setText("Book Type: " + type);
         }
 
-        public void setSellingandTotalPrice(String sellingPrice, String quantity) {
+        public void setSellinGrandTotalPrice(String sellingPrice, String quantity) {
             TextView mSell = (TextView) view.findViewById(R.id.obookSellingPrice);
             mSell.setText("\u20B9 " + sellingPrice);
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,16 +86,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         List<String> semList = new ArrayList<String>();
         semList.add(0, "select Semester");
         semList.add(1, "All Semester");
-        semList.add("1st sem");
-        semList.add("2nd sem");
-        semList.add("3rd sem");
-        semList.add("4th sem");
-        semList.add("5th sem");
-        semList.add("6th sem");
-        semList.add("7th sem");
-        semList.add("8th sem");
-        semList.add("9th sem");
-        semList.add("10th sem");
+        semList.add("1");
+        semList.add("2");
+        semList.add("3");
+        semList.add("4");
+        semList.add("5");
+        semList.add("6");
+        semList.add("7");
+        semList.add("8");
+        semList.add("9");
+        semList.add("10");
         ArrayAdapter<String> semDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, semList);
         semDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         msemSelecter.setAdapter(semDataAdapter);
@@ -183,13 +185,14 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void setSem(String sem) {
             TextView msem = (TextView) mview.findViewById(R.id.bookClass);
-            msem.setText(sem);
+            msem.setText("Semester: " + sem);
             this.sem = sem;
         }
 
         public void setpriceMRP(String priceMRP) {
             TextView mmarket = (TextView) mview.findViewById(R.id.bookMarketPrice);
             mmarket.setText(priceMRP);
+            mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
             this.priceMRP = priceMRP;
         }
 
