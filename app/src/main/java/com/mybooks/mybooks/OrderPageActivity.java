@@ -133,16 +133,16 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                         databaseReference.setValue("Order cancelled by user.");
                         Toast.makeText(v.getContext(), "Order cancelled", Toast.LENGTH_SHORT).show();
                     } else if (mcancelOrderBtn.getText().toString().equals("DELETE ORDER")){
-                        DatabaseReference orderDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
+                        /*DatabaseReference orderDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
                         orderDatabaseReference.removeValue();
 
                         DatabaseReference detailsDatabaseReference = FirebaseDatabase.getInstance().getReference()
                                 .child("OrderDetails")
                                 .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".","*"))
                                 .child(ordId);
-                        detailsDatabaseReference.removeValue();
+                        detailsDatabaseReference.removeValue();*/
 
-                        Toast.makeText(v.getContext(), "Order deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Order can not be deleted", Toast.LENGTH_SHORT).show();
 
                     }
                     break;

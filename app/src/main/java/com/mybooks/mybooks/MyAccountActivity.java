@@ -73,7 +73,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void setMyAccDetails() {
-        mName.setText(sharedPreferences.getString("Name", null));
+        mName.setText(sharedPreferences.getString("Name", null).toUpperCase());
         mMobile.setText(sharedPreferences.getString("contact", null));
         mEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
 
