@@ -113,7 +113,7 @@ public class HomeActivity extends AppCompatActivity
                 finish();
                 break;
             case R.id.myAccMenu:
-                startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+                startActivity(new Intent(getApplicationContext(), MyAccountActivity.class));
                 break;
 
             case R.id.myOrder:

@@ -34,7 +34,8 @@
         <activity android:name=".PaymentPageActivity" />
         <activity android:name=".OrderPageActivity" />
         <activity android:name=".OrderDetailsActivity" />
-        <activity android:name=".CustomOrderActivity"></activity>
+        <activity android:name=".CustomOrderActivity" />
+        <activity android:name=".MyAccountActivity"></activity>
     </application>
 
 </manifest>
