@@ -71,11 +71,12 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    public static class OrderBookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class OrderBookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         View mView;
 
         String ordId;
+        String comments;
 
         TextView mcancelOrderBtn;
 
@@ -83,14 +84,14 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
             super(itemView);
             mView = itemView;
 
-             mcancelOrderBtn = (TextView) itemView.findViewById(R.id.cancelOrder);
+            mcancelOrderBtn = (TextView) itemView.findViewById(R.id.cancelOrder);
             mcancelOrderBtn.setOnClickListener(this);
 
             TextView mGetOrderDetailsBtn = (TextView) itemView.findViewById(R.id.getOrderDetails);
             mGetOrderDetailsBtn.setOnClickListener(this);
         }
 
-        public void setOrderId(String id){
+        public void setOrderId(String id) {
             TextView orderId = (TextView) mView.findViewById(R.id.osid);
             orderId.setText("Order ID: " + id);
             this.ordId = id;
@@ -120,7 +121,8 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
         public void setComment(String comment) {
             TextView mComment = (TextView) mView.findViewById(R.id.oComment);
-            mComment.setText("Comment: " + comment);
+            mComment.setText(comment);
+            this.comments = comment;
         }
 
         @Override
@@ -129,10 +131,15 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                 case R.id.cancelOrder:
 
                     if (mcancelOrderBtn.getText().toString().equals("CANCEL ORDER")) {
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId).child("status");
-                        databaseReference.setValue("Order cancelled by user.");
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
+                        databaseReference.child("status").setValue("Order cancelled");
+
+                        if (comments.equals(""))
+                            databaseReference.child("comment").setValue("Customer: Order cancelled by customer.");
+                        else
+                            databaseReference.child("comment").setValue(comments + "\nCustomer: Order cancelled by customer.");
                         Toast.makeText(v.getContext(), "Order cancelled", Toast.LENGTH_SHORT).show();
-                    } else if (mcancelOrderBtn.getText().toString().equals("DELETE ORDER")){
+                    } else if (mcancelOrderBtn.getText().toString().equals("DELETE ORDER")) {
                         /*DatabaseReference orderDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
                         orderDatabaseReference.removeValue();
 

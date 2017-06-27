@@ -111,12 +111,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     public String setAddress() {
         address = "";
         address = address + sharedPreferences.getString("Name", null) ;
-        address = address + "\n" + sharedPreferences.getString("contact", null);
         address = address + "\n" + sharedPreferences.getString("addressline1", null);
         address = address + "\n" + sharedPreferences.getString("addressline2", null);
         address = address + "\n" + sharedPreferences.getString("city", null);
         address = address + " - " + sharedPreferences.getString("pincode", null);
         address = address + "\n" + sharedPreferences.getString("state", null);
+        address = address + "\n" + sharedPreferences.getString("contact", null);
         mDeliveryAddress.setText(address);
         return address;
     }
@@ -167,9 +167,9 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         databaseReference.child("date").setValue(String.valueOf(getDate()));
         databaseReference.child("grandtotal").setValue(grandTotal);
         databaseReference.child("status").setValue("Order placed");
-        databaseReference.child("deliveryaddress").setValue(setAddress());
+        databaseReference.child("deliveryaddress").setValue(setAddress().replace("\n", ", "));
         databaseReference.child("discount").setValue("0");
-        databaseReference.child("comment").setValue("na").addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child("comment").setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
