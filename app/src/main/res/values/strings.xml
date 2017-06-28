@@ -28,4 +28,12 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_my_cart">MyCart</string>
 
+    <!-- order status -->
+    <string name="order_cancelled">Order cancelled</string>
+    <string name="order_inprocess">In process</string>
+    <string name="order_placed">Order placed</string>
+    <string name="out_for_delivery">Out for delivery</string>
+    <string name="delivered">Delivered</string>
+    <!-- order status -->
+
 </resources>

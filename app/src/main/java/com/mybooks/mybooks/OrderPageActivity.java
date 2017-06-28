@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -132,7 +133,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             switch (v.getId()) {
                 case R.id.cancelOrder:
 
@@ -145,9 +146,14 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                         alert.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 String reason = edittext.getText().toString();
+                                if (TextUtils.isEmpty(reason)) {
+                                    Toast.makeText(mView.getContext(), "Please provide reason for cancellation", Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+
                                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
-                                databaseReference.child("comment").setValue(comments + "\nCustomer: " + "Order cancelled" + " (" + reason + ")");
-                                databaseReference.child("status").setValue("Order cancelled").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                databaseReference.child("comment").setValue(comments + "Customer: " + "Order cancelled" + " (" + reason + ")\n");
+                                databaseReference.child("status").setValue(v.getContext().getString(R.string.order_cancelled)).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
@@ -167,15 +173,6 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                         });
 
                         alert.show();
-
-                        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
-                        databaseReference.child("status").setValue("Order cancelled");
-
-                        if (comments.equals(""))
-                            databaseReference.child("comment").setValue("Customer: Order cancelled by customer.");
-                        else
-                            databaseReference.child("comment").setValue(comments + "\nCustomer: Order cancelled by customer.");
-                        Toast.makeText(v.getContext(), "Order cancelled", Toast.LENGTH_SHORT).show();*/
 
                     } else if (mcancelOrderBtn.getText().toString().equals("DELETE ORDER")) {
                         /*DatabaseReference orderDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
