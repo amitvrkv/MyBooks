@@ -4,6 +4,7 @@
 
     <string name="database_path">/data/data/com.mybooks.mybooks/databases/MYBOOKS</string>
     <string name="sharedPrefDeliveryAddress">delivery_address</string>
+    <string name="sharedPrefOrderIdDetails"></string>
 
     <string-array name="quantity">
         <item>1</item>

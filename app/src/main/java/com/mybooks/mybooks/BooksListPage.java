@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,12 +51,27 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     private ProgressDialog progressDialog;
 
+    ImageView mSearchToolbarBtn, mSearchBtn;
+    RelativeLayout mSearchOptionLayout, mCheckoutAndFilterOptionLayout;
+    EditText mSearchData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list_page);
 
         progressDialog = new ProgressDialog(this);
+
+        /* Search option*/
+        mSearchToolbarBtn = (ImageView) findViewById(R.id.seachToolbarMenu);
+        mSearchToolbarBtn.setOnClickListener(this);
+        mSearchBtn = (ImageView) findViewById(R.id.searchBtn);
+        mSearchBtn.setOnClickListener(this);
+        mSearchOptionLayout = (RelativeLayout) findViewById(R.id.searchOption);
+        mSearchOptionLayout.setVisibility(View.GONE);
+        mCheckoutAndFilterOptionLayout = (RelativeLayout) findViewById(R.id.checkoutAndFilterOption);
+        mCheckoutAndFilterOptionLayout.setVisibility(View.VISIBLE);
+        mSearchData = (EditText) findViewById(R.id.searchData);
 
         ///////filter start
         mfilter = (TextView) findViewById(R.id.filter);
@@ -149,7 +165,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void setImage(final String src) {
             final ImageView mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
-            if ( ! src.equals("na")) {
+            if (!src.equals("na")) {
                 Picasso.with(mview.getContext()).load(src).into(mBookImage);
                 /*Picasso.with(mview.getContext()).load(src).networkPolicy(NetworkPolicy.OFFLINE).into(mBookImage, new Callback() {
                     @Override
@@ -192,7 +208,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         public void setpriceMRP(String priceMRP) {
             TextView mmarket = (TextView) mview.findViewById(R.id.bookMarketPrice);
             mmarket.setText(priceMRP);
-            mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG );
+            mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             this.priceMRP = priceMRP;
         }
 
@@ -262,15 +278,20 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             case R.id.checkout:
                 startActivity(new Intent(getApplicationContext(), MyCart.class));
                 break;
+
+            case R.id.seachToolbarMenu:
+                if (mSearchOptionLayout.getVisibility() == View.VISIBLE) {
+                    mSearchOptionLayout.setVisibility(View.GONE);
+                    mCheckoutAndFilterOptionLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mSearchOptionLayout.setVisibility(View.VISIBLE);
+                    mCheckoutAndFilterOptionLayout.setVisibility(View.GONE);
+                }
+                break;
         }
     }
 
     public void doneFilter() {
-        progressDialog.setTitle("Please wait...");
-        progressDialog.setMessage("Searching books...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
         String course = mcousrseSelecter.getSelectedItem().toString();
         final String sem = msemSelecter.getSelectedItem().toString();
 
@@ -284,6 +305,11 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             else
                 mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("sem").equalTo(sem);
         }
+
+        /*progressDialog.setTitle("Please wait...");
+        progressDialog.setMessage("Searching books...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();*/
 
         mdatabaseQuery.keepSynced(true);
 
@@ -318,7 +344,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         };
         mBookList.setAdapter(firebaseRecyclerAdapter);
 
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
     }
 
     public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
@@ -327,12 +353,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART WHERE key = '" + key + "'", null);
 
         if (cursor.getCount() <= 0) {
-                sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
-                Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
+            sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
+            Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
-            //View view = findViewById(R.id.bookListParentView);
-            //Snackbar.make(view, "Already added to your Cart",  Snackbar.LENGTH_SHORT).show();
         }
 
     }

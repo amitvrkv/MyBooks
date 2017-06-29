@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/bookListParentView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bookListParentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -37,6 +37,19 @@
                 android:textColor="@color/colorTextIcon"
                 android:textSize="@dimen/toolbarTextSize" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/seachToolbarMenu"
+                    android:padding="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_search" />
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -47,34 +60,66 @@
             android:background="@color/cardview_light_background"
             android:orientation="horizontal">
 
-
-            <View
-                android:id="@+id/statusbarCenter"
-                android:layout_width="1dp"
-                android:layout_height="42dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@color/colorDivider" />
-
-            <TextView
-                android:id="@+id/checkout"
-                android:layout_width="200dp"
+            <RelativeLayout
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/searchOption"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignRight="@id/statusbarCenter"
-                android:gravity="center"
-                android:text="Checkout"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="21dp" />
+                >
 
-            <TextView
-                android:id="@+id/filter"
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@id/statusbarCenter"
-                android:gravity="center"
-                android:text="Filter"
-                android:textColor="@color/colorSecondaryText"
-                android:textSize="21dp" />
+                <EditText
+                    android:maxLines="1"
+                    android:id="@+id/searchData"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/searchBtn"
+                    android:layout_toStartOf="@+id/searchBtn" />
+
+                <ImageView
+                    android:id="@+id/searchBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:padding="10dp"
+                    android:src="@android:drawable/ic_search_category_default" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/checkoutAndFilterOption"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:id="@+id/statusbarCenter"
+                    android:layout_width="1dp"
+                    android:layout_height="42dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/colorDivider" />
+
+                <TextView
+                    android:id="@+id/checkout"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignRight="@id/statusbarCenter"
+                    android:gravity="center"
+                    android:text="Checkout"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="21dp" />
+
+                <TextView
+                    android:id="@+id/filter"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignLeft="@id/statusbarCenter"
+                    android:gravity="center"
+                    android:text="Filter"
+                    android:textColor="@color/colorSecondaryText"
+                    android:textSize="21dp" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -91,44 +136,43 @@
 
 
     <RelativeLayout
-        android:background="@android:drawable/dialog_holo_light_frame"
         android:id="@+id/filterView"
         android:layout_width="250dp"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/header"
-        >
+        android:background="@android:drawable/dialog_holo_light_frame">
 
 
         <LinearLayout
-            android:layout_margin="10dp"
-            android:orientation="vertical"
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/linearLayout">
+            android:layout_margin="10dp"
+            android:orientation="vertical">
 
-        <Spinner
-            android:padding="10dp"
-            android:id="@+id/courseSelecter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/courseSelecter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp" />
 
-        <Spinner
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:id="@+id/semesterSelecter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/semesterSelecter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp" />
 
         </LinearLayout>
 
 
         <Button
-            android:layout_centerHorizontal="true"
             android:id="@+id/doneFilter"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:layout_margin="10dp"
             android:background="@color/colorPrimary"
             android:text="done"

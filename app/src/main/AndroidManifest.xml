@@ -36,6 +36,7 @@
         <activity android:name=".OrderDetailsActivity" />
         <activity android:name=".CustomOrderActivity" />
         <activity android:name=".MyAccountActivity"></activity>
+        <service android:name=".MyBooksService"></service>
     </application>
 
 </manifest>
