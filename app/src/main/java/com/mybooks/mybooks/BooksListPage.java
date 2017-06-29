@@ -288,6 +288,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     mCheckoutAndFilterOptionLayout.setVisibility(View.GONE);
                 }
                 break;
+
+            case R.id.searchBtn:
+
+                break;
         }
     }
 
