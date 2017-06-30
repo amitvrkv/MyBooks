@@ -96,6 +96,9 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
             TextView mGetOrderDetailsBtn = (TextView) itemView.findViewById(R.id.getOrderDetails);
             mGetOrderDetailsBtn.setOnClickListener(this);
+
+            TextView mAddComments = (TextView) itemView.findViewById(R.id.oAddCommentsBtn);
+            mAddComments.setOnClickListener(this);
         }
 
         public void setOrderId(String id) {
@@ -119,7 +122,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
             mStatus.setText("Order Status: " + status);
 
             TextView mcancelOrderBtn = (TextView) itemView.findViewById(R.id.cancelOrder);
-            if (status.contains("cancelled") || status.contains("delivered")) {
+            if (status.contains("cancelled") || status.contains("Delivered")) {
                 mcancelOrderBtn.setText("DELETE ORDER");
             } else {
                 mcancelOrderBtn.setText("CANCEL ORDER");
@@ -128,7 +131,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
         public void setComment(String comment) {
             TextView mComment = (TextView) mView.findViewById(R.id.oComment);
-            mComment.setText(comment);
+            mComment.setText(comment.replace("EEEE", "ME"));
             this.comments = comment;
         }
 
@@ -193,6 +196,40 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
                     Intent intent = new Intent(mView.getContext(), OrderDetailsActivity.class);
                     intent.putExtra("orderId", ordId);
                     mView.getContext().startActivity(intent);
+                    break;
+
+                case R.id.oAddCommentsBtn:
+                    AlertDialog.Builder alert = new AlertDialog.Builder(mView.getContext());
+                    final EditText edittext = new EditText(mView.getContext());
+                    alert.setTitle("Enter comment");
+                    alert.setView(edittext);
+                    alert.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String reason = edittext.getText().toString();
+                            if (TextUtils.isEmpty(reason))
+                                return;
+
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordId);
+                            databaseReference.child("comment").setValue(comments + "EEEE: " + reason + "\n")
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(mView.getContext(), "Comment updated", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(mView.getContext(), "Failed to update comment", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    });
+
+                    alert.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    });
+                    alert.show();
                     break;
             }
         }

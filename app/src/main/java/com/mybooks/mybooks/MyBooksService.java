@@ -51,14 +51,30 @@ public class MyBooksService extends Service {
                 SharedPreferences sharedPreferences;
                 sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefOrderIdDetails), MODE_PRIVATE);
 
+                String orderid = "";
+                String status = "";
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String orderid = ds.getKey().toString();
-                    String status = ds.child("status").getValue().toString();
+
+                    if (ds.child("status").getValue() == null ) {
+                        continue;
+                    }
+
+                    /*if (! (ds.child("comment").getValue() == null || ds.child("comment").getValue() == "")) {
+                        if (ds.child("comment").getValue().toString().startsWith("My Books") && !ds.child("comment").getValue().toString().contains("cancelled")) {
+                            showNotification(orderid, "comment", ds.child("comment").getValue().toString());
+                        }
+                    } else
+                        continue;*/
+
+                    orderid = ds.getKey().toString();
+                    status = (String) ds.child("status").getValue();
 
                     if (status.equals(getString(R.string.order_cancelled)) || status.equals(getString(R.string.delivered))) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.remove(orderid);
-                        editor.apply();
+                        showNotification(orderid, sharedPreferences.getString(orderid, null), status);
+                        //SharedPreferences.Editor editor = sharedPreferences.edit();
+                        //editor.remove(orderid);
+                        //editor.apply();
                     } else if (sharedPreferences.contains(ds.getKey())) {
                         if (!sharedPreferences.getString(orderid, null).equals(status)) {
                             showNotification(orderid, sharedPreferences.getString(orderid, null), status);
@@ -91,13 +107,15 @@ public class MyBooksService extends Service {
     private void showNotification(String orderId, String oldStatus, String newStatus) {
         Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.app_icon);
 
-        String title = "My Books ( Order No: " + orderId + ")";
+        String title = "My Books ";
         String msg;
 
-        if (oldStatus.equals("new"))
-            msg = "New order placed with Order ID: " + oldStatus;
-        else
-            msg = "Order status changed from " + oldStatus + " to " + newStatus;
+        if (oldStatus.equals("new")) {
+            msg = "New order placed with Order ID: " + orderId;
+        } else if (oldStatus.equals("comment")) {
+            msg = newStatus;
+        } else
+            msg = "Order No: " + orderId + "\nYour order is " + newStatus;
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
@@ -109,7 +127,7 @@ public class MyBooksService extends Service {
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         builder.setSound(alarmSound);
-        builder.setVibrate(new long[]{500, 500, 500, 500});
+        builder.setVibrate(new long[]{300, 300, 300, 300});
 
         Intent notificationIntent = new Intent(this, OrderPageActivity.class);
 
