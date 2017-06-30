@@ -65,13 +65,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Comment:" />
+                            android:text="Comments:" />
 
                         <TextView
                             android:id="@+id/oAddCommentsBtn"
                             android:textColor="@color/colorAccent"
                             android:gravity="right"
-                            android:text="Add comments"
+                            android:text="Add comment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
 

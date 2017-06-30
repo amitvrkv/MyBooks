@@ -70,12 +70,13 @@ public class MyBooksService extends Service {
                     orderid = ds.getKey().toString();
                     status = (String) ds.child("status").getValue();
 
-                    if (status.equals(getString(R.string.order_cancelled)) || status.equals(getString(R.string.delivered))) {
+                    /*if (status.equals(getString(R.string.order_cancelled)) || status.equals(getString(R.string.delivered))) {
                         showNotification(orderid, sharedPreferences.getString(orderid, null), status);
                         //SharedPreferences.Editor editor = sharedPreferences.edit();
                         //editor.remove(orderid);
                         //editor.apply();
-                    } else if (sharedPreferences.contains(ds.getKey())) {
+                    } else*/
+                    if (sharedPreferences.contains(ds.getKey())) {
                         if (!sharedPreferences.getString(orderid, null).equals(status)) {
                             showNotification(orderid, sharedPreferences.getString(orderid, null), status);
                             addToLocalDatabase(orderid, status);
