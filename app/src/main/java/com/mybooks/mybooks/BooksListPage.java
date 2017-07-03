@@ -24,8 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -61,10 +64,14 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_books_list_page);
 
         progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setMessage("Loading books details...");
+        progressDialog.setCancelable(false);
 
         /* Search option*/
         mSearchToolbarBtn = (ImageView) findViewById(R.id.seachToolbarMenu);
         mSearchToolbarBtn.setOnClickListener(this);
+        mSearchToolbarBtn.setVisibility(View.GONE);
         mSearchBtn = (ImageView) findViewById(R.id.searchBtn);
         mSearchBtn.setOnClickListener(this);
         mSearchOptionLayout = (RelativeLayout) findViewById(R.id.searchOption);
@@ -178,6 +185,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                         Picasso.with(mview.getContext()).load(src).into(mBookImage);
                     }
                 });*/
+            } else {
+                mBookImage.setImageResource(R.drawable.no_image_available);
             }
         }
 
@@ -262,12 +271,15 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     if (mcousrseSelecter.getSelectedItem().toString().equals("select Course"))
                         Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
                     else {
+                        mSearchToolbarBtn.setVisibility(View.VISIBLE);
                         filterView.setVisibility(View.GONE);
                         doneFilter();
                     }
                 } else {
+                    mSearchToolbarBtn.setVisibility(View.GONE);
                     filterView.setVisibility(View.VISIBLE);
                 }
+                //doneFilter();
                 break;
 
             case R.id.doneFilter:
@@ -290,9 +302,67 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.searchBtn:
-
+                seacrhBooks();
                 break;
         }
+    }
+
+    public void seacrhBooks() {
+        progressDialog.show();
+        String course = mcousrseSelecter.getSelectedItem().toString();
+
+        mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("title").startAt(mSearchData.getText().toString());
+        mdatabaseQuery.keepSynced(true);
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
+                BookList.class,
+                R.layout.books_list_view,
+                BookListHolder.class,
+                mdatabaseQuery
+        ) {
+            @Override
+            protected void populateViewHolder(BookListHolder viewHolder, final BookList model, int position) {
+                viewHolder.setImage(model.getSrc());
+                viewHolder.setauthor(model.getAuthor());
+                viewHolder.settitle(model.getTitle());
+                viewHolder.setCourse(model.getCourse());
+                viewHolder.setSem(model.getSem());
+                viewHolder.setpriceMRP(model.getPriceMRP());
+                viewHolder.setpriceOld(model.getPriceOld());
+                viewHolder.setPriceNew(model.getPriceNew());
+                viewHolder.setavlcopy(model.getAvlcopy());
+                viewHolder.setKey(model.getKey());
+
+                // OnclickListener on recycler view redirect to book preview page
+                viewHolder.mview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
+                        //insertDataToCart(model.getKey(), model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getPriceMRP(), model.getPriceNew(), model.getPriceOld());
+                    }
+                });
+
+
+            }
+        };
+        mBookList.setAdapter(firebaseRecyclerAdapter);
+
+        mdatabaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                progressDialog.dismiss();
+                if (dataSnapshot.getChildrenCount() <= 0) {
+                    Toast.makeText(getApplicationContext(), "No books found", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), dataSnapshot.getChildrenCount() + " book(s) found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void doneFilter() {
@@ -303,6 +373,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
             return;
         } else {
+            mSearchToolbarBtn.setVisibility(View.VISIBLE);
             filterView.setVisibility(View.GONE);
             if (sem.equals("select Semester") || sem.equals("All Semester"))
                 mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
@@ -310,10 +381,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("sem").equalTo(sem);
         }
 
-        /*progressDialog.setTitle("Please wait...");
-        progressDialog.setMessage("Searching books...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();*/
+        progressDialog.show();
 
         mdatabaseQuery.keepSynced(true);
 
@@ -344,11 +412,28 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                         //insertDataToCart(model.getKey(), model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getPriceMRP(), model.getPriceNew(), model.getPriceOld());
                     }
                 });
+
+
             }
         };
         mBookList.setAdapter(firebaseRecyclerAdapter);
 
-        //progressDialog.dismiss();
+        mdatabaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                progressDialog.dismiss();
+                if (dataSnapshot.getChildrenCount() <= 0) {
+                    Toast.makeText(getApplicationContext(), "No books found", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), dataSnapshot.getChildrenCount() + " book(s) found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
