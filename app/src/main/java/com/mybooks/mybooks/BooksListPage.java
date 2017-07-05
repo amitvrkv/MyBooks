@@ -274,7 +274,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                         Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
                     else {
                         ////
-                        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
                         filterView.startAnimation(slideUp);
                         ////
 
@@ -284,7 +284,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     }
                 } else {
                     ///
-                    Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+                    Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_left_filter);
                     filterView.startAnimation(slideDown);
                     ////
 
@@ -386,7 +386,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             return;
         } else {
             mSearchToolbarBtn.setVisibility(View.VISIBLE);
-            Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+            Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
             filterView.startAnimation(slideUp);
             filterView.setVisibility(View.GONE);
             if (sem.equals("select Semester") || sem.equals("All Semester"))
