@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -271,11 +273,21 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     if (mcousrseSelecter.getSelectedItem().toString().equals("select Course"))
                         Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
                     else {
+                        ////
+                        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                        filterView.startAnimation(slideUp);
+                        ////
+
                         mSearchToolbarBtn.setVisibility(View.VISIBLE);
                         filterView.setVisibility(View.GONE);
                         doneFilter();
                     }
                 } else {
+                    ///
+                    Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_down);
+                    filterView.startAnimation(slideDown);
+                    ////
+
                     mSearchToolbarBtn.setVisibility(View.GONE);
                     filterView.setVisibility(View.VISIBLE);
                 }
@@ -374,6 +386,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             return;
         } else {
             mSearchToolbarBtn.setVisibility(View.VISIBLE);
+            Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+            filterView.startAnimation(slideUp);
             filterView.setVisibility(View.GONE);
             if (sem.equals("select Semester") || sem.equals("All Semester"))
                 mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
