@@ -311,7 +311,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         progressDialog.show();
         String course = mcousrseSelecter.getSelectedItem().toString();
 
-        mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("title").startAt(mSearchData.getText().toString());
+        mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("title").startAt(mSearchData.getText().toString().toUpperCase());
         mdatabaseQuery.keepSynced(true);
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<BookList, BookListHolder>(
