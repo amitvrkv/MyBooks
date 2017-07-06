@@ -38,8 +38,8 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:icon="@drawable/ic_library_books_black_24dp"
             android:id="@+id/orderBookMenu"
+            android:icon="@drawable/ic_library_books_black_24dp"
             android:title="Order Books" />
 
         <item
@@ -48,28 +48,37 @@
 
     </group>
 
-    <item android:title="My Account details:">
-        <menu>
-            <item
-                android:icon="@drawable/ic_shopping_cart_black_24dp"
-                android:id="@+id/myCartMenu"
-                android:title="My Cart" />
+    <!--<item android:title="My Account details:">
 
-            <item
-                android:id="@+id/myOrder"
-                android:title="My Order" />
+        <menu>-->
 
-            <item
-                android:icon="@drawable/ic_settings_black_24dp"
-                android:id="@+id/myAccMenu"
-                android:title="My Account" />
+    <group
+        android:id="@+id/kihk"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/myCartMenu"
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:title="My Cart" />
 
-            <item
-                android:icon="@drawable/ic_lock_open_black_24dp"
-                android:id="@+id/logoutMenu"
-                android:title="Logout" />
+        <item
+            android:id="@+id/myOrder"
+            android:title="My Order" />
 
-        </menu>
-    </item>
+
+        <item
+            android:id="@+id/myAccMenu"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="My Account" />
+
+        <item
+            android:id="@+id/logoutMenu"
+            android:icon="@drawable/ic_lock_open_black_24dp"
+            android:title="Logout" />
+
+    </group>
+
+    <!--</menu>
+
+</item>-->
 
 </menu>

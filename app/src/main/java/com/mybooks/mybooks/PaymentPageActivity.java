@@ -131,7 +131,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
             return;
         }
 
-        if( ! haveNetworkConnection()) {
+        if( haveNetworkConnection() == false) {
             Snackbar.make(parentLayoutView, "Please check your internet connection.", Snackbar.LENGTH_SHORT).show();
             return;
         }
