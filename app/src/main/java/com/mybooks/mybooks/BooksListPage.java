@@ -38,6 +38,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BooksListPage extends AppCompatActivity implements View.OnClickListener {
 
@@ -153,7 +155,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     public static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         View mview;
-        Button buyButton;
+        TextView buyButtonTxt;
 
         String title;
         String author;
@@ -168,8 +170,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             super(itemView);
             mview = itemView;
 
-            buyButton = (Button) itemView.findViewById(R.id.bookBuy);
-            buyButton.setOnClickListener(this);
+            buyButtonTxt = (TextView) itemView.findViewById(R.id.bookBuyTxt);
+            buyButtonTxt.setOnClickListener(this);
         }
 
         public void setImage(final String src) {
@@ -194,13 +196,27 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void settitle(String title) {
             TextView mtitle = (TextView) mview.findViewById(R.id.bookTitle);
-            mtitle.setText(title);
+            mtitle.setText(capitalizeEveryWord(title));
             this.title = title;
         }
 
+        public String capitalizeEveryWord(String str) {
+            System.out.println(str);
+            StringBuffer stringbf = new StringBuffer();
+            Matcher m = Pattern.compile(
+                    "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+            while (m.find()) {
+                m.appendReplacement(
+                        stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+            }
+            return m.appendTail(stringbf).toString();
+        }
+
+
         public void setauthor(String author) {
             TextView mauthor = (TextView) mview.findViewById(R.id.bookAuthor);
-            mauthor.setText(author);
+            mauthor.setText(capitalizeEveryWord(author));
             this.author = author;
         }
 
@@ -231,7 +247,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void setavlcopy(int mavlcopy) {
             ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
-            Button mbookbuy = (Button) mview.findViewById(R.id.bookBuy);
+            TextView mbookbuy = (TextView) mview.findViewById(R.id.bookBuyTxt);
 
             if (mavlcopy <= 0) {
                 outofstockimg.setVisibility(View.VISIBLE);
@@ -253,7 +269,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         //Adding books to cart
         @Override
         public void onClick(View v) {
-            if (v.getId() == buyButton.getId()) {
+            if (v.getId() == buyButtonTxt.getId()) {
                 BooksListPage bk = new BooksListPage();
                 bk.insertDataToCart(v.getContext(), key, title, author, course, sem, priceMRP, priceNew, priceOld);
             }
