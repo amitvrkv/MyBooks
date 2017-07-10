@@ -3,12 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:icon="@mipmap/ic_chat_black_24dp"
         android:id="@+id/blogMenu"
         android:orderInCategory="100"
         android:title="Blog"
         app:showAsAction="never" />
 
+
     <item
+        android:id="@+id/feedbackMenu"
+        android:orderInCategory="100"
+        android:title="Blog"
+        app:showAsAction="never" />
+
+    <item
+        android:icon="@mipmap/ic_help_black_24dp"
         android:id="@+id/helpMenu"
         android:orderInCategory="100"
         android:title="Help"

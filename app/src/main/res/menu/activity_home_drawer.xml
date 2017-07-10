@@ -42,9 +42,9 @@
             android:icon="@drawable/ic_library_books_black_24dp"
             android:title="Order Books" />
 
-        <item
+        <!-- <item
             android:id="@+id/customiseOrderMenu"
-            android:title="Customise Order" />
+            android:title="Customise Order" />  -->
 
     </group>
 
@@ -62,12 +62,13 @@
 
         <item
             android:id="@+id/myOrder"
+            android:icon="@mipmap/ic_note_black_24dp"
             android:title="My Order" />
 
 
         <item
             android:id="@+id/myAccMenu"
-            android:icon="@drawable/ic_settings_black_24dp"
+            android:icon="@mipmap/ic_account_circle_black_24dp"
             android:title="My Account" />
 
         <item
