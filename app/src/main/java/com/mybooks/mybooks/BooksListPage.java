@@ -274,6 +274,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 bk.insertDataToCart(v.getContext(), key, title, author, course, sem, priceMRP, priceNew, priceOld);
             }
         }
+
+
+
+
     }
 
 
@@ -373,6 +377,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
             }
         };
+
         mBookList.setAdapter(firebaseRecyclerAdapter);
 
         mdatabaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {

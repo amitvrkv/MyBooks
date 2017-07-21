@@ -13,7 +13,7 @@
     <item
         android:id="@+id/feedbackMenu"
         android:orderInCategory="100"
-        android:title="Blog"
+        android:title="Feedback"
         app:showAsAction="never" />
 
     <item

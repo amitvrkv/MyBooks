@@ -32,6 +32,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
     Query databaseReference;
 
     RecyclerView recyclerView;
+    private LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,11 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
             }
         };
 
+        mLayoutManager = new LinearLayoutManager(OrderPageActivity.this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
 
     }

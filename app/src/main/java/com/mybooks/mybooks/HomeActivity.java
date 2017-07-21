@@ -105,9 +105,9 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(new Intent(getApplicationContext(), BooksListPage.class));
                 break;
 
-            case R.id.customiseOrderMenu:
+            /*case R.id.customiseOrderMenu:
                 startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
-                break;
+                break;*/
 
             case R.id.myCartMenu :
                 startActivity(new Intent(getApplicationContext(), MyCart.class));

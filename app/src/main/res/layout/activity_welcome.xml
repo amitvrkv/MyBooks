@@ -7,8 +7,6 @@
     tools:context="com.mybooks.mybooks.Welcome"
     >
 
-
-
     <View
         android:alpha="0.1"
         android:background="@drawable/books_background"
@@ -18,18 +16,19 @@
 
     <ImageView
         android:id="@+id/app_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/logo_transparent" />
 
 
-    <ProgressBar
+    <!--<ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="15dp"
-        />
+        />-->
 
 
 </RelativeLayout>

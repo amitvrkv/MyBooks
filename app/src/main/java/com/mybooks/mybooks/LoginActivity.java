@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -57,6 +59,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         mSignInForm = findViewById(R.id.email_sign_in_form);
         mSignInForm.setVisibility(View.VISIBLE);
+        //Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
 
         mSignInRed = (TextView) findViewById(R.id.sign_in_redirect_button);
         mSignInRed.setOnClickListener(this);
