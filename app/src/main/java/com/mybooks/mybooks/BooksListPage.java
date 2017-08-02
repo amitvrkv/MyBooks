@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,7 +50,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     private Button mdoneFilter, mclearFilter;
     private TextView mfilter, mcheckout;
     private RelativeLayout filterView;
-    private Spinner mcousrseSelecter, msemSelecter;
+    private Spinner mcousrseSelecter, msemSelecter, mClassSelecter;
 
     private RecyclerView mBookList;
 
@@ -94,22 +95,76 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         filterView = (RelativeLayout) findViewById(R.id.filterView);
         //filterView.setVisibility(View.GONE);
 
-        //Course selector
+        //Class selector
+        mClassSelecter = (Spinner) findViewById(R.id.classSelecter);
         mcousrseSelecter = (Spinner) findViewById(R.id.courseSelecter);
-        List<String> courseList = new ArrayList<String>();
-        courseList.add("BCA");
-        courseList.add("BCOM");
-        courseList.add("BBM");
-        courseList.add("BBA");
-        courseList.add("BHM");
-        Collections.sort(courseList);
-        courseList.add(0, "select Course");
-        ArrayAdapter<String> courseDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, courseList);
-        courseDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mcousrseSelecter.setAdapter(courseDataAdapter);
+        msemSelecter = (Spinner) findViewById(R.id.semesterSelecter);
+
+        final List<String> classList = new ArrayList<String>();
+        classList.add("select Class");
+        classList.add("SSLC");
+        classList.add("PUC");
+        classList.add("UG");
+        classList.add("PG");
+        ArrayAdapter<String> classDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classList);
+        classDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mClassSelecter.setAdapter(classDataAdapter);
+
+        //Course selector
+        final List<String> courseList = new ArrayList<String>();
+        mClassSelecter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.college);
+                linearLayout.setVisibility(View.VISIBLE);
+                msemSelecter.setVisibility(View.VISIBLE);
+                courseList.clear();
+
+                if (classList.get(position).toString().equals("select Class")) {
+                    linearLayout.setVisibility(View.GONE);
+                } else if (classList.get(position).toString().equals("SSLC")) {
+                    courseList.add("SSLC");
+                    linearLayout.setVisibility(View.GONE);
+                } else if (classList.get(position).toString().equals("PUC")) {
+                    courseList.add("I PUC");
+                    courseList.add("II PUC");
+                    Collections.sort(courseList);
+                    courseList.add(0, "select year");
+                    msemSelecter.setVisibility(View.GONE);
+                } else if (classList.get(position).toString().equals("UG")) {
+                    courseList.add("BCA");
+                    courseList.add("BCOM");
+                    courseList.add("BBM");
+                    courseList.add("BBA");
+                    courseList.add("BHM");
+                    courseList.add("BA");
+                    courseList.add("BSC");
+                    courseList.add("BE");
+                    Collections.sort(courseList);
+                    courseList.add(0, "select Course");
+                } else if (classList.get(position).toString().equals("PG")) {
+                    courseList.add("MA");
+                    courseList.add("MCA");
+                    courseList.add("MSC");
+                    courseList.add("MCOM");
+                    courseList.add("MBA");
+                    Collections.sort(courseList);
+                    courseList.add(0, "select Course");
+                }
+
+                ArrayAdapter<String> courseDataAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, courseList);
+                courseDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mcousrseSelecter.setAdapter(courseDataAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //Semester selector
-        msemSelecter = (Spinner) findViewById(R.id.semesterSelecter);
+
         List<String> semList = new ArrayList<String>();
         semList.add(0, "select Semester");
         semList.add(1, "All Semester");
@@ -399,21 +454,42 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
     }
 
     public void doneFilter() {
-        String course = mcousrseSelecter.getSelectedItem().toString();
-        final String sem = msemSelecter.getSelectedItem().toString();
+        String classSel = mClassSelecter.getSelectedItem().toString();
 
-        if (course.equals("select Course")) {
-            Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
+        String course;
+        final String sem;
+
+        if (classSel.equals("select Class")) {
+            Toast.makeText(getApplicationContext(), "Please select your class", Toast.LENGTH_SHORT).show();
             return;
+        } else if (classSel.equals("SSLC")) {
+            Toast.makeText(getApplicationContext(), "SSLC books will be available soon", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (classSel.equals("PUC")) {
+
+            Toast.makeText(getApplicationContext(), "PUC books will be available soon", Toast.LENGTH_SHORT).show();
+            return;
+
         } else {
-            mSearchToolbarBtn.setVisibility(View.VISIBLE);
-            Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
-            filterView.startAnimation(slideUp);
-            filterView.setVisibility(View.GONE);
-            if (sem.equals("select Semester") || sem.equals("All Semester"))
-                mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
-            else
-                mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("sem").equalTo(sem);
+
+            course = mcousrseSelecter.getSelectedItem().toString();
+
+            if (course.equals("select Course")) {
+                Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+
+                sem = msemSelecter.getSelectedItem().toString();
+
+                mSearchToolbarBtn.setVisibility(View.VISIBLE);
+                Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
+                filterView.startAnimation(slideUp);
+                filterView.setVisibility(View.GONE);
+                if (sem.equals("select Semester") || sem.equals("All Semester"))
+                    mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
+                else
+                    mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course).orderByChild("sem").equalTo(sem);
+            }
         }
 
         progressDialog.show();

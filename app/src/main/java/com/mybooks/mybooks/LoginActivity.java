@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +46,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     View parentLayoutView;
+
+    ImageView mAppLogo;
+    RelativeLayout relativeLayoutLogin, relativeLayoutWelcome;
+
+    boolean user_logged_in = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,16 +99,24 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    checkIfEmailVerified();
+                    //checkIfEmailVerified();
+                    user_logged_in = true;
                 }
             }
         };
+
+        mAppLogo = (ImageView) findViewById(R.id.app_logo);
+        relativeLayoutLogin = (RelativeLayout) findViewById(R.id.Login);
+        relativeLayoutLogin.setVisibility(View.GONE);
+        relativeLayoutWelcome = (RelativeLayout) findViewById(R.id.Welcome);
+        relativeLayoutWelcome.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        animateLogo();
     }
 
     @Override
@@ -185,6 +201,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             Snackbar.make(parentLayoutView, "Wrong Username or Password.", Snackbar.LENGTH_LONG).show();
                         }
                         mprogressDialog.dismiss();
+                        checkIfEmailVerified();
                     }
                 });
     }
@@ -273,6 +290,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.sendEmailVerification();
         FirebaseAuth.getInstance().signOut();
+        relativeLayoutLogin.setVisibility(View.VISIBLE);
+        relativeLayoutWelcome.setVisibility(View.GONE);
     }
 
     public void sendResetPassword() {
@@ -289,6 +308,41 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         FirebaseAuth.getInstance().sendPasswordResetEmail(email);
         Toast.makeText(getApplicationContext(), "Password reset email sent successfully.", Toast.LENGTH_SHORT).show();
         //Snackbar.make(parentLayoutView, "Password reset email sent successfully.", Snackbar.LENGTH_LONG).show();
+    }
+
+    private int getDisplayHeight() {
+        return this.getResources().getDisplayMetrics().heightPixels;
+    }
+
+    public void animateLogo() {
+        TranslateAnimation transAnim = new TranslateAnimation(0, 0, 0,
+                getDisplayHeight() / 2 - 100);
+        transAnim.setStartOffset(500);
+        transAnim.setDuration(2500);
+        transAnim.setFillAfter(true);
+        transAnim.setInterpolator(new BounceInterpolator());
+        transAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                //finish();
+                if (user_logged_in)
+                    checkIfEmailVerified();
+                else {
+                    relativeLayoutLogin.setVisibility(View.VISIBLE);
+                    relativeLayoutWelcome.setVisibility(View.GONE);
+                }
+            }
+        });
+        mAppLogo.startAnimation(transAnim);
     }
 }
 
