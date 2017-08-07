@@ -3,6 +3,7 @@ package com.mybooks.mybooks;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -109,14 +110,59 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         relativeLayoutLogin = (RelativeLayout) findViewById(R.id.Login);
         relativeLayoutLogin.setVisibility(View.GONE);
         relativeLayoutWelcome = (RelativeLayout) findViewById(R.id.Welcome);
-        relativeLayoutWelcome.setVisibility(View.VISIBLE);
+        //relativeLayoutWelcome.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        animateLogo();
+        //animateLogo();
+
+        //
+        /*ImageView imageView = (ImageView) findViewById(R.id.app_logo);
+        Animation animation1 =
+                AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.fade);
+        imageView.startAnimation(animation1);
+        animation1.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (user_logged_in)
+                    checkIfEmailVerified();
+                else {
+                    relativeLayoutLogin.setVisibility(View.VISIBLE);
+                    relativeLayoutWelcome.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });*/
+
+
+        final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.main_welcome_page);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (user_logged_in)
+                    checkIfEmailVerified();
+                else {
+                    relativeLayoutLogin.setVisibility(View.VISIBLE);
+                    relativeLayout.setVisibility(View.GONE);
+                }
+            }
+        }, 1500);
+
+        //
     }
 
     @Override

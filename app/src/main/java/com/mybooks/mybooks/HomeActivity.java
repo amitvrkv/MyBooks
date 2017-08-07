@@ -94,7 +94,7 @@ public class HomeActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         if ( ! haveNetworkConnection()) {
-            Snackbar.make(parentLayoutView, "Please check your internet connectiona", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(parentLayoutView, "Please check your internet connection", Snackbar.LENGTH_LONG).show();
             return false;
         }
 

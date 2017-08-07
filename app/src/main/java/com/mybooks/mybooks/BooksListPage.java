@@ -102,8 +102,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         final List<String> classList = new ArrayList<String>();
         classList.add("select Class");
-        classList.add("SSLC");
-        classList.add("PUC");
+        //classList.add("SSLC");
+        //classList.add("PUC");
         classList.add("UG");
         classList.add("PG");
         ArrayAdapter<String> classDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classList);
@@ -331,8 +331,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         }
 
 
-
-
     }
 
 
@@ -344,29 +342,30 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.filter:
-                if (filterView.getVisibility() == View.VISIBLE) {
-                    if (mcousrseSelecter.getSelectedItem().toString().equals("select Course"))
-                        Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
-                    else {
-                        ////
-                        Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
-                        filterView.startAnimation(slideUp);
-                        ////
+                Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_left_filter);
 
-                        mSearchToolbarBtn.setVisibility(View.VISIBLE);
-                        filterView.setVisibility(View.GONE);
-                        doneFilter();
+                slideDown.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
                     }
-                } else {
-                    ///
-                    Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_left_filter);
-                    filterView.startAnimation(slideDown);
-                    ////
 
-                    mSearchToolbarBtn.setVisibility(View.GONE);
-                    filterView.setVisibility(View.VISIBLE);
-                }
-                //doneFilter();
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        mSearchToolbarBtn.setVisibility(View.GONE);
+                        RelativeLayout relativeLayout_statusbar = (RelativeLayout) findViewById(R.id.statusbar);
+                        relativeLayout_statusbar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                filterView.startAnimation(slideDown);
+                filterView.setVisibility(View.VISIBLE);
+
                 break;
 
             case R.id.doneFilter:
@@ -485,6 +484,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
                 filterView.startAnimation(slideUp);
                 filterView.setVisibility(View.GONE);
+
+                RelativeLayout relativeLayout_statusbar = (RelativeLayout) findViewById(R.id.statusbar);
+                relativeLayout_statusbar.setVisibility(View.VISIBLE);
+
                 if (sem.equals("select Semester") || sem.equals("All Semester"))
                     mdatabaseQuery = FirebaseDatabase.getInstance().getReference().child("Books").child(course);
                 else
@@ -560,5 +563,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         }
 
     }
+
 
 }

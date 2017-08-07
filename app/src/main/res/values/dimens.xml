@@ -11,6 +11,6 @@
 
     <!-- toolbar -->
     <dimen name="toolbarHeight">56dp</dimen>
-    <dimen name="toolbarTextSize">22dp</dimen>
-    <dimen name="backButtonPadding">12dp</dimen><!-- toolbar -->
+    <dimen name="toolbarTextSize">20dp</dimen>
+    <dimen name="backButtonPadding">13dp</dimen><!-- toolbar -->
 </resources>
