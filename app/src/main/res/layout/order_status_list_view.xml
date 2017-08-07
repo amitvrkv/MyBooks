@@ -58,7 +58,7 @@
                     android:layout_marginTop="3dp"
                     android:orientation="vertical">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -68,14 +68,17 @@
                             android:text="Comments:" />
 
                         <TextView
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/round_corner"
                             android:id="@+id/oAddCommentsBtn"
-                            android:textColor="@color/colorAccent"
                             android:gravity="right"
                             android:text="Add comment"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <TextView
                         android:id="@+id/oComment"

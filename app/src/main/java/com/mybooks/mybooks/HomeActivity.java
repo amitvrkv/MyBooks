@@ -1,12 +1,14 @@
 package com.mybooks.mybooks;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,17 +75,20 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.helpMenu) {
+            getHelp("Help: ");
             return true;
         }
 
         if (id == R.id.blogMenu) {
+            Toast.makeText(getApplicationContext(),"Coming soon.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if (id == R.id.feedbackMenu) {
+            getHelp("Feedback: ");
             return true;
         }
 
@@ -150,5 +156,45 @@ public class HomeActivity extends AppCompatActivity
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    private void getHelp(final String subject){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Please send an email to : orderonlinemybook@gmail.com");
+        alertDialogBuilder.setPositiveButton("Send mail",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                        emailIntent.setType("text/plain");
+                        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{  "orderonlinemybooks@gmail.com"});
+                        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+                        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+
+
+                        emailIntent.setType("message/rfc822");
+
+                        try {
+                            startActivity(Intent.createChooser(emailIntent,
+                                    "Send email using..."));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(getApplicationContext(),
+                                    "No email clients installed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+
+        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }

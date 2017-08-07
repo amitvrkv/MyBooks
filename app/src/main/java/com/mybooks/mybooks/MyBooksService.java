@@ -41,8 +41,6 @@ public class MyBooksService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //Toast.makeText(getApplicationContext(), "Service started", Toast.LENGTH_SHORT).show();
-
         databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("Order").orderByChild("from").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -60,22 +58,9 @@ public class MyBooksService extends Service {
                         continue;
                     }
 
-                    /*if (! (ds.child("comment").getValue() == null || ds.child("comment").getValue() == "")) {
-                        if (ds.child("comment").getValue().toString().startsWith("My Books") && !ds.child("comment").getValue().toString().contains("cancelled")) {
-                            showNotification(orderid, "comment", ds.child("comment").getValue().toString());
-                        }
-                    } else
-                        continue;*/
-
                     orderid = ds.getKey().toString();
                     status = (String) ds.child("status").getValue();
 
-                    /*if (status.equals(getString(R.string.order_cancelled)) || status.equals(getString(R.string.delivered))) {
-                        showNotification(orderid, sharedPreferences.getString(orderid, null), status);
-                        //SharedPreferences.Editor editor = sharedPreferences.edit();
-                        //editor.remove(orderid);
-                        //editor.apply();
-                    } else*/
                     if (sharedPreferences.contains(ds.getKey())) {
                         if (!sharedPreferences.getString(orderid, null).equals(status)) {
                             showNotification(orderid, sharedPreferences.getString(orderid, null), status);
@@ -120,7 +105,6 @@ public class MyBooksService extends Service {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this)
-                        //.setLargeIcon(bitmap)
                         .setSmallIcon(R.drawable.app_icon)
                         .setContentTitle(title).setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                         .setContentText(msg)
