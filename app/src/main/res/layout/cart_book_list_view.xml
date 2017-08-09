@@ -105,22 +105,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="\u20B9 Sell"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textSize="16dp" />
+                    android:textColor="@color/Green"
+                     />
 
                 <TextView
+                    android:textColor="@color/Red"
                     android:id="@+id/cbookMarketPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:layout_marginLeft="5dp"
                     android:text="Market"
-                    android:textSize="16dp" />
+                    android:textSize="12dp" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/totalIndividual"
-                android:textColor="@android:color/holo_red_dark"
                 android:text="Total: \u20B9 "
                 android:layout_margin="5dp"
                 android:layout_alignParentRight="true"
@@ -136,15 +137,16 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:layout_marginTop="2dp"
+            android:textColor="@color/Red"
             android:background="@drawable/round_corner"
             android:id="@+id/cremoveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="4dp"
-            android:text="Remove"
+            android:text="X"
              />
-
 
     </RelativeLayout>
 

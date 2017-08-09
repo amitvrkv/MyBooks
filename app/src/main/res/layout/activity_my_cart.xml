@@ -38,6 +38,7 @@
         android:layout_height="65dp">
 
         <TextView
+            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/grandTotalPrice"
             android:layout_marginLeft="15dp"
             android:gravity="center"
@@ -46,6 +47,7 @@
             android:layout_height="match_parent" />
 
         <Button
+            android:textStyle="bold"
             android:layout_marginRight="15dp"
             android:text="Continue"
             android:layout_centerVertical="true"

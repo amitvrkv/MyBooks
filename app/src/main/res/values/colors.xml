@@ -10,4 +10,13 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>    <!-- End -->
 
+    <color name="Red">#ff3b30</color>
+    <color name="Orange">#ff9500</color>
+    <color name="Yellow">#ffcc00</color>
+    <color name="Green">#4cd964</color>
+    <color name="Teal_Blue">#5ac8fa</color>
+    <color name="Blue">#007aff</color>
+    <color name="Purple">#5856d6</color>
+    <color name="Pink">#ff2d55</color>
+
 </resources>

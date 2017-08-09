@@ -11,9 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -84,6 +86,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mCheckoutAndFilterOptionLayout = (RelativeLayout) findViewById(R.id.checkoutAndFilterOption);
         mCheckoutAndFilterOptionLayout.setVisibility(View.VISIBLE);
         mSearchData = (EditText) findViewById(R.id.searchData);
+        mSearchData.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searhBooks();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         ///////filter start
         mfilter = (TextView) findViewById(R.id.filter);
@@ -102,10 +114,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         final List<String> classList = new ArrayList<String>();
         classList.add("select Class");
-        //classList.add("SSLC");
-        //classList.add("PUC");
-        classList.add("UG");
-        classList.add("PG");
+        //classList.add("School");
+        //classList.add("Pre University College");
+        classList.add("Under Graduate");
+        classList.add("Post Graduate");
         ArrayAdapter<String> classDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classList);
         classDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mClassSelecter.setAdapter(classDataAdapter);
@@ -122,16 +134,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
                 if (classList.get(position).toString().equals("select Class")) {
                     linearLayout.setVisibility(View.GONE);
-                } else if (classList.get(position).toString().equals("SSLC")) {
-                    courseList.add("SSLC");
+                } else if (classList.get(position).toString().equals("School")) {
+                    courseList.add("10th STD (SSLC)");
                     linearLayout.setVisibility(View.GONE);
-                } else if (classList.get(position).toString().equals("PUC")) {
+                } else if (classList.get(position).toString().equals("Pre University College")) {
                     courseList.add("I PUC");
                     courseList.add("II PUC");
                     Collections.sort(courseList);
                     courseList.add(0, "select year");
                     msemSelecter.setVisibility(View.GONE);
-                } else if (classList.get(position).toString().equals("UG")) {
+                } else if (classList.get(position).toString().equals("Under Graduate")) {
                     courseList.add("BCA");
                     courseList.add("BCOM");
                     courseList.add("BBM");
@@ -142,7 +154,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     courseList.add("BE");
                     Collections.sort(courseList);
                     courseList.add(0, "select Course");
-                } else if (classList.get(position).toString().equals("PG")) {
+                } else if (classList.get(position).toString().equals("Post Graduate")) {
                     courseList.add("MA");
                     courseList.add("MCA");
                     courseList.add("MSC");
@@ -233,17 +245,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             final ImageView mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
             if (!src.equals("na")) {
                 Picasso.with(mview.getContext()).load(src).into(mBookImage);
-                /*Picasso.with(mview.getContext()).load(src).networkPolicy(NetworkPolicy.OFFLINE).into(mBookImage, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        Picasso.with(mview.getContext()).load(src).into(mBookImage);
-                    }
-                });*/
             } else {
                 mBookImage.setImageResource(R.drawable.no_image_available);
             }
@@ -300,6 +301,13 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             this.priceOld = priceOld;
         }
 
+        public void setPriceNew(String priceNew) {
+            TextView bookSellingNewPrice = (TextView) mview.findViewById(R.id.bookSellingNewPrice);
+            bookSellingNewPrice.setText(priceNew);
+            bookSellingNewPrice.setPaintFlags(bookSellingNewPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            this.priceNew = priceNew;
+        }
+
         public void setavlcopy(int mavlcopy) {
             ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
             TextView mbookbuy = (TextView) mview.findViewById(R.id.bookBuyTxt);
@@ -315,10 +323,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void setKey(String key) {
             this.key = key;
-        }
-
-        public void setPriceNew(String priceNew) {
-            this.priceNew = priceNew;
         }
 
         //Adding books to cart
@@ -388,12 +392,12 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.searchBtn:
-                seacrhBooks();
+                searhBooks();
                 break;
         }
     }
 
-    public void seacrhBooks() {
+    public void searhBooks() {
         progressDialog.show();
         String course = mcousrseSelecter.getSelectedItem().toString();
 

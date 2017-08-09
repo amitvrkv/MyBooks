@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -194,6 +195,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
             TextView mpriceMrp = (TextView) view.findViewById(R.id.cbookMarketPrice);
             mpriceMrp.setText(priceMRP.get(position));
+            mpriceMrp.setPaintFlags(mpriceMrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
             final TextView mpriceSell = (TextView) view.findViewById(R.id.cbookSellingPrice);
             mpriceSell.setText("\u20B9 " + priceOld.get(position));
@@ -252,10 +254,12 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
                     if (isChecked) {
                         mpriceSell.setText("\u20B9 " + priceNew.get(position));
+                        mpriceSell.setTextColor(getResources().getColor(R.color.Yellow));
                         bookPrice = Integer.parseInt(priceNew.get(position));
                         updateDatabase("booktype", "new", key.get(position));
                     } else {
                         mpriceSell.setText("\u20B9 " + priceOld.get(position));
+                        mpriceSell.setTextColor(getResources().getColor(R.color.Green));
                         bookPrice = Integer.parseInt(priceOld.get(position));
                         updateDatabase("booktype", "old", key.get(position));
                     }
