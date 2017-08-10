@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mybooks.mybooks.Individual_book_details"
+    >
+
+    <ImageView
+        android:padding="3dp"
+        android:scaleType="fitCenter"
+        android:id="@+id/book_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/close_btn"
+        android:padding="6dp"
+        android:background="@drawable/round_corner"
+        android:textColor="@color/Red"
+        android:layout_margin="5dp"
+        android:textSize="22dp"
+        android:layout_alignParentRight="true"
+        android:text="X"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -212,12 +212,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Toast.makeText(getApplicationContext(), "Please select your course", Toast.LENGTH_SHORT).show();
-    }
-
 
     public static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -233,21 +227,27 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         String priceOld;
         String priceNew;
 
+        ImageView mBookImage;
+        String src;
+
         public BookListHolder(View itemView) {
             super(itemView);
             mview = itemView;
 
             buyButtonTxt = (TextView) itemView.findViewById(R.id.bookBuyTxt);
             buyButtonTxt.setOnClickListener(this);
+            mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
+            mBookImage.setOnClickListener(this);
         }
 
         public void setImage(final String src) {
-            final ImageView mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
+            mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
             if (!src.equals("na")) {
                 Picasso.with(mview.getContext()).load(src).into(mBookImage);
             } else {
                 mBookImage.setImageResource(R.drawable.no_image_available);
             }
+            this.src = src;
         }
 
         public void settitle(String title) {
@@ -331,6 +331,15 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             if (v.getId() == buyButtonTxt.getId()) {
                 BooksListPage bk = new BooksListPage();
                 bk.insertDataToCart(v.getContext(), key, title, author, course, sem, priceMRP, priceNew, priceOld);
+            }
+            if (v.getId() == mBookImage.getId()) {
+                if (src.equals("na")){
+                    Toast.makeText(v.getContext(), "No image available", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(v.getContext(), Individual_book_details.class);
+                intent.putExtra("src", src);
+                v.getContext().startActivity(intent);
             }
         }
 

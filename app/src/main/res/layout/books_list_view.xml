@@ -22,7 +22,6 @@
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/round_corner"
                 android:scaleType="fitCenter"
                 android:src="@drawable/no_image_available" />
 
