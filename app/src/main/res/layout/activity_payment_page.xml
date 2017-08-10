@@ -64,7 +64,7 @@
                     android:paddingBottom="5dp"
                     android:paddingTop="5dp"
                     android:text="Update Address"
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/Red" />
 
             </LinearLayout>
 
@@ -105,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/Green"
         android:text="place order"
         android:textColor="@color/colorTextIcon" />
 

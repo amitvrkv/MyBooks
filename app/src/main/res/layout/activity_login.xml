@@ -129,7 +129,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="right"
                 android:text="Forgot Password."
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/Red" />
 
             <TextView
                 android:id="@+id/sign_up_redirect_button"
@@ -138,7 +138,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="right"
                 android:text="New user? Sign up here."
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/Red" />
 
         </LinearLayout>
 
@@ -221,7 +221,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="Already registered? Sign in here."
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/Red" />
 
         </LinearLayout>
 
