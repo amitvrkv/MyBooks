@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -334,7 +335,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             }
             if (v.getId() == mBookImage.getId()) {
                 if (src.equals("na")){
-                    Toast.makeText(v.getContext(), "No image available", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), "No image available", Toast.LENGTH_SHORT).show();
+                    showToastMessage(v.getContext(), "No image available", 1000);
                     return;
                 }
                 Intent intent = new Intent(v.getContext(), Individual_book_details.class);
@@ -548,11 +550,14 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mdatabaseQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 progressDialog.dismiss();
                 if (dataSnapshot.getChildrenCount() <= 0) {
-                    Toast.makeText(getApplicationContext(), "No books found", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "No books found", Toast.LENGTH_LONG).show();
+                    showToastMessage(getApplicationContext(), "No book found", 1500);
                 } else {
-                    Toast.makeText(getApplicationContext(), dataSnapshot.getChildrenCount() + " book(s) found.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), dataSnapshot.getChildrenCount() + " book(s) found.", Toast.LENGTH_SHORT).show();
+                    showToastMessage(getApplicationContext(), dataSnapshot.getChildrenCount() + " book(s) found.", 1000);
                 }
             }
 
@@ -577,5 +582,16 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     }
 
+    public static void showToastMessage(Context context, String text, int duration){
+        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast.cancel();
+            }
+        }, duration);
+    }
 
 }
