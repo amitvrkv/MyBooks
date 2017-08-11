@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mycartParentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/mycartParentView"
     tools:context="com.mybooks.mybooks.MyCart">
 
     <LinearLayout
@@ -15,57 +15,64 @@
 
         <ImageView
             android:id="@+id/cartBackButton"
-            android:src="@drawable/ic_arrow_back_white_24dp"
-            android:padding="@dimen/backButtonPadding"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:padding="@dimen/backButtonPadding"
+            android:src="@drawable/ic_arrow_back_white_24dp" />
 
         <TextView
-            android:textColor="@color/colorTextIcon"
-            android:gravity="center"
-            android:textSize="@dimen/toolbarTextSize"
-            android:text="My Cart"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="My Cart"
+            android:textColor="@color/colorTextIcon"
+            android:textSize="@dimen/toolbarTextSize" />
 
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/footer"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="65dp">
+        android:layout_height="65dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
-            android:textColor="@color/colorPrimaryDark"
             android:id="@+id/grandTotalPrice"
-            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:text="Total: \u20B9 0"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
-            android:textStyle="bold"
-            android:layout_marginRight="15dp"
-            android:text="Continue"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:id="@+id/continueBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="Continue" />
 
+        <TextView
+            android:layout_marginBottom="2dp"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/delivery_charge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delivery"
+            android:textColor="@color/Red"
+            android:textSize="10dp" />
     </RelativeLayout>
 
     <ListView
-        android:layout_margin="5dp"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/toolbar"
         android:id="@+id/cartList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/toolbar"
+        android:layout_margin="5dp" />
 
 
 </RelativeLayout>

@@ -83,9 +83,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
 
         if (cursor.moveToFirst() == false) {
-            //Toast.makeText(getApplicationContext(), "Your Cart is empty!", Toast.LENGTH_SHORT).show();
             Snackbar.make(parentView, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
-
         } else {
             do {
                 key.add(cursor.getString(cursor.getColumnIndex("key")));
@@ -220,7 +218,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
             mremoveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Product removed from your cart", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "Product removed from your cart", Toast.LENGTH_SHORT).show();
                     SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
                     sqLiteDatabase.execSQL("DELETE FROM CART WHERE key = '" + key.get(position) + "'");
 
@@ -312,6 +310,8 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
         }
 
         public void setGrandTotal() {
+            TextView delivery_charge_tc = (TextView) findViewById(R.id.delivery_charge);
+
             int gtotal = 0;
 
             String list = null;
@@ -321,12 +321,22 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
                 list = list + " " + total.get(i);
             }
 
+            if (gtotal == 0)
+                finish();
+
+            if (gtotal < 500) {
+                mGrandTotal.setText("Total: \u20B9 " + gtotal + " (+100)");
+                delivery_charge_tc.setText("\u20B9100 Delivery charge applicable on order below \u20B9500");
+                gtotal += 100;
+            } else {
+                mGrandTotal.setText("Total: \u20B9 " + gtotal);
+                delivery_charge_tc.setText("Free delivery");
+            }
+
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("GrandTotal", String.valueOf(gtotal));
             editor.commit();
-
-            mGrandTotal.setText("Total: \u20B9 " + gtotal);
         }
 
         public void updateDatabase(String column, String value, String key) {

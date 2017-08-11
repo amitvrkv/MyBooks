@@ -55,7 +55,7 @@
                     android:id="@+id/deliveryAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="gfdgfd" />
+                    android:text="Name\nAddress\nBangalore" />
 
                 <TextView
                     android:id="@+id/updateAddress"
