@@ -227,18 +227,25 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         String priceMRP;
         String priceOld;
         String priceNew;
+        String publisher;
 
         ImageView mBookImage;
         String src;
 
         public BookListHolder(View itemView) {
             super(itemView);
-            mview = itemView;
+            this.mview = itemView;
 
             buyButtonTxt = (TextView) itemView.findViewById(R.id.bookBuyTxt);
             buyButtonTxt.setOnClickListener(this);
             mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
             mBookImage.setOnClickListener(this);
+        }
+
+        public void setPublisher(String publisher) {
+            this.publisher = publisher;
+            TextView mpublisher = (TextView) mview.findViewById(R.id.publisher);
+            mpublisher.setText(publisher);
         }
 
         public void setImage(final String src) {
@@ -331,17 +338,10 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         public void onClick(View v) {
             if (v.getId() == buyButtonTxt.getId()) {
                 BooksListPage bk = new BooksListPage();
-                bk.insertDataToCart(v.getContext(), key, title, author, course, sem, priceMRP, priceNew, priceOld);
+                bk.insertDataToCart(v.getContext(), key, title, publisher, author, course, sem, priceMRP, priceNew, priceOld);
             }
             if (v.getId() == mBookImage.getId()) {
-                if (src.equals("na")){
-                    //Toast.makeText(v.getContext(), "No image available", Toast.LENGTH_SHORT).show();
-                    showToastMessage(v.getContext(), "No image available", 1000);
-                    return;
-                }
-                Intent intent = new Intent(v.getContext(), Individual_book_details.class);
-                intent.putExtra("src", src);
-                v.getContext().startActivity(intent);
+                loadBookDetails(v.getContext(), course, key);
             }
         }
 
@@ -433,16 +433,15 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.setPriceNew(model.getPriceNew());
                 viewHolder.setavlcopy(model.getAvlcopy());
                 viewHolder.setKey(model.getKey());
+                viewHolder.setPublisher(model.getPublisher());
 
                 // OnclickListener on recycler view redirect to book preview page
                 viewHolder.mview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
-                        //insertDataToCart(model.getKey(), model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getPriceMRP(), model.getPriceNew(), model.getPriceOld());
+                        loadBookDetails(v.getContext(), model.getCourse(), model.getKey());
                     }
                 });
-
 
             }
         };
@@ -532,13 +531,14 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 viewHolder.setPriceNew(model.getPriceNew());
                 viewHolder.setavlcopy(model.getAvlcopy());
                 viewHolder.setKey(model.getKey());
+                viewHolder.setPublisher(model.getPublisher());
 
                 // OnclickListener on recycler view redirect to book preview page
                 viewHolder.mview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Toast.makeText(getApplicationContext(), "Selected : " + model.getCourse() +"and "+ model.getKey(), Toast.LENGTH_SHORT).show();
-                        //insertDataToCart(model.getKey(), model.getTitle(), model.getAuthor(), model.getCourse(), model.getSem(), model.getPriceMRP(), model.getPriceNew(), model.getPriceOld());
+                        //Toast.makeText(getApplicationContext(), "Selected :", Toast.LENGTH_SHORT).show();
+                        loadBookDetails(v.getContext(), model.getCourse(), model.getKey());
                     }
                 });
 
@@ -568,13 +568,13 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void insertDataToCart(Context ctx, String key, String title, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
+    public void insertDataToCart(Context ctx, String key, String title, String publisher, String author, String course, String sem, String priceMRP, String priceNew, String priceOld) {
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR,title VARCHAR,author VARCHAR,course VARCHAR,sem VARCHAR,priceMRP VARCHAR,priceNew VARCHAR,priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR,title VARCHAR, publisher VARCHAR, author VARCHAR,course VARCHAR,sem VARCHAR,priceMRP VARCHAR,priceNew VARCHAR,priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART WHERE key = '" + key + "'", null);
 
         if (cursor.getCount() <= 0) {
-            sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
+            sqLiteDatabase.execSQL("INSERT INTO CART VALUES('" + key + "','" + title + "','" + publisher + "','" + author + "','" + course + "','" + sem + "', '" + priceMRP + "' , '" + priceNew + "' , '" + priceOld + "', 'old', '1');");
             Toast.makeText(ctx, "Product added to your Cart", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
@@ -582,7 +582,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public static void showToastMessage(Context context, String text, int duration){
+    public static void showToastMessage(Context context, String text, int duration) {
         final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.show();
         Handler handler = new Handler();
@@ -592,6 +592,13 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                 toast.cancel();
             }
         }, duration);
+    }
+
+    public static void loadBookDetails(Context ctx, String course, String key) {
+        Intent intent = new Intent(ctx, Individual_book_details.class);
+        intent.putExtra("course", course);
+        intent.putExtra("key", key);
+        ctx.startActivity(intent);
     }
 
 }

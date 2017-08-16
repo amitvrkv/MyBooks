@@ -15,12 +15,13 @@ public class BookList {
     private String priceNew;
     private int avlcopy;
     private String src;
+    private String publisher;
 
     public BookList(){
 
     }
 
-    public BookList(String title, String author, String sem, String priceOld, String priceMRP, String priceNew,String course, int avlcopy, String key, String src) {
+    public BookList(String title, String author, String sem, String priceOld, String priceMRP, String priceNew, String course, int avlcopy, String key, String src, String publisher) {
         this.title = title;
         this.author = author;
         this.sem = sem;
@@ -31,6 +32,7 @@ public class BookList {
         this.key = key;
         this.priceNew = priceNew;
         this.src = src;
+        this.publisher = publisher;
     }
 
     public String getSrc() {
@@ -112,4 +114,11 @@ public class BookList {
         this.key = key;
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 }

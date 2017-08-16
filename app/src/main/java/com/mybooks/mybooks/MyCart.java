@@ -68,6 +68,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
         cartList = (ListView) findViewById(R.id.cartList);
 
         ArrayList<String> title = new ArrayList<>();
+        ArrayList<String> publisher = new ArrayList<>();
         ArrayList<String> author = new ArrayList<>();
         ArrayList<String> course = new ArrayList<>();
         ArrayList<String> sem = new ArrayList<>();
@@ -79,7 +80,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
         ArrayList<String> quantity = new ArrayList<>();
 
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR, title VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR, priceMRP VARCHAR, priceNew VARCHAR, priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CART(key VARCHAR, title VARCHAR, publisher VARCHAR, author VARCHAR, course VARCHAR, sem VARCHAR, priceMRP VARCHAR, priceNew VARCHAR, priceOld VARCHAR, booktype VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from CART", null);
 
         if (cursor.moveToFirst() == false) {
@@ -88,6 +89,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
             do {
                 key.add(cursor.getString(cursor.getColumnIndex("key")));
                 title.add(cursor.getString(cursor.getColumnIndex("title")));
+                publisher.add(cursor.getString(cursor.getColumnIndex("publisher")));
                 author.add(cursor.getString(cursor.getColumnIndex("author")));
                 course.add(cursor.getString(cursor.getColumnIndex("course")));
                 sem.add(cursor.getString(cursor.getColumnIndex("sem")));
@@ -99,7 +101,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
             } while (cursor.moveToNext());
 
-            cartList.setAdapter(new listViewCustomAdapter(this, key, title, author, course, sem, priceMRP, priceNew, priceOld, booktype, quantity));
+            cartList.setAdapter(new listViewCustomAdapter(this, key, title, publisher, author, course, sem, priceMRP, priceNew, priceOld, booktype, quantity));
         }
 
     }
@@ -128,6 +130,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
         Context context;
         ArrayList<String> title = new ArrayList<>();
+        ArrayList<String> publisher = new ArrayList<>();
         ArrayList<String> author = new ArrayList<>();
         ArrayList<String> course = new ArrayList<>();
         ArrayList<String> sem = new ArrayList<>();
@@ -140,10 +143,11 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
         public LayoutInflater inflater = null;
 
-        public listViewCustomAdapter(Context context, ArrayList<String> key, ArrayList<String> title, ArrayList<String> author, ArrayList<String> course, ArrayList<String> sem, ArrayList<String> priceMRP, ArrayList<String> priceNew, ArrayList<String> priceOld, ArrayList<String> booktype, ArrayList<String> quantity) {
+        public listViewCustomAdapter(Context context, ArrayList<String> key, ArrayList<String> title, ArrayList<String> publisher, ArrayList<String> author, ArrayList<String> course, ArrayList<String> sem, ArrayList<String> priceMRP, ArrayList<String> priceNew, ArrayList<String> priceOld, ArrayList<String> booktype, ArrayList<String> quantity) {
             this.key = key;
             this.context = context;
             this.title = title;
+            this.publisher = publisher;
             this.author = author;
             this.course = course;
             this.sem = sem;
@@ -181,6 +185,9 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
             TextView mtitle = (TextView) view.findViewById(R.id.cbookTitle);
             mtitle.setText(title.get(position));
+
+            TextView mPublisher = (TextView) view.findViewById(R.id.cbookPublisher);
+            mPublisher.setText(publisher.get(position));
 
             TextView mauthor = (TextView) view.findViewById(R.id.cbookAuthor);
             mauthor.setText(author.get(position));

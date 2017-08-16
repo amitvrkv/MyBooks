@@ -4,26 +4,124 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mybooks.mybooks.Individual_book_details"
-    >
+    tools:context="com.mybooks.mybooks.Individual_book_details">
 
-    <ImageView
-        android:padding="3dp"
-        android:scaleType="fitCenter"
-        android:id="@+id/book_image"
+    <ScrollView
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        >
 
-    <TextView
-        android:id="@+id/close_btn"
-        android:padding="6dp"
-        android:background="@drawable/round_corner"
-        android:textColor="@color/Red"
-        android:layout_margin="5dp"
-        android:textSize="22dp"
-        android:layout_alignParentRight="true"
-        android:text="X"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbarHeight"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/BackButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/backButtonPadding"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/book_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:scaleType="fitCenter" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/darker_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/BookTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Title" />
+
+                    <TextView
+                        android:id="@+id/BookPublisher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Publisher" />
+
+                    <TextView
+                        android:id="@+id/BookAuthor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Author" />
+
+                    <TextView
+                        android:id="@+id/BookCourse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Course" />
+
+                    <TextView
+                        android:id="@+id/BookSem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Sem" />
+
+                    <TextView
+                        android:id="@+id/BookMRP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Sem" />
+
+                    <TextView
+                        android:id="@+id/BookNewPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book New Price" />
+
+                    <TextView
+                        android:id="@+id/BookOldPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Book Old Price" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
 
 </RelativeLayout>

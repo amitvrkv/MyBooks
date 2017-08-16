@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/bookTitle"
@@ -50,6 +50,14 @@
                 android:text="Book Title"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/publisher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Publisher"
+                android:textSize="13dp" />
 
             <TextView
                 android:id="@+id/bookAuthor"

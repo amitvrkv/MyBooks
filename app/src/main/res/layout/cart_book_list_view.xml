@@ -20,6 +20,13 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="16dp" />
 
+        <TextView
+            android:id="@+id/cbookPublisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Book Publisher" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -82,11 +89,11 @@
             </LinearLayout>
 
             <CheckBox
-                android:paddingRight="5dp"
                 android:id="@+id/checkBoxNewBook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:paddingRight="5dp"
                 android:text="New Book" />
 
         </RelativeLayout>
@@ -105,28 +112,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="\u20B9 Sell"
-                    android:textColor="@color/Green"
-                     />
+                    android:textColor="@color/Green" />
 
                 <TextView
-                    android:textColor="@color/Red"
                     android:id="@+id/cbookMarketPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_marginLeft="5dp"
+                    android:gravity="center"
                     android:text="Market"
+                    android:textColor="@color/Red"
                     android:textSize="12dp" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/totalIndividual"
-                android:text="Total: \u20B9 "
-                android:layout_margin="5dp"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:text="Total: \u20B9 " />
 
         </RelativeLayout>
 
@@ -137,16 +143,15 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_marginTop="2dp"
-            android:textColor="@color/Red"
-            android:background="@drawable/round_corner"
             android:id="@+id/cremoveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/round_corner"
             android:padding="4dp"
             android:text="X"
-             />
+            android:textColor="@color/Red" />
 
     </RelativeLayout>
 

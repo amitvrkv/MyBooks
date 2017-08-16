@@ -198,6 +198,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                         .child("prod" + count);
                 databaseReference.child("bookkey").setValue(cursor.getString(cursor.getColumnIndex("key")));
                 databaseReference.child("title").setValue(cursor.getString(cursor.getColumnIndex("title")));
+                databaseReference.child("publisher").setValue(cursor.getString(cursor.getColumnIndex("publisher")));
                 databaseReference.child("author").setValue(cursor.getString(cursor.getColumnIndex("author")));
                 databaseReference.child("course").setValue(cursor.getString(cursor.getColumnIndex("course")));
                 databaseReference.child("sem").setValue(cursor.getString(cursor.getColumnIndex("sem")));
