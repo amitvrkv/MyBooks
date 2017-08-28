@@ -137,7 +137,10 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
         public void setComment(String comment) {
             TextView mComment = (TextView) mView.findViewById(R.id.oComment);
-            mComment.setText(comment.replace("EEEE", "ME"));
+            if (comment.equals(""))
+                mComment.setText(comment);
+            else
+                mComment.setText(comment.replace("EEEE", "ME"));
             this.comments = comment;
         }
 
