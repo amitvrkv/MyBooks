@@ -117,8 +117,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         classList.add("select Class");
         //classList.add("School");
         //classList.add("Pre University College");
-        classList.add("Under Graduate");
-        classList.add("Post Graduate");
+        classList.add("UG");
+        classList.add("PG");
         ArrayAdapter<String> classDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classList);
         classDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mClassSelecter.setAdapter(classDataAdapter);
