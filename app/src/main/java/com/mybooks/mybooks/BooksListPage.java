@@ -117,8 +117,8 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         classList.add("select Class");
         //classList.add("School");
         //classList.add("Pre University College");
-        classList.add("UG");
-        classList.add("PG");
+        classList.add("Under Graduate");
+        classList.add("Under Graduate");
         ArrayAdapter<String> classDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, classList);
         classDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mClassSelecter.setAdapter(classDataAdapter);
@@ -155,7 +155,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
                     courseList.add("BE");
                     Collections.sort(courseList);
                     courseList.add(0, "select Course");
-                } else if (classList.get(position).toString().equals("Post Graduate")) {
+                } else if (classList.get(position).toString().equals("Under Graduate")) {
                     courseList.add("MA");
                     courseList.add("MCA");
                     courseList.add("MSC");
@@ -238,18 +238,18 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
             buyButtonTxt = (TextView) itemView.findViewById(R.id.bookBuyTxt);
             buyButtonTxt.setOnClickListener(this);
-            mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
+            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
             mBookImage.setOnClickListener(this);
         }
 
         public void setPublisher(String publisher) {
             this.publisher = publisher;
-            TextView mpublisher = (TextView) mview.findViewById(R.id.publisher);
+            TextView mpublisher = (TextView) mview.findViewById(R.id.p_f3);
             mpublisher.setText(publisher);
         }
 
         public void setImage(final String src) {
-            mBookImage = (ImageView) mview.findViewById(R.id.bookImage);
+            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
             if (!src.equals("na")) {
                 Picasso.with(mview.getContext()).load(src).into(mBookImage);
             } else {
@@ -259,7 +259,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         }
 
         public void settitle(String title) {
-            TextView mtitle = (TextView) mview.findViewById(R.id.bookTitle);
+            TextView mtitle = (TextView) mview.findViewById(R.id.p_f2);
             mtitle.setText(capitalizeEveryWord(title));
             this.title = title;
         }
@@ -279,38 +279,38 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
 
         public void setauthor(String author) {
-            TextView mauthor = (TextView) mview.findViewById(R.id.bookAuthor);
+            TextView mauthor = (TextView) mview.findViewById(R.id.p_f4);
             mauthor.setText(capitalizeEveryWord(author));
             this.author = author;
         }
 
         public void setCourse(String course) {
-            TextView mcourse = (TextView) mview.findViewById(R.id.bookCourse);
+            TextView mcourse = (TextView) mview.findViewById(R.id.p_f5);
             mcourse.setText(course);
             this.course = course;
         }
 
         public void setSem(String sem) {
-            TextView msem = (TextView) mview.findViewById(R.id.bookClass);
+            TextView msem = (TextView) mview.findViewById(R.id.p_f6);
             msem.setText("Semester: " + sem);
             this.sem = sem;
         }
 
         public void setpriceMRP(String priceMRP) {
-            TextView mmarket = (TextView) mview.findViewById(R.id.bookMarketPrice);
+            TextView mmarket = (TextView) mview.findViewById(R.id.p_f7);
             mmarket.setText(priceMRP);
             mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             this.priceMRP = priceMRP;
         }
 
         public void setpriceOld(String priceOld) {
-            TextView msell = (TextView) mview.findViewById(R.id.bookSellingPrice);
+            TextView msell = (TextView) mview.findViewById(R.id.p_f9);
             msell.setText("\u20B9 " + priceOld);
             this.priceOld = priceOld;
         }
 
         public void setPriceNew(String priceNew) {
-            TextView bookSellingNewPrice = (TextView) mview.findViewById(R.id.bookSellingNewPrice);
+            TextView bookSellingNewPrice = (TextView) mview.findViewById(R.id.p_f8);
             bookSellingNewPrice.setText(priceNew);
             bookSellingNewPrice.setPaintFlags(bookSellingNewPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             this.priceNew = priceNew;

@@ -47,12 +47,12 @@ public class Individual_book_details extends AppCompatActivity {
             }
         });
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Books").child(course).child(key);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                /*
                 BookList bookList = dataSnapshot.getValue(BookList.class);
-
                 mBookTitle.setText("Book Title: " + bookList.getTitle());
                 mBookPublisher.setText("Publisher: " + bookList.getPublisher());
                 mBookAuthor.setText("Author: " + bookList.getAuthor());
@@ -66,6 +66,21 @@ public class Individual_book_details extends AppCompatActivity {
                     mBook_image.setVisibility(View.GONE);
                 else
                     Picasso.with(getApplicationContext()).load(bookList.getSrc()).into(mBook_image);
+                    */
+                ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
+                mBookTitle.setText("Book Title: " + modelProductList.getF2());
+                mBookPublisher.setText("Publisher: " + modelProductList.getF3());
+                mBookAuthor.setText("Author: " + modelProductList.getF4());
+                mBookCourse.setText("Course: " + modelProductList.getF5());
+                mBookSem.setText("Semester: " + modelProductList.getF6());
+                mBookMRP.setText("Book MRP: \u20B9 " + modelProductList.getF7());
+                mBookNewPrice.setText("New Book Price: \u20B9 " + modelProductList.getF8());
+                mBookOldPrice.setText("Old Book Price: \u20B9 " + modelProductList.getF9());
+
+                if (modelProductList.getF13().equals("na"))
+                    mBook_image.setVisibility(View.GONE);
+                else
+                    Picasso.with(getApplicationContext()).load(modelProductList.getF13()).into(mBook_image);
             }
 
             @Override

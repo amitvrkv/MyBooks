@@ -24,6 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
@@ -83,7 +88,8 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if (id == R.id.blogMenu) {
-            Toast.makeText(getApplicationContext(),"Coming soon.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getApplicationContext(), BooksListPageNew.class));
+            //Toast.makeText(getApplicationContext(),"Coming soon.", Toast.LENGTH_SHORT).show();
             return true;
         }
 

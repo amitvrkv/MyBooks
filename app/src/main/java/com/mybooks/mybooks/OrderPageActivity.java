@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -23,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class OrderPageActivity extends AppCompatActivity implements View.OnClickListener {
+public class OrderPageActivity extends AppCompatActivity {
 
     private ImageView mOderBackBtn;
 
@@ -38,9 +39,7 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_page);
-
-        mOderBackBtn = (ImageView) findViewById(R.id.oderBackBtn);
-        mOderBackBtn.setOnClickListener(this);
+        setToolbar();
 
         recyclerView = (RecyclerView) findViewById(R.id.orderRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -73,15 +72,20 @@ public class OrderPageActivity extends AppCompatActivity implements View.OnClick
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.oderBackBtn:
-                startActivity(new Intent(this, HomeActivity.class));
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("My Orders");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
-                break;
-        }
+            }
+        });
     }
+
 
 
     public static class OrderBookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

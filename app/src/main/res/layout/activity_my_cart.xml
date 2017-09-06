@@ -7,28 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.mybooks.mybooks.MyCart">
 
-    <LinearLayout
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/toolbarHeight"
-        android:background="@color/colorPrimary">
-
-        <ImageView
-            android:id="@+id/cartBackButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/backButtonPadding"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="My Cart"
-            android:textColor="@color/colorTextIcon"
-            android:textSize="@dimen/toolbarTextSize" />
-
-    </LinearLayout>
+    <include layout="@layout/toolbar"/>
 
     <RelativeLayout
         android:id="@+id/footer"

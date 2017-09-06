@@ -8,6 +8,7 @@
 
 
     <LinearLayout
+        android:id="@+id/card_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -17,7 +18,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/bookImage"
+                android:id="@+id/p_f13"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
@@ -44,27 +45,27 @@
             android:padding="10dp">
 
             <TextView
-                android:id="@+id/bookTitle"
+                android:id="@+id/p_f2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Book Title"
+                android:text="F2"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/publisher"
+                android:id="@+id/p_f3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text="Publisher"
+                android:text="F3"
                 android:textSize="13dp" />
 
             <TextView
-                android:id="@+id/bookAuthor"
+                android:id="@+id/p_f4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text="Author"
+                android:text="F4"
                 android:textSize="13dp" />
 
 
@@ -74,18 +75,18 @@
                 android:layout_marginTop="3dp">
 
                 <TextView
-                    android:id="@+id/bookCourse"
+                    android:id="@+id/p_f5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Course"
+                    android:text="F5"
                     android:textSize="14dp" />
 
                 <TextView
-                    android:id="@+id/bookClass"
+                    android:id="@+id/p_f6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="Class"
+                    android:text="F6"
                     android:textSize="12dp" />
 
             </LinearLayout>
@@ -102,30 +103,30 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/bookSellingPrice"
+                        android:id="@+id/p_f9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="\u20B9 Old"
+                        android:text="\u20B9 F9"
                         android:textColor="@color/Green"
                         android:textSize="14dp" />
 
                     <TextView
-                        android:id="@+id/bookSellingNewPrice"
+                        android:id="@+id/p_f8"
                         android:textColor="@color/Yellow"
                         android:gravity="center"
                         android:textSize="13dp"
                         android:layout_marginLeft="5dp"
-                        android:text="New"
+                        android:text="F8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        android:id="@+id/bookMarketPrice"
+                        android:id="@+id/p_f7"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="5dp"
                         android:gravity="center"
-                        android:text="Market"
+                        android:text="F7"
                         android:textColor="@color/Red"
                         android:textSize="12dp" />
 

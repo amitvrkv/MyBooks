@@ -52,6 +52,7 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
+        setToolbar();
 
         parentView = findViewById(R.id.mycartParentView);
 
@@ -60,10 +61,6 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
         mContinueBtn = (Button) findViewById(R.id.continueBtn);
         mContinueBtn.setOnClickListener(this);
-
-        mbackBtn = (ImageView) findViewById(R.id.cartBackButton);
-        mbackBtn.setOnClickListener(this);
-
 
         cartList = (ListView) findViewById(R.id.cartList);
 
@@ -106,13 +103,23 @@ public class MyCart extends AppCompatActivity implements View.OnClickListener{
 
     }
 
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("My Cart");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.cartBackButton:
-                finish();
-                break;
-
             case R.id.continueBtn:
                 if( mGrandTotal.getText().toString().equals("Total: \u20B9 0")) {
                     Toast.makeText(getApplicationContext(), "Your cart is empty.", Toast.LENGTH_SHORT).show();

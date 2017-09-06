@@ -6,6 +6,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -17,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextView mName, mMobile, mEmail, mDelAddress, mUpdateAddBtn;
-    ImageView backBtn;
 
     String address;
     SharedPreferences sharedPreferences;
@@ -26,6 +26,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
+        setToolbar();
 
         mName = (TextView) findViewById(R.id.myAccName);
         mMobile = (TextView) findViewById(R.id.myAccContactNumber);
@@ -34,12 +35,23 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         mUpdateAddBtn = (TextView) findViewById(R.id.myAccUpdateAddBtn);
         mUpdateAddBtn.setOnClickListener(this);
 
-        backBtn = (ImageView) findViewById(R.id.myAccBackBtn);
-        backBtn.setOnClickListener(this);
-
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
         setMyAccDetails();
+    }
+
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("My Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -51,10 +63,6 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.myAccBackBtn:
-                    finish();
-                break;
-
             case R.id.myAccUpdateAddBtn:
                 startActivity(new Intent(this, AddressActivity.class));
                 break;
