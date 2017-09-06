@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -116,12 +117,18 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_favorite:
+                Toast.makeText(getApplicationContext(), "Fav Item list", Toast.LENGTH_SHORT).show();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
 
     @Override
     public void onClick(View v) {
+        editTextSearchData.setCursorVisible(false);
         switch (v.getId()) {
             case R.id.search_data:
                 editTextSearchData.setCursorVisible(true);
@@ -385,6 +392,10 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
             }
         });
+    }
+
+    public void productByCat4_Support(ArrayList<String> list) {
+
     }
 
     public void setFilter() {
