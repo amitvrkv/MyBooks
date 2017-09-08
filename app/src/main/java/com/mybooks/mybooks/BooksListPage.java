@@ -236,7 +236,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
             super(itemView);
             this.mview = itemView;
 
-            buyButtonTxt = (TextView) itemView.findViewById(R.id.bookBuyTxt);
+            buyButtonTxt = (TextView) itemView.findViewById(R.id.addToCartButton);
             buyButtonTxt.setOnClickListener(this);
             mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
             mBookImage.setOnClickListener(this);
@@ -318,7 +318,7 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
         public void setavlcopy(int mavlcopy) {
             ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
-            TextView mbookbuy = (TextView) mview.findViewById(R.id.bookBuyTxt);
+            TextView mbookbuy = (TextView) mview.findViewById(R.id.addToCartButton);
 
             if (mavlcopy <= 0) {
                 outofstockimg.setVisibility(View.VISIBLE);

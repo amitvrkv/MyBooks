@@ -1,7 +1,8 @@
 package com.mybooks.mybooks;
 
 import android.app.Activity;
-import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -37,18 +38,12 @@ import java.util.List;
 
 public class BooksListPageNew extends AppCompatActivity implements View.OnClickListener {
 
-    List<String> listKeys;
     List<ModelProductList> listObjects;
 
     DatabaseReference databaseReference;
     RecyclerView recyclerView;
 
-    //Tool bar
-    //TextView filter;
-    //TextView checkout;
-
     //Filter views
-    String cat1, cat2, cat3, cat4;
     Button doneFilter;
     View filterLayout;
     Spinner spinnerCat1, spinnerCat2, spinnerCat3, spinnerCat4;
@@ -62,11 +57,19 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     //Search
     EditText editTextSearchData;
 
+    TextView cart_item_count;
+
+    Activity act;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_list_page_new);
         setToolbar();
+
+        act = this;
+
+        cart_item_count = (TextView) findViewById(R.id.cart_item_count);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -80,9 +83,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     editTextSearchData.setCursorVisible(false);
                     searchProduct();
-
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                    hideKeyboard();
                     return true;
                 }
                 return false;
@@ -106,6 +107,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
         setDataOnPageStart();
 
+        setCartCount();
     }
 
     @Override
@@ -117,7 +119,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_favorite:
                 Toast.makeText(getApplicationContext(), "Fav Item list", Toast.LENGTH_SHORT).show();
                 break;
@@ -141,6 +143,11 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 setDoneFilter();
                 break;
         }
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
     public void setDoneFilter() {
@@ -208,7 +215,10 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                //finish();
+                SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
+                Toast.makeText(getApplicationContext(), "Table deleted", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -222,43 +232,12 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listObjects.clear();
-                //Toast.makeText(getApplicationContext(),"> <" , Toast.LENGTH_SHORT).show();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelProductList modelProductList = dataSnapshot1.getValue(ModelProductList.class);
                     listObjects.add(modelProductList);
-
-                    /*
-                    if (spinnerCat1.getSelectedItem().equals("Category")) {
-                        listObjects.add(modelProductList);
-                    } else if (spinnerCat1.getVisibility() == View.VISIBLE && spinnerCat2.getVisibility() == View.GONE || spinnerCat2.getSelectedItem().equals("select")) {
-                        //Toast.makeText(getApplicationContext(),"> 1" , Toast.LENGTH_SHORT).show();
-                        if (modelProductList.getF1().equals(spinnerCat1.getSelectedItem().toString())) {
-                            listObjects.add(modelProductList);
-                        }
-
-                    } else if (spinnerCat2.getVisibility() == View.VISIBLE && spinnerCat3.getVisibility() == View.GONE || spinnerCat3.getSelectedItem().equals("select")) {
-                        //Toast.makeText(getApplicationContext(),"> 2" , Toast.LENGTH_SHORT).show();
-                        if (list3.contains(modelProductList.getF5())) {
-                            listObjects.add(modelProductList);
-                        }
-                    } else if ((spinnerCat3.getVisibility() == View.VISIBLE && spinnerCat4.getVisibility() == View.GONE) || spinnerCat4.getSelectedItem().equals("select")) {
-                        //Toast.makeText(getApplicationContext(),"> 3\n" +  modelProductList.getF1() + "\n" +  modelProductList.getF5() , Toast.LENGTH_SHORT).show();
-                        if (modelProductList.getF1().equals(spinnerCat1.getSelectedItem().toString()) && modelProductList.getF5().equals(spinnerCat3.getSelectedItem().toString())) {
-                            listObjects.add(modelProductList);
-                        }
-
-                    } else {
-                        //Toast.makeText(getApplicationContext(),"> 4" , Toast.LENGTH_SHORT).show();
-                        if (modelProductList.getF1().equals(spinnerCat1.getSelectedItem().toString()) && modelProductList.getF5().equals(spinnerCat3.getSelectedItem().toString()) && modelProductList.getF6().equals(spinnerCat4.getSelectedItem().toString())) {
-                            listObjects.add(modelProductList);
-                        } else {
-                            listObjects.add(modelProductList);
-                        }
-                    }*/
-
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -286,7 +265,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                         listObjects.add(modelProductList);
                     }
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -314,7 +293,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                         listObjects.add(modelProductList);
                     }
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -342,7 +321,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                         listObjects.add(modelProductList);
                     }
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -380,7 +359,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                         }
                     });
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -392,10 +371,6 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
             }
         });
-    }
-
-    public void productByCat4_Support(ArrayList<String> list) {
-
     }
 
     public void setFilter() {
@@ -540,6 +515,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         });
     }
 
+
     public void searchProduct() {
         if (TextUtils.isEmpty(editTextSearchData.getText())) {
             setDataOnPageStart();
@@ -555,7 +531,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                     ModelProductList modelProductList = dataSnapshot1.getValue(ModelProductList.class);
                     listObjects.add(modelProductList);
                 }
-                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects);
+                RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -567,5 +543,15 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
             }
         });
+    }
+
+
+
+    public void setCartCount() {
+        TextView cart_item_count = (TextView) findViewById(R.id.cart_item_count);
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(BooksListPageNew.this.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART ", null);
+        cart_item_count.setText("" + cursor.getCount());
     }
 }

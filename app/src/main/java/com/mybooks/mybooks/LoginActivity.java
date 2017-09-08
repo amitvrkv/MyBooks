@@ -1,26 +1,25 @@
 package com.mybooks.mybooks;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,22 +35,17 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
 
+    View parentLayoutView;
+    ImageView mAppLogo;
+    RelativeLayout relativeLayoutLogin, relativeLayoutWelcome;
+    boolean user_logged_in = false;
     private EditText mEmailSignIn, mPasswordSignIn, mEmailSignUp, mPasswordSignUpOne, mPasswordSignUpTwo;
     private Button mEmailSignInButton, mEmailSignUpButton;
     private TextView mSignUpRed, mSignInRed, mresetPassword;
     private View mSignInForm, mSignUpForm;
-
     private ProgressDialog mprogressDialog;
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    View parentLayoutView;
-
-    ImageView mAppLogo;
-    RelativeLayout relativeLayoutLogin, relativeLayoutWelcome;
-
-    boolean user_logged_in = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,14 +169,25 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
+        hideKeyboard();
         switch (v.getId()) {
             case R.id.sign_in_redirect_button:
+                Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+                mSignInForm.startAnimation(animation1);
                 mSignInForm.setVisibility(View.VISIBLE);
+
+                Animation animation2 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+                mSignUpForm.startAnimation(animation2);
                 mSignUpForm.setVisibility(View.GONE);
                 break;
 
             case R.id.sign_up_redirect_button:
+                Animation animation3 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+                mSignUpForm.startAnimation(animation3);
                 mSignUpForm.setVisibility(View.VISIBLE);
+
+                Animation animation4 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+                mSignInForm.startAnimation(animation4);
                 mSignInForm.setVisibility(View.GONE);
                 break;
 
@@ -323,6 +328,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private void checkIfEmailVerified() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            return;
+        }
+
         if (user.isEmailVerified()) {
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
             finish();
@@ -389,6 +399,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             }
         });
         mAppLogo.startAnimation(transAnim);
+    }
+
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 }
 

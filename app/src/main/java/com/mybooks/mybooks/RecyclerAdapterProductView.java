@@ -1,8 +1,14 @@
 package com.mybooks.mybooks;
 
+import android.animation.Animator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -24,15 +30,16 @@ import java.util.regex.Pattern;
 
 public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAdapterProductView.MyHolder> {
 
-    String filter;
-
     List<ModelProductList> listdata;
     Context ctx;
-    DatabaseReference mDatabase;
+    TextView cart_item_count;
+    Activity act;
 
-    public RecyclerAdapterProductView(Context ctx, List<ModelProductList> listdata) {
+    public RecyclerAdapterProductView(Context ctx, List<ModelProductList> listdata, TextView cart_item_count, Activity act) {
         this.listdata = listdata;
         this.ctx = ctx;
+        this.cart_item_count = cart_item_count;
+        this.act = act;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
 
         /* set price*/
         int mrp_p = Integer.parseInt(modelProductList.getF7());
-        int new_p = Integer.parseInt(modelProductList.getF8());
+        final int new_p = Integer.parseInt(modelProductList.getF8());
         int old_p = Integer.parseInt(modelProductList.getF9());
         holder.mrp_price.setText(modelProductList.getF7());
         holder.new_price.setText(modelProductList.getF8());
@@ -80,24 +87,33 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             Picasso.with(ctx).load(modelProductList.getF13()).into(holder.mBookImage);
         }
 
-        /*Set out of stock tag*/
+        /*Set out of stock tag and Add to cart button visibility*/
         if (Integer.parseInt(modelProductList.getF10()) <= 0) {
             holder.outofstockimg.setVisibility(View.VISIBLE);
-            holder.buyButtonTxt.setVisibility(View.GONE);
+            holder.addToCartButton.setVisibility(View.GONE);
         } else {
             holder.outofstockimg.setVisibility(View.GONE);
-            holder.buyButtonTxt.setVisibility(View.VISIBLE);
+            holder.addToCartButton.setVisibility(View.VISIBLE);
+
+            SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+            Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + modelProductList.getF11() + "'", null);
+            if (cursor.getCount() > 0) {
+                holder.addToCartButton.setText("ADDED");
+            }
         }
 
-                /* ADD to cart button click handler*/
-        holder.buyButtonTxt.setOnClickListener(new View.OnClickListener() {
+        /* ADD to cart button click handler*/
+        holder.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(ctx, bookList.getSrc(), Toast.LENGTH_SHORT).show();
+                addProductToCart(ctx, modelProductList.getF11(), holder.mBookImage);
+                holder.addToCartButton.setText("ADDED");
+                holder.addToCartButton.setTextColor(Color.GREEN);
             }
         });
 
-                /* List view click listener*/
+        /* List view click listener*/
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,6 +145,57 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         return m.appendTail(stringbf).toString();
     }
 
+    public void addProductToCart(Context ctx, String key, View targetView) {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + key + "'", null);
+
+        if (cursor.getCount() <= 0) {
+            sqLiteDatabase.execSQL("INSERT INTO P_CART VALUES('" + key + "','old', '0', '1');");
+            //Toast.makeText(ctx, "Product added to your Cart ", Toast.LENGTH_SHORT).show();
+            makeFlyAnimation(targetView);
+        } else {
+            Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setCartCount() {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART ", null);
+        cart_item_count.setText("" + cursor.getCount());
+    }
+
+    private void makeFlyAnimation(final View targetView) {
+        TextView destView = cart_item_count;
+
+        new CircleAnimationUtil().attachActivity(act).setTargetView(targetView).setMoveDuration(500).setDestView(destView).setAnimationListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Toast.makeText(ctx, "Continue Shopping...", Toast.LENGTH_SHORT).show();
+                targetView.setVisibility(View.VISIBLE);
+                setCartCount();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).startAnimation();
+
+
+    }
+
 
     @Override
     public int getItemCount() {
@@ -151,7 +218,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         TextView old_price;
 
         ImageView outofstockimg;
-        TextView buyButtonTxt;
+        TextView addToCartButton;
 
         public MyHolder(View mview) {
             super(mview);
@@ -177,12 +244,11 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             new_price.setPaintFlags(new_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
 
-            buyButtonTxt = (TextView) mview.findViewById(R.id.bookBuyTxt);
-            buyButtonTxt.setVisibility(View.GONE);
+            addToCartButton = (TextView) mview.findViewById(R.id.addToCartButton);
+            addToCartButton.setVisibility(View.GONE);
 
 
             linearLayout = (LinearLayout) mview.findViewById(R.id.card_parent);
-
 
         }
     }
