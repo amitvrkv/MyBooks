@@ -8,11 +8,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -59,6 +60,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         holder.mcourse.setText(modelProductList.getF5());
         holder.msem.setText(modelProductList.getF6());
 
+        setWishlistBtn(ctx, modelProductList.getF11(), holder.wishListBtnAdded);
 
         /* set price*/
         int mrp_p = Integer.parseInt(modelProductList.getF7());
@@ -120,6 +122,40 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 loadBookDetails(v.getContext(), modelProductList.getF11());
             }
         });
+
+        /*Wish list button click*/
+        holder.wishListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation zoomin = AnimationUtils.loadAnimation(ctx, R.anim.zoom_in);
+                final Animation zoomout = AnimationUtils.loadAnimation(ctx, R.anim.zoom_out);
+                holder.wishListBtn.setAnimation(zoomin);
+
+
+                zoomin.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        holder.wishListBtn.setAnimation(zoomout);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+                if (holder.wishListBtnAdded.getVisibility() == View.GONE) {
+                    addProductToWishList(v.getContext(), modelProductList.getF11(), holder.wishListBtnAdded);
+                } else {
+                    removeProductToWishList(v.getContext(), modelProductList.getF11(), holder.wishListBtnAdded);
+                }
+            }
+        });
     }
 
     public void loadBookDetails(Context ctx, String key) {
@@ -159,6 +195,27 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         }
     }
 
+    private void addProductToWishList(Context ctx, String key, ImageView imageView) {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + key + "'", null);
+
+        if (cursor.getCount() <= 0) {
+            sqLiteDatabase.execSQL("INSERT INTO WISHLIST VALUES('" + key + "');");
+            Toast.makeText(ctx, "Product added to Wishlist ", Toast.LENGTH_SHORT).show();
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(ctx, "Already added to Wishlist", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void removeProductToWishList(Context ctx, String key, ImageView imageView) {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("DELETE FROM WISHLIST WHERE key = '" + key + "'");
+        imageView.setVisibility(View.GONE);
+        Toast.makeText(ctx, "Product removed from Wishlist ", Toast.LENGTH_SHORT).show();
+    }
+
     public void setCartCount() {
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
@@ -178,6 +235,8 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             @Override
             public void onAnimationEnd(Animator animation) {
                 Toast.makeText(ctx, "Continue Shopping...", Toast.LENGTH_SHORT).show();
+                Animation animation1 = AnimationUtils.loadAnimation(ctx, R.anim.fade_in);
+                targetView.startAnimation(animation1);
                 targetView.setVisibility(View.VISIBLE);
                 setCartCount();
             }
@@ -194,6 +253,17 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         }).startAnimation();
 
 
+    }
+
+    public void setWishlistBtn(Context ctx, String key, ImageView imageView) {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + key + "'", null);
+        if (cursor.getCount() <= 0) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -220,8 +290,14 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         ImageView outofstockimg;
         TextView addToCartButton;
 
+        ImageView wishListBtn;
+        ImageView wishListBtnAdded;
+
         public MyHolder(View mview) {
             super(mview);
+
+            wishListBtn = (ImageView) mview.findViewById(R.id.wishListBtn);
+            wishListBtnAdded = (ImageView) mview.findViewById(R.id.wishListBtnAdded);
 
             mtitle = (TextView) mview.findViewById(R.id.p_f2);
             mtitle.setText("");

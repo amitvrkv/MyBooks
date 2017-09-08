@@ -121,7 +121,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_favorite:
-                Toast.makeText(getApplicationContext(), "Fav Item list", Toast.LENGTH_SHORT).show();
+                productByWishlist();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -131,6 +131,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         editTextSearchData.setCursorVisible(false);
+        getSupportActionBar().setTitle("Order Books");
         switch (v.getId()) {
             case R.id.search_data:
                 editTextSearchData.setCursorVisible(true);
@@ -156,22 +157,10 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         Animation slideUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_right_filter);
         filterLayout.startAnimation(slideUp);
         filterLayout.setVisibility(View.GONE);
-        slideUp.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        Animation fade_in = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
+        recyclerView.startAnimation(fade_in);
+        recyclerView.setVisibility(View.VISIBLE);
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
         //setDataOnPageStart();
         Animation sd = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
         floatingActionButtonFilter.startAnimation(sd);
@@ -196,6 +185,8 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     }
 
     public void setFloatingActionButtonFilter() {
+        Animation fade_out = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+        recyclerView.startAnimation(fade_out);
         recyclerView.setVisibility(View.GONE);
         Animation slideDown = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_left_filter);
         filterLayout.setAnimation(slideDown);
@@ -219,6 +210,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
                 sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
                 Toast.makeText(getApplicationContext(), "Table deleted", Toast.LENGTH_SHORT).show();
+                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS WISHLIST");
             }
         });
     }
@@ -373,6 +365,50 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    public void productByWishlist() {
+        getSupportActionBar().setTitle("Wish list");
+        listObjects = new ArrayList<>();
+        listObjects.clear();
+        final int[] c = {0};
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+        final Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST", null);
+
+        if (cursor.getCount() <= 0 || cursor.moveToFirst() == false) {
+            Toast.makeText(getApplicationContext(), "Wishlist is empty!", Toast.LENGTH_SHORT).show();
+            productByWishlist_support(listObjects);
+        } else {
+            do {
+                String key = cursor.getString(0);
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
+                        listObjects.add(modelProductList);
+                        c[0]++;
+                        if (c[0] >= cursor.getCount()) {
+                            productByWishlist_support(listObjects);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+            } while (cursor.moveToNext());
+        }
+    }
+
+    public void productByWishlist_support(List<ModelProductList> list){
+        RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), list, cart_item_count, act);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerAdapterProductView);
+    }
+
     public void setFilter() {
         list1 = new ArrayList<>();
         list2 = new ArrayList<>();
@@ -515,7 +551,6 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         });
     }
 
-
     public void searchProduct() {
         if (TextUtils.isEmpty(editTextSearchData.getText())) {
             setDataOnPageStart();
@@ -544,8 +579,6 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             }
         });
     }
-
-
 
     public void setCartCount() {
         TextView cart_item_count = (TextView) findViewById(R.id.cart_item_count);

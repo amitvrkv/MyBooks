@@ -6,14 +6,24 @@
     android:layout_height="wrap_content"
     android:layout_margin="2dp">
 
-    <!--
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:alpha="0.7"
-            android:id="@+id/widhListBtn"
+            android:id="@+id/wishListBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="3dp"
+            android:src="@mipmap/ic_favorite_border_black_24dp" />
+
+        <ImageView
+            android:visibility="gone"
+            android:alpha="0.4"
+            android:id="@+id/wishListBtnAdded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -21,7 +31,7 @@
             android:src="@mipmap/ic_favorite_black_24dp" />
 
     </RelativeLayout>
-    -->
+
 
     <LinearLayout
         android:id="@+id/card_parent"
