@@ -102,6 +102,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + modelProductList.getF11() + "'", null);
             if (cursor.getCount() > 0) {
                 holder.addToCartButton.setText("ADDED");
+                holder.addToCartButton.setTextColor(Color.GREEN);
             }
         }
 
@@ -112,6 +113,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 addProductToCart(ctx, modelProductList.getF11(), holder.mBookImage);
                 holder.addToCartButton.setText("ADDED");
                 holder.addToCartButton.setTextColor(Color.GREEN);
+
             }
         });
 
@@ -130,8 +132,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 Animation zoomin = AnimationUtils.loadAnimation(ctx, R.anim.zoom_in);
                 final Animation zoomout = AnimationUtils.loadAnimation(ctx, R.anim.zoom_out);
                 holder.wishListBtn.setAnimation(zoomin);
-
-
                 zoomin.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -205,7 +205,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             Toast.makeText(ctx, "Product added to Wishlist ", Toast.LENGTH_SHORT).show();
             imageView.setVisibility(View.VISIBLE);
         } else {
-            Toast.makeText(ctx, "Already added to Wishlist", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(ctx, "Already added to Wishlist", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -213,7 +213,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("DELETE FROM WISHLIST WHERE key = '" + key + "'");
         imageView.setVisibility(View.GONE);
-        Toast.makeText(ctx, "Product removed from Wishlist ", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(ctx, "Product removed from Wishlist ", Toast.LENGTH_SHORT).show();
     }
 
     public void setCartCount() {

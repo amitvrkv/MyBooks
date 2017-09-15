@@ -1,6 +1,7 @@
 package com.mybooks.mybooks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +60,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     EditText editTextSearchData;
 
     TextView cart_item_count;
-
+    ImageView my_cart_icon;
     Activity act;
 
     @Override
@@ -70,6 +72,8 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         act = this;
 
         cart_item_count = (TextView) findViewById(R.id.cart_item_count);
+        my_cart_icon = (ImageView) findViewById(R.id.my_cart_icon);
+        my_cart_icon.setOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
@@ -103,10 +107,13 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         filterLayout.setVisibility(View.INVISIBLE);
         doneFilter = (Button) findViewById(R.id.doneFilter);
         doneFilter.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setFilter();
-
         setDataOnPageStart();
-
         setCartCount();
     }
 
@@ -135,6 +142,9 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.search_data:
                 editTextSearchData.setCursorVisible(true);
+                break;
+            case R.id.my_cart_icon:
+                startActivity(new Intent(this, MyCartNew.class));
                 break;
             case R.id.floatingActionButtonFilter:
                 setFloatingActionButtonFilter();

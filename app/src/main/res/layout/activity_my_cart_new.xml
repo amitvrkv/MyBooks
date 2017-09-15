@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mybooks.mybooks.MyCartNew">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/TotalLayout"
+        android:layout_below="@+id/appBar">
+
+        <ListView
+            android:id="@+id/my_cart_item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dp">
+
+        </ListView>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/TotalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbarHeight"
+        android:layout_alignParentBottom="true"
+        android:background="@color/Light_Grey">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:gravity="center"
+            android:text="\u20B9"
+            android:textSize="16pt" />
+
+        <TextView
+            android:id="@+id/grandTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/textView"
+            android:layout_toRightOf="@+id/textView"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="0.0"
+            android:textSize="16pt" />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/Orange"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="Continue"
+            android:textColor="@color/colorTextIcon"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

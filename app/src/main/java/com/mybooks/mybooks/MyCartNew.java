@@ -1,0 +1,407 @@
+package com.mybooks.mybooks;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class MyCartNew extends AppCompatActivity {
+
+    RelativeLayout parentLayout;
+    ListView my_cart_item_list;
+    SQLiteDatabase sqLiteDatabase;
+
+    TextView mGrandTotal;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my_cart_new);
+        setToolbar();
+
+        my_cart_item_list = (ListView) findViewById(R.id.my_cart_item_list);
+        parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
+
+        mGrandTotal = (TextView) findViewById(R.id.grandTotal);
+
+        setMy_cart_item_list();
+    }
+
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("My Cart");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    public void setMy_cart_item_list() {
+        List<String> key = new ArrayList<>();
+        List<String> type = new ArrayList<>();
+        List<String> price = new ArrayList<>();
+        List<String> qty = new ArrayList<>();
+        sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(this.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART", null);
+
+        if (cursor.moveToFirst() == false) {
+            Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
+        } else {
+            do {
+                key.add(cursor.getString(cursor.getColumnIndex("key")));
+                type.add(cursor.getString(cursor.getColumnIndex("booktype")));
+                price.add(cursor.getString(cursor.getColumnIndex("price")));
+                qty.add(cursor.getString(cursor.getColumnIndex("qty")));
+            } while (cursor.moveToNext());
+            my_cart_item_list.setAdapter(new listViewCustomAdapter(this, key, type, price, qty));
+        }
+    }
+
+
+    public class listViewCustomAdapter extends BaseAdapter {
+
+        public LayoutInflater inflater = null;
+        ArrayList<String> total = new ArrayList<>();
+        Context context;
+        List<String> key = new ArrayList<>();
+        List<String> type = new ArrayList<>();
+        List<String> price = new ArrayList<>();
+        List<String> qty = new ArrayList<>();
+
+        public listViewCustomAdapter(Context context, List<String> key, List<String> type, List<String> price, List<String> qty) {
+            this.context = context;
+            this.key = key;
+            this.type = type;
+            this.price = price;
+            this.qty = qty;
+            inflater = (LayoutInflater) context.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+
+        @Override
+        public int getCount() {
+            return key.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return position;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+
+            final int final_pos = position;
+            final View view = inflater.inflate(R.layout.cart_book_list_view_new, null);
+            final TextView cart_product_title = (TextView) view.findViewById(R.id.cart_product_title);
+            final TextView cart_product_description_1 = (TextView) view.findViewById(R.id.cart_product_description_1);
+            final TextView cart_product_description_2 = (TextView) view.findViewById(R.id.cart_product_description_2);
+            final TextView cart_product_mrp = (TextView) view.findViewById(R.id.cart_product_mrp);
+            final TextView cart_product_sell_price = (TextView) view.findViewById(R.id.cart_product_sell_price);
+            cart_product_mrp.setPaintFlags(cart_product_mrp.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            final ImageView cart_product_image = (ImageView) view.findViewById(R.id.cart_product_image);
+
+            final RadioGroup radio_group_type = (RadioGroup) view.findViewById(R.id.cart_product_radio_group_type);
+            final RadioButton radio_button_old_type = (RadioButton) view.findViewById(R.id.cart_product_radio_button_old_type);
+            final RadioButton radio_button_new_type = (RadioButton) view.findViewById(R.id.cart_product_radio_button_new_type);
+
+            final Spinner cart_product_spinner_qty = (Spinner) view.findViewById(R.id.cart_product_spinner_qty);
+            int q = Integer.parseInt(String.valueOf(qty.get(position)));
+            cart_product_spinner_qty.setSelection(q - 1);
+
+            Button cart_product_remove_btn = (Button) view.findViewById(R.id.cart_product_remove_btn);
+            cart_product_remove_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeProductFromCart(position);
+                }
+            });
+
+            if (type.get(position).equalsIgnoreCase("New")) {
+                radio_button_new_type.setChecked(true);
+            } else if (type.get(position).equalsIgnoreCase("Old")) {
+                radio_button_old_type.setChecked(true);
+            }
+
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key.get(position));
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
+                    cart_product_title.setText(capitalizeEveryWord(modelProductList.getF2()));
+                    cart_product_description_1.setText(capitalizeEveryWord(modelProductList.getF3()));
+                    cart_product_description_2.setText(capitalizeEveryWord(modelProductList.getF4()));
+                    cart_product_mrp.setText(modelProductList.getF7());
+
+                    if (modelProductList.getF13() == null) {
+                        cart_product_image.setImageResource(R.drawable.no_image_available);
+                    } else if (modelProductList.getF13().equals("na")) {
+                        cart_product_image.setImageResource(R.drawable.no_image_available);
+                    } else {
+                        Picasso.with(context).load(modelProductList.getF13()).into(cart_product_image);
+                    }
+
+                    /* hide show book type selection view*/
+                    int new_price = Integer.parseInt(modelProductList.getF8());
+                    int old_price = Integer.parseInt(modelProductList.getF9());
+                    if (new_price == old_price) {
+                        updateDatabase(modelProductList.getF11(), "booktype", "New");
+                        updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
+                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
+                        linearLayout.setVisibility(View.GONE);
+                    } else {
+                        updateDatabase(modelProductList.getF11(), "booktype", "Old");
+                        updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
+                        LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
+                        linearLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    radio_group_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                            if (checkedId == radio_button_old_type.getId()) {
+                                updateDatabase(modelProductList.getF11(), "booktype", "Old");
+                                updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
+                                cart_product_sell_price.setText("\u20B9 " + modelProductList.getF9());
+                            } else if (checkedId == radio_button_new_type.getId()) {
+                                updateDatabase(modelProductList.getF11(), "booktype", "New");
+                                updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
+                                cart_product_sell_price.setText("\u20B9 " + modelProductList.getF8());
+                            }
+                        }
+                    });
+
+                    if (type.get(position).equalsIgnoreCase("New")) {
+                        updateDatabase(modelProductList.getF11(), "booktype", "New");
+                        cart_product_sell_price.setText("\u20B9 " + modelProductList.getF8());
+                    } else if (type.get(position).equalsIgnoreCase("Old")) {
+                        cart_product_sell_price.setText("\u20B9 " + modelProductList.getF9());
+                        updateDatabase(modelProductList.getF11(), "booktype", "Old");
+                    }
+
+                    cart_product_spinner_qty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            total.add("0");
+
+
+            /*
+            mremoveBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(getApplicationContext(), "Product removed from your cart", Toast.LENGTH_SHORT).show();
+                    SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                    sqLiteDatabase.execSQL("DELETE FROM CART WHERE key = '" + key.get(position) + "'");
+
+                    key.remove(position);
+                    title.remove(position);
+                    author.remove(position);
+                    course.remove(position);
+                    sem.remove(position);
+                    priceMRP.remove(position);
+                    priceOld.remove(position);
+                    priceNew.remove(position);
+                    booktype.remove(position);
+                    quantity.remove(position);
+
+                    total.remove(position);
+
+                    MyCart.listViewCustomAdapter.this.notifyDataSetChanged();
+
+                    setGrandTotal();
+                }
+            });
+            */
+
+            /*
+
+            newBookCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    int bookPrice = 0;
+                    int qty = 1;
+                    int totalPrice = 0;
+
+                    if (isChecked) {
+                        mpriceSell.setText("\u20B9 " + priceNew.get(position));
+                        mpriceSell.setTextColor(getResources().getColor(R.color.Yellow));
+                        bookPrice = Integer.parseInt(priceNew.get(position));
+                        updateDatabase("booktype", "new", key.get(position));
+                    } else {
+                        mpriceSell.setText("\u20B9 " + priceOld.get(position));
+                        mpriceSell.setTextColor(getResources().getColor(R.color.Green));
+                        bookPrice = Integer.parseInt(priceOld.get(position));
+                        updateDatabase("booktype", "old", key.get(position));
+                    }
+
+                    qty = Integer.parseInt(spinner.getSelectedItem().toString());
+
+                    totalPrice = bookPrice * qty;
+
+                    total.set(final_pos, String.valueOf(totalPrice));
+
+                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
+
+                    setGrandTotal();
+                }
+            });
+
+            */
+
+            /*
+
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    int bookPrice = 0;
+                    int totalPrice = 0;
+
+                    int qty = Integer.parseInt(spinner.getSelectedItem().toString());
+
+                    if(newBookCheck.isChecked()) {
+                        bookPrice = Integer.parseInt(priceNew.get(final_pos));
+                    } else {
+                        bookPrice = Integer.parseInt(priceOld.get(final_pos));
+                    }
+
+                    totalPrice = bookPrice * qty;
+
+                    total.set(final_pos, String.valueOf(totalPrice));
+
+                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
+
+                    setGrandTotal();
+                    updateDatabase("qty", spinner.getSelectedItem().toString() , key.get(final_pos));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            */
+
+            return view;
+        }
+
+        public String capitalizeEveryWord(String str) {
+
+            if (str == null)
+                return "";
+
+            System.out.println(str);
+            StringBuffer stringbf = new StringBuffer();
+            Matcher m = Pattern.compile(
+                    "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+            while (m.find()) {
+                m.appendReplacement(
+                        stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+            }
+            return m.appendTail(stringbf).toString();
+        }
+
+
+        public void setGrandTotal() {
+            int gtotal = 0;
+
+            String list = null;
+
+            for (int i = 0; i < total.size(); i++) {
+                gtotal = gtotal + Integer.parseInt(total.get(i));
+                list = list + " " + total.get(i);
+            }
+
+            if (gtotal == 0)
+                finish();
+
+                mGrandTotal.setText("\u20B9 " + gtotal);
+            //SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+            //SharedPreferences.Editor editor = sharedPreferences.edit();
+            //editor.putString("GrandTotal", String.valueOf(gtotal));
+            //editor.commit();
+        }
+
+
+        public void updateDatabase(String key, String column, String value) {
+            sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("UPDATE P_CART SET " + column + "='" + value + "' WHERE key='" + key + "'");
+        }
+
+        public void removeProductFromCart(int position) {
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("DELETE FROM P_CART WHERE key = '" + key.get(position) + "'");
+            key.remove(position);
+            type.remove(position);
+            qty.remove(position);
+            price.remove(position);
+            MyCartNew.listViewCustomAdapter.this.notifyDataSetChanged();
+        }
+    }
+
+
+}

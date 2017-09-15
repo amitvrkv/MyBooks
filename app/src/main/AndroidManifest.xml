@@ -26,7 +26,7 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity android:name=".BooksListPage" />
-        <activity android:name=".BooksListPageNew"/>
+        <activity android:name=".BooksListPageNew" />
         <activity
             android:name=".MyCart"
             android:label="@string/title_activity_my_cart"
@@ -40,7 +40,8 @@
 
         <service android:name=".MyBooksService" />
 
-        <activity android:name=".Individual_book_details"></activity>
+        <activity android:name=".Individual_book_details" />
+        <activity android:name=".MyCartNew"></activity>
     </application>
 
 </manifest>
