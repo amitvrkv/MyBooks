@@ -20,14 +20,14 @@
 
             <TextView
                 android:id="@+id/cart_item_count"
-                android:textStyle="bold"
-                android:textColor="@color/colorTextIcon"
-                android:layout_margin="3dp"
-                android:gravity="center_horizontal|center_vertical"
-                android:background="@drawable/circle_shape"
-                android:text="0"
                 android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_height="20dp"
+                android:layout_margin="3dp"
+                android:background="@drawable/circle_shape"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="0"
+                android:textColor="@color/colorTextIcon"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,13 +45,13 @@
                     android:src="@drawable/ic_shopping_cart_black_24dp" />
 
                 <View
-                    android:focusableInTouchMode="true"
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="2dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="2dp"
-                    android:background="#eaeaea" />
+                    android:background="#eaeaea"
+                    android:focusableInTouchMode="true" />
 
                 <EditText
                     android:id="@+id/search_data"
@@ -59,10 +59,10 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     android:hint="Search"
-                    android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:singleLine="true"
-                    android:maxLines="1" />
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -85,6 +85,8 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="150dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
@@ -97,45 +99,6 @@
         android:src="@drawable/filter"
         app:layout_anchor="@+id/recyclerView"
         app:layout_anchorGravity="bottom|right" />
-
-    <!--
-    <RelativeLayout
-        android:layout_margin="5dp"
-        app:layout_anchor="@+id/recyclerView"
-        app:layout_anchorGravity="bottom|left"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
-
-        <android.support.design.widget.FloatingActionButton
-            android:src="@mipmap/ic_shopping_cart_white_24dp"
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:backgroundTint="@color/colorPrimary" />
-
-        <TextView android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="OK"
-            android:textColor="@color/Red"
-            android:padding="2dp"
-            android:background="@drawable/round_corner"
-           />
-
-    </RelativeLayout>
-
-
-    <android.support.design.widget.FloatingActionButton
-        app:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/filter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_anchor="@+id/toolbar"
-        app:layout_anchorGravity="center_vertical|right"
-        />
--->
 
 </android.support.design.widget.CoordinatorLayout>
 

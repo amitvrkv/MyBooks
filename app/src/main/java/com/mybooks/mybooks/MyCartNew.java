@@ -1,9 +1,12 @@
 package com.mybooks.mybooks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
@@ -23,6 +26,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +47,9 @@ public class MyCartNew extends AppCompatActivity {
     SQLiteDatabase sqLiteDatabase;
 
     TextView mGrandTotal;
+    RelativeLayout TotalLayout;
+
+    Button cart_product_continueBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,20 @@ public class MyCartNew extends AppCompatActivity {
         parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
 
         mGrandTotal = (TextView) findViewById(R.id.grandTotal);
+        TotalLayout = (RelativeLayout) findViewById(R.id.TotalLayout);
+
+        cart_product_continueBtn = (Button) findViewById(R.id.cart_product_continueBtn);
+        cart_product_continueBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!haveNetworkConnection()) {
+                    Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                } else if (mGrandTotal.getText().toString().equals("0")) {
+                    return;
+                }
+                Toast.makeText(getApplicationContext(), "payment page to be implemented", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         setMy_cart_item_list();
     }
@@ -77,11 +98,15 @@ public class MyCartNew extends AppCompatActivity {
         List<String> type = new ArrayList<>();
         List<String> price = new ArrayList<>();
         List<String> qty = new ArrayList<>();
+        List<String> mtotal = new ArrayList<>();
+
+
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(this.getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART", null);
 
         if (cursor.moveToFirst() == false) {
+            TotalLayout.setVisibility(View.GONE);
             Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
         } else {
             do {
@@ -89,32 +114,39 @@ public class MyCartNew extends AppCompatActivity {
                 type.add(cursor.getString(cursor.getColumnIndex("booktype")));
                 price.add(cursor.getString(cursor.getColumnIndex("price")));
                 qty.add(cursor.getString(cursor.getColumnIndex("qty")));
+                mtotal.add(String.valueOf(Integer.parseInt(cursor.getString(cursor.getColumnIndex("price"))) * Integer.parseInt(cursor.getString(cursor.getColumnIndex("qty")))));
             } while (cursor.moveToNext());
-            my_cart_item_list.setAdapter(new listViewCustomAdapter(this, key, type, price, qty));
+            my_cart_item_list.setAdapter(new listViewCustomAdapter(this, key, type, price, qty, mtotal));
         }
     }
 
+    private boolean haveNetworkConnection() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     public class listViewCustomAdapter extends BaseAdapter {
 
         public LayoutInflater inflater = null;
-        ArrayList<String> total = new ArrayList<>();
         Context context;
         List<String> key = new ArrayList<>();
         List<String> type = new ArrayList<>();
         List<String> price = new ArrayList<>();
         List<String> qty = new ArrayList<>();
+        List<String> mtotal = new ArrayList<>();
 
-        public listViewCustomAdapter(Context context, List<String> key, List<String> type, List<String> price, List<String> qty) {
+        public listViewCustomAdapter(Context context, List<String> key, List<String> type, List<String> price, List<String> qty, List<String> mtotal) {
             this.context = context;
             this.key = key;
             this.type = type;
             this.price = price;
             this.qty = qty;
+            this.mtotal = mtotal;
             inflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-
 
         @Override
         public int getCount() {
@@ -134,8 +166,8 @@ public class MyCartNew extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-
             final int final_pos = position;
+
             final View view = inflater.inflate(R.layout.cart_book_list_view_new, null);
             final TextView cart_product_title = (TextView) view.findViewById(R.id.cart_product_title);
             final TextView cart_product_description_1 = (TextView) view.findViewById(R.id.cart_product_description_1);
@@ -153,6 +185,9 @@ public class MyCartNew extends AppCompatActivity {
             int q = Integer.parseInt(String.valueOf(qty.get(position)));
             cart_product_spinner_qty.setSelection(q - 1);
 
+            final TextView cart_product_total = (TextView) view.findViewById(R.id.cart_product_total);
+            cart_product_total.setText("\u20B9 " + mtotal.get(position));
+
             Button cart_product_remove_btn = (Button) view.findViewById(R.id.cart_product_remove_btn);
             cart_product_remove_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,6 +195,16 @@ public class MyCartNew extends AppCompatActivity {
                     removeProductFromCart(position);
                 }
             });
+
+            Button cart_product_move_to_wishlist_btn = (Button) view.findViewById(R.id.cart_product_move_to_wishlist_btn);
+            cart_product_move_to_wishlist_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addProductToWishList(position);
+                }
+            });
+
+            cart_product_sell_price.setText("\u20B9 " + price.get(position));
 
             if (type.get(position).equalsIgnoreCase("New")) {
                 radio_button_new_type.setChecked(true);
@@ -189,31 +234,43 @@ public class MyCartNew extends AppCompatActivity {
                     int new_price = Integer.parseInt(modelProductList.getF8());
                     int old_price = Integer.parseInt(modelProductList.getF9());
                     if (new_price == old_price) {
-                        updateDatabase(modelProductList.getF11(), "booktype", "New");
-                        updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
+                        //updateDatabase(modelProductList.getF11(), "booktype", "New");
+                        //updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
                         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
                         linearLayout.setVisibility(View.GONE);
                     } else {
-                        updateDatabase(modelProductList.getF11(), "booktype", "Old");
-                        updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
+                        //updateDatabase(modelProductList.getF11(), "booktype", "Old");
+                        //updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
                         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
                         linearLayout.setVisibility(View.VISIBLE);
                     }
 
+                    /*Selecting the type of book and updating the total amount*/
                     radio_group_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                             if (checkedId == radio_button_old_type.getId()) {
+                                //Toast.makeText(getApplicationContext(), "" + modelProductList.getF9(), Toast.LENGTH_SHORT).show();
                                 updateDatabase(modelProductList.getF11(), "booktype", "Old");
                                 updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
                                 cart_product_sell_price.setText("\u20B9 " + modelProductList.getF9());
+
+                                mtotal.set(final_pos, String.valueOf(Integer.parseInt(qty.get(final_pos)) * Integer.parseInt(modelProductList.getF9())));
+
                             } else if (checkedId == radio_button_new_type.getId()) {
+                                //Toast.makeText(getApplicationContext(), "" + modelProductList.getF8(), Toast.LENGTH_SHORT).show();
                                 updateDatabase(modelProductList.getF11(), "booktype", "New");
                                 updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
                                 cart_product_sell_price.setText("\u20B9 " + modelProductList.getF8());
+
+                                mtotal.set(final_pos, String.valueOf(Integer.parseInt(qty.get(final_pos)) * Integer.parseInt(modelProductList.getF8())));
+
                             }
+                            cart_product_total.setText("\u20B9 " + mtotal.get(position));
+                            setGrandTotal();
                         }
                     });
+
 
                     if (type.get(position).equalsIgnoreCase("New")) {
                         updateDatabase(modelProductList.getF11(), "booktype", "New");
@@ -223,15 +280,25 @@ public class MyCartNew extends AppCompatActivity {
                         updateDatabase(modelProductList.getF11(), "booktype", "Old");
                     }
 
+                    /*Selecting the quantity and updating the total amount*/
                     cart_product_spinner_qty.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                            qty.set(final_pos, String.valueOf(position + 1));
+                            updateDatabase(key.get(final_pos), "qty", String.valueOf(position + 1));
+
+                            if (radio_button_new_type.isChecked()) {
+                                mtotal.set(final_pos, String.valueOf(Integer.parseInt(qty.get(final_pos)) * Integer.parseInt(modelProductList.getF8())));
+                            } else if (radio_button_old_type.isChecked()) {
+                                mtotal.set(final_pos, String.valueOf(Integer.parseInt(qty.get(final_pos)) * Integer.parseInt(modelProductList.getF9())));
+                            }
+                            cart_product_total.setText("\u20B9 " + mtotal.get(final_pos));
+                            setGrandTotal();
                         }
 
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
-
                         }
                     });
                 }
@@ -242,108 +309,7 @@ public class MyCartNew extends AppCompatActivity {
                 }
             });
 
-            total.add("0");
-
-
-            /*
-            mremoveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Toast.makeText(getApplicationContext(), "Product removed from your cart", Toast.LENGTH_SHORT).show();
-                    SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-                    sqLiteDatabase.execSQL("DELETE FROM CART WHERE key = '" + key.get(position) + "'");
-
-                    key.remove(position);
-                    title.remove(position);
-                    author.remove(position);
-                    course.remove(position);
-                    sem.remove(position);
-                    priceMRP.remove(position);
-                    priceOld.remove(position);
-                    priceNew.remove(position);
-                    booktype.remove(position);
-                    quantity.remove(position);
-
-                    total.remove(position);
-
-                    MyCart.listViewCustomAdapter.this.notifyDataSetChanged();
-
-                    setGrandTotal();
-                }
-            });
-            */
-
-            /*
-
-            newBookCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    int bookPrice = 0;
-                    int qty = 1;
-                    int totalPrice = 0;
-
-                    if (isChecked) {
-                        mpriceSell.setText("\u20B9 " + priceNew.get(position));
-                        mpriceSell.setTextColor(getResources().getColor(R.color.Yellow));
-                        bookPrice = Integer.parseInt(priceNew.get(position));
-                        updateDatabase("booktype", "new", key.get(position));
-                    } else {
-                        mpriceSell.setText("\u20B9 " + priceOld.get(position));
-                        mpriceSell.setTextColor(getResources().getColor(R.color.Green));
-                        bookPrice = Integer.parseInt(priceOld.get(position));
-                        updateDatabase("booktype", "old", key.get(position));
-                    }
-
-                    qty = Integer.parseInt(spinner.getSelectedItem().toString());
-
-                    totalPrice = bookPrice * qty;
-
-                    total.set(final_pos, String.valueOf(totalPrice));
-
-                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
-
-                    setGrandTotal();
-                }
-            });
-
-            */
-
-            /*
-
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                    int bookPrice = 0;
-                    int totalPrice = 0;
-
-                    int qty = Integer.parseInt(spinner.getSelectedItem().toString());
-
-                    if(newBookCheck.isChecked()) {
-                        bookPrice = Integer.parseInt(priceNew.get(final_pos));
-                    } else {
-                        bookPrice = Integer.parseInt(priceOld.get(final_pos));
-                    }
-
-                    totalPrice = bookPrice * qty;
-
-                    total.set(final_pos, String.valueOf(totalPrice));
-
-                    mtotalIndividual.setText("Total: \u20B9 " + totalPrice);
-
-                    setGrandTotal();
-                    updateDatabase("qty", spinner.getSelectedItem().toString() , key.get(final_pos));
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-            */
+            setGrandTotal();
 
             return view;
         }
@@ -365,29 +331,24 @@ public class MyCartNew extends AppCompatActivity {
             return m.appendTail(stringbf).toString();
         }
 
-
         public void setGrandTotal() {
             int gtotal = 0;
-
-            String list = null;
-
-            for (int i = 0; i < total.size(); i++) {
-                gtotal = gtotal + Integer.parseInt(total.get(i));
-                list = list + " " + total.get(i);
+            for (int i = 0; i < mtotal.size(); i++) {
+                gtotal = gtotal + Integer.parseInt(mtotal.get(i));
             }
+            mGrandTotal.setText("" + gtotal);
 
-            if (gtotal == 0)
-                finish();
-
-                mGrandTotal.setText("\u20B9 " + gtotal);
-            //SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-            //SharedPreferences.Editor editor = sharedPreferences.edit();
-            //editor.putString("GrandTotal", String.valueOf(gtotal));
-            //editor.commit();
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("GrandTotal", String.valueOf(gtotal));
+            editor.commit();
         }
 
-
         public void updateDatabase(String key, String column, String value) {
+            if ( ! haveNetworkConnection()){
+                Toast.makeText(getApplicationContext(), "Check your internet connection \nChanges not updated", Toast.LENGTH_SHORT).show();
+                return;
+            }
             sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
             sqLiteDatabase.execSQL("UPDATE P_CART SET " + column + "='" + value + "' WHERE key='" + key + "'");
         }
@@ -399,9 +360,30 @@ public class MyCartNew extends AppCompatActivity {
             type.remove(position);
             qty.remove(position);
             price.remove(position);
+
+            mtotal.remove(position);
+
+            if (mtotal.size() == 0) {
+                TotalLayout.setVisibility(View.GONE);
+                Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
+            }
+
             MyCartNew.listViewCustomAdapter.this.notifyDataSetChanged();
         }
-    }
 
+        public void addProductToWishList(int position){
+            SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getApplicationContext().getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
+            Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + key.get(position) + "'", null);
+
+            if (cursor.getCount() <= 0) {
+                sqLiteDatabase.execSQL("INSERT INTO WISHLIST VALUES('" + key.get(position) + "');");
+                Toast.makeText(getApplicationContext(), "Product moved to Wishlist ", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Already present in Wishlist", Toast.LENGTH_SHORT).show();
+            }
+            removeProductFromCart(position);
+        }
+    }
 
 }

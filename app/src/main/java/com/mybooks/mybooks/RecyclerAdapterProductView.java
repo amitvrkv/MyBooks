@@ -65,7 +65,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         /* set price*/
         int mrp_p = Integer.parseInt(modelProductList.getF7());
         final int new_p = Integer.parseInt(modelProductList.getF8());
-        int old_p = Integer.parseInt(modelProductList.getF9());
+        final int old_p = Integer.parseInt(modelProductList.getF9());
         holder.mrp_price.setText(modelProductList.getF7());
         holder.new_price.setText(modelProductList.getF8());
         holder.old_price.setText("\u20B9" + modelProductList.getF9());
@@ -110,7 +110,14 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         holder.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProductToCart(ctx, modelProductList.getF11(), holder.mBookImage);
+                int new_price = Integer.parseInt(modelProductList.getF8());
+                int old_price = Integer.parseInt(modelProductList.getF9());
+                if (new_price == old_price) {
+                    addProductToCart(ctx, holder.mBookImage, modelProductList.getF11(), "New", String.valueOf(new_price));
+                } else {
+                    addProductToCart(ctx, holder.mBookImage, modelProductList.getF11(), "Old", String.valueOf(old_price));
+                }
+                //addProductToCart(ctx, modelProductList.getF11(), holder.mBookImage);
                 holder.addToCartButton.setText("ADDED");
                 holder.addToCartButton.setTextColor(Color.GREEN);
 
@@ -181,13 +188,13 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         return m.appendTail(stringbf).toString();
     }
 
-    public void addProductToCart(Context ctx, String key, View targetView) {
+    public void addProductToCart(Context ctx, View targetView, String key, String type, String price) {
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + key + "'", null);
 
         if (cursor.getCount() <= 0) {
-            sqLiteDatabase.execSQL("INSERT INTO P_CART VALUES('" + key + "','old', '0', '1');");
+            sqLiteDatabase.execSQL("INSERT INTO P_CART VALUES('" + key + "','" + type + "', '" + price + "', '1');");
             //Toast.makeText(ctx, "Product added to your Cart ", Toast.LENGTH_SHORT).show();
             makeFlyAnimation(targetView);
         } else {

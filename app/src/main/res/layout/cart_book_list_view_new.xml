@@ -132,6 +132,8 @@
                         android:text="Quantity: " />
 
                     <Spinner
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:id="@+id/cart_product_spinner_qty"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
