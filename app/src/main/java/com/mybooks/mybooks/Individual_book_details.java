@@ -1,17 +1,18 @@
 package com.mybooks.mybooks;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 public class Individual_book_details extends AppCompatActivity {
 
@@ -51,22 +52,6 @@ public class Individual_book_details extends AppCompatActivity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                /*
-                BookList bookList = dataSnapshot.getValue(BookList.class);
-                mBookTitle.setText("Book Title: " + bookList.getTitle());
-                mBookPublisher.setText("Publisher: " + bookList.getPublisher());
-                mBookAuthor.setText("Author: " + bookList.getAuthor());
-                mBookCourse.setText("Course: " + bookList.getCourse());
-                mBookSem.setText("Semester: " + bookList.getSem());
-                mBookMRP.setText("Book MRP: \u20B9 " + bookList.getPriceMRP());
-                mBookNewPrice.setText("New Book Price: \u20B9 " + bookList.getPriceNew());
-                mBookOldPrice.setText("Old Book Price: \u20B9 " + bookList.getPriceOld());
-
-                if (bookList.getSrc().equals("na"))
-                    mBook_image.setVisibility(View.GONE);
-                else
-                    Picasso.with(getApplicationContext()).load(bookList.getSrc()).into(mBook_image);
-                    */
                 ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
                 mBookTitle.setText("Book Title: " + modelProductList.getF2());
                 mBookPublisher.setText("Publisher: " + modelProductList.getF3());
@@ -80,7 +65,11 @@ public class Individual_book_details extends AppCompatActivity {
                 if (modelProductList.getF13().equals("na"))
                     mBook_image.setVisibility(View.GONE);
                 else
-                    Picasso.with(getApplicationContext()).load(modelProductList.getF13()).into(mBook_image);
+                    //Picasso.with(getApplicationContext()).load(modelProductList.getF13()).into(mBook_image);
+                    Glide.with(getApplicationContext()).load(modelProductList.getF13())
+                            .error(R.drawable.no_image_available)
+                            .crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(mBook_image);
             }
 
             @Override

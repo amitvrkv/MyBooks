@@ -16,10 +16,15 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -83,10 +88,30 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         /* set book cover*/
         if (modelProductList.getF13() == null) {
             holder.mBookImage.setImageResource(R.drawable.no_image_available);
+            holder.loadimage_progress_bar.setVisibility(View.GONE);
         } else if (modelProductList.getF13().equals("na")) {
             holder.mBookImage.setImageResource(R.drawable.no_image_available);
+            holder.loadimage_progress_bar.setVisibility(View.GONE);
         } else {
-            Picasso.with(ctx).load(modelProductList.getF13()).into(holder.mBookImage);
+            //Picasso.with(ctx).load(modelProductList.getF13()).into(holder.mBookImage);
+            //holder.loadimage_progress_bar.setVisibility(View.VISIBLE);
+            Glide.with(ctx).load(modelProductList.getF13())
+                    .error(R.drawable.no_image_available)
+                    .thumbnail(0.5f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            holder.loadimage_progress_bar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.loadimage_progress_bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(holder.mBookImage);
         }
 
         /*Set out of stock tag and Add to cart button visibility*/
@@ -300,11 +325,15 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         ImageView wishListBtn;
         ImageView wishListBtnAdded;
 
+        ProgressBar loadimage_progress_bar;
+
         public MyHolder(View mview) {
             super(mview);
 
             wishListBtn = (ImageView) mview.findViewById(R.id.wishListBtn);
             wishListBtnAdded = (ImageView) mview.findViewById(R.id.wishListBtnAdded);
+
+            loadimage_progress_bar = (ProgressBar) mview.findViewById(R.id.loadimage_progress_bar);
 
             mtitle = (TextView) mview.findViewById(R.id.p_f2);
             mtitle.setText("");

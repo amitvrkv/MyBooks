@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
-import android.os.Handler;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -24,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RemoteViews;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,9 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,24 +42,38 @@ import java.util.regex.Pattern;
 
 public class BooksListPage extends AppCompatActivity implements View.OnClickListener {
 
+    ImageView mSearchToolbarBtn, mSearchBtn;
+    RelativeLayout mSearchOptionLayout, mCheckoutAndFilterOptionLayout;
+    EditText mSearchData;
     private ImageView mbackButton;
     private LinearLayout mToolbar;
-
     private Button mdoneFilter, mclearFilter;
     private TextView mfilter, mcheckout;
     private RelativeLayout filterView;
     private Spinner mcousrseSelecter, msemSelecter, mClassSelecter;
-
     private RecyclerView mBookList;
-
     private Query mdatabaseQuery;
     private FirebaseRecyclerAdapter<BookList, BookListHolder> firebaseRecyclerAdapter;
-
     private ProgressDialog progressDialog;
 
-    ImageView mSearchToolbarBtn, mSearchBtn;
-    RelativeLayout mSearchOptionLayout, mCheckoutAndFilterOptionLayout;
-    EditText mSearchData;
+    public static void showToastMessage(Context context, String text, int duration) {
+        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        toast.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast.cancel();
+            }
+        }, duration);
+    }
+
+    public static void loadBookDetails(Context ctx, String course, String key) {
+        Intent intent = new Intent(ctx, Individual_book_details.class);
+        intent.putExtra("course", course);
+        intent.putExtra("key", key);
+        ctx.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,142 +221,6 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
         mBookList.setLayoutManager(new LinearLayoutManager(this));
 
     }
-
-
-    public static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        View mview;
-        TextView buyButtonTxt;
-
-        String title;
-        String author;
-        String course;
-        String sem;
-        String key;
-        String priceMRP;
-        String priceOld;
-        String priceNew;
-        String publisher;
-
-        ImageView mBookImage;
-        String src;
-
-        public BookListHolder(View itemView) {
-            super(itemView);
-            this.mview = itemView;
-
-            buyButtonTxt = (TextView) itemView.findViewById(R.id.addToCartButton);
-            buyButtonTxt.setOnClickListener(this);
-            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
-            mBookImage.setOnClickListener(this);
-        }
-
-        public void setPublisher(String publisher) {
-            this.publisher = publisher;
-            TextView mpublisher = (TextView) mview.findViewById(R.id.p_f3);
-            mpublisher.setText(publisher);
-        }
-
-        public void setImage(final String src) {
-            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
-            if (!src.equals("na")) {
-                Picasso.with(mview.getContext()).load(src).into(mBookImage);
-            } else {
-                mBookImage.setImageResource(R.drawable.no_image_available);
-            }
-            this.src = src;
-        }
-
-        public void settitle(String title) {
-            TextView mtitle = (TextView) mview.findViewById(R.id.p_f2);
-            mtitle.setText(capitalizeEveryWord(title));
-            this.title = title;
-        }
-
-        public String capitalizeEveryWord(String str) {
-            System.out.println(str);
-            StringBuffer stringbf = new StringBuffer();
-            Matcher m = Pattern.compile(
-                    "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
-
-            while (m.find()) {
-                m.appendReplacement(
-                        stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
-            }
-            return m.appendTail(stringbf).toString();
-        }
-
-
-        public void setauthor(String author) {
-            TextView mauthor = (TextView) mview.findViewById(R.id.p_f4);
-            mauthor.setText(capitalizeEveryWord(author));
-            this.author = author;
-        }
-
-        public void setCourse(String course) {
-            TextView mcourse = (TextView) mview.findViewById(R.id.p_f5);
-            mcourse.setText(course);
-            this.course = course;
-        }
-
-        public void setSem(String sem) {
-            TextView msem = (TextView) mview.findViewById(R.id.p_f6);
-            msem.setText("Semester: " + sem);
-            this.sem = sem;
-        }
-
-        public void setpriceMRP(String priceMRP) {
-            TextView mmarket = (TextView) mview.findViewById(R.id.p_f7);
-            mmarket.setText(priceMRP);
-            mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            this.priceMRP = priceMRP;
-        }
-
-        public void setpriceOld(String priceOld) {
-            TextView msell = (TextView) mview.findViewById(R.id.p_f9);
-            msell.setText("\u20B9 " + priceOld);
-            this.priceOld = priceOld;
-        }
-
-        public void setPriceNew(String priceNew) {
-            TextView bookSellingNewPrice = (TextView) mview.findViewById(R.id.p_f8);
-            bookSellingNewPrice.setText(priceNew);
-            bookSellingNewPrice.setPaintFlags(bookSellingNewPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            this.priceNew = priceNew;
-        }
-
-        public void setavlcopy(int mavlcopy) {
-            ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
-            TextView mbookbuy = (TextView) mview.findViewById(R.id.addToCartButton);
-
-            if (mavlcopy <= 0) {
-                outofstockimg.setVisibility(View.VISIBLE);
-                mbookbuy.setVisibility(View.GONE);
-            } else {
-                outofstockimg.setVisibility(View.GONE);
-                mbookbuy.setVisibility(View.VISIBLE);
-            }
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
-
-        //Adding books to cart
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == buyButtonTxt.getId()) {
-                BooksListPage bk = new BooksListPage();
-                bk.insertDataToCart(v.getContext(), key, title, publisher, author, course, sem, priceMRP, priceNew, priceOld);
-            }
-            if (v.getId() == mBookImage.getId()) {
-                loadBookDetails(v.getContext(), course, key);
-            }
-        }
-
-
-    }
-
 
     @Override
     public void onClick(View v) {
@@ -582,23 +455,138 @@ public class BooksListPage extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public static void showToastMessage(Context context, String text, int duration) {
-        final Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        toast.show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toast.cancel();
-            }
-        }, duration);
-    }
+    public static class BookListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public static void loadBookDetails(Context ctx, String course, String key) {
-        Intent intent = new Intent(ctx, Individual_book_details.class);
-        intent.putExtra("course", course);
-        intent.putExtra("key", key);
-        ctx.startActivity(intent);
+        View mview;
+        TextView buyButtonTxt;
+
+        String title;
+        String author;
+        String course;
+        String sem;
+        String key;
+        String priceMRP;
+        String priceOld;
+        String priceNew;
+        String publisher;
+
+        ImageView mBookImage;
+        String src;
+
+        public BookListHolder(View itemView) {
+            super(itemView);
+            this.mview = itemView;
+
+            buyButtonTxt = (TextView) itemView.findViewById(R.id.addToCartButton);
+            buyButtonTxt.setOnClickListener(this);
+            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
+            mBookImage.setOnClickListener(this);
+        }
+
+        public void setPublisher(String publisher) {
+            this.publisher = publisher;
+            TextView mpublisher = (TextView) mview.findViewById(R.id.p_f3);
+            mpublisher.setText(publisher);
+        }
+
+        public void setImage(final String src) {
+            mBookImage = (ImageView) mview.findViewById(R.id.p_f13);
+            if (!src.equals("na")) {
+                //Picasso.with(mview.getContext()).load(src).into(mBookImage);
+            } else {
+                mBookImage.setImageResource(R.drawable.no_image_available);
+            }
+            this.src = src;
+        }
+
+        public void settitle(String title) {
+            TextView mtitle = (TextView) mview.findViewById(R.id.p_f2);
+            mtitle.setText(capitalizeEveryWord(title));
+            this.title = title;
+        }
+
+        public String capitalizeEveryWord(String str) {
+            System.out.println(str);
+            StringBuffer stringbf = new StringBuffer();
+            Matcher m = Pattern.compile(
+                    "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+            while (m.find()) {
+                m.appendReplacement(
+                        stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+            }
+            return m.appendTail(stringbf).toString();
+        }
+
+
+        public void setauthor(String author) {
+            TextView mauthor = (TextView) mview.findViewById(R.id.p_f4);
+            mauthor.setText(capitalizeEveryWord(author));
+            this.author = author;
+        }
+
+        public void setCourse(String course) {
+            TextView mcourse = (TextView) mview.findViewById(R.id.p_f5);
+            mcourse.setText(course);
+            this.course = course;
+        }
+
+        public void setSem(String sem) {
+            TextView msem = (TextView) mview.findViewById(R.id.p_f6);
+            msem.setText("Semester: " + sem);
+            this.sem = sem;
+        }
+
+        public void setpriceMRP(String priceMRP) {
+            TextView mmarket = (TextView) mview.findViewById(R.id.p_f7);
+            mmarket.setText(priceMRP);
+            mmarket.setPaintFlags(mmarket.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            this.priceMRP = priceMRP;
+        }
+
+        public void setpriceOld(String priceOld) {
+            TextView msell = (TextView) mview.findViewById(R.id.p_f9);
+            msell.setText("\u20B9 " + priceOld);
+            this.priceOld = priceOld;
+        }
+
+        public void setPriceNew(String priceNew) {
+            TextView bookSellingNewPrice = (TextView) mview.findViewById(R.id.p_f8);
+            bookSellingNewPrice.setText(priceNew);
+            bookSellingNewPrice.setPaintFlags(bookSellingNewPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            this.priceNew = priceNew;
+        }
+
+        public void setavlcopy(int mavlcopy) {
+            ImageView outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
+            TextView mbookbuy = (TextView) mview.findViewById(R.id.addToCartButton);
+
+            if (mavlcopy <= 0) {
+                outofstockimg.setVisibility(View.VISIBLE);
+                mbookbuy.setVisibility(View.GONE);
+            } else {
+                outofstockimg.setVisibility(View.GONE);
+                mbookbuy.setVisibility(View.VISIBLE);
+            }
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        //Adding books to cart
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == buyButtonTxt.getId()) {
+                BooksListPage bk = new BooksListPage();
+                bk.insertDataToCart(v.getContext(), key, title, publisher, author, course, sem, priceMRP, priceNew, priceOld);
+            }
+            if (v.getId() == mBookImage.getId()) {
+                loadBookDetails(v.getContext(), course, key);
+            }
+        }
+
+
     }
 
 }

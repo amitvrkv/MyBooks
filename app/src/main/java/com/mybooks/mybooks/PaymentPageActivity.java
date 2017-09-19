@@ -102,7 +102,6 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     placeOrder();
                 }
                 else
-                    //Toast.makeText(getApplicationContext(), "Please select mode of payments", Toast.LENGTH_SHORT).show();
                     Snackbar.make(parentLayoutView, "Please select mode of payment", Snackbar.LENGTH_SHORT).show();
                 break;
         }
@@ -161,6 +160,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
         String grandTotal = sharedPreferences.getString("GrandTotal", null);
 
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordernumber);
         databaseReference.child("orderid").setValue(ordernumber);
         databaseReference.child("from").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
@@ -179,6 +179,32 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+
+
+        /*
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordernumber);
+        databaseReference.child("orderid").setValue(ordernumber);
+        databaseReference.child("from").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
+        databaseReference.child("date").setValue(String.valueOf(getDate()));
+
+        databaseReference.child("total").setValue(grandTotal);
+        databaseReference.child("delivery").setValue(grandTotal);
+        databaseReference.child("discount").setValue(grandTotal);
+        databaseReference.child("grandtotal").setValue(grandTotal);
+
+        databaseReference.child("paymentmode").setValue(grandTotal);
+        databaseReference.child("status").setValue("Order placed");
+        databaseReference.child("deliveryaddress").setValue(setAddress().replace("\n", ", "));
+        databaseReference.child("comment").setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    placeOrderedProductOnFirebase(ordernumber);
+                } else {
+                    orderPlaceFailed("Failed to place order. Try again!!!");
+                }
+            }
+        });*/
     }
 
     //Updating product details on firebase

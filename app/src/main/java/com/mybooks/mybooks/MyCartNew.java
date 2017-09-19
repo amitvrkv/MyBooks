@@ -28,12 +28,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -227,7 +228,11 @@ public class MyCartNew extends AppCompatActivity {
                     } else if (modelProductList.getF13().equals("na")) {
                         cart_product_image.setImageResource(R.drawable.no_image_available);
                     } else {
-                        Picasso.with(context).load(modelProductList.getF13()).into(cart_product_image);
+                        //Picasso.with(context).load(modelProductList.getF13()).into(cart_product_image);
+                        Glide.with(context).load(modelProductList.getF13())
+                                .error(R.drawable.no_image_available)
+                                .thumbnail(0.1f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(cart_product_image);
                     }
 
                     /* hide show book type selection view*/
