@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.orderBookMenu :
-                startActivity(new Intent(getApplicationContext(), BooksListPage.class));
+                startActivity(new Intent(getApplicationContext(), BooksListPageNew.class));
                 break;
 
             /*case R.id.customiseOrderMenu:
@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity
                 break;*/
 
             case R.id.myCartMenu :
-                startActivity(new Intent(getApplicationContext(), MyCart.class));
+                startActivity(new Intent(getApplicationContext(), MyCartNew.class));
                 break;
 
             case R.id.logoutMenu :

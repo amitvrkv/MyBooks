@@ -25,12 +25,7 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".BooksListPage" />
         <activity android:name=".BooksListPageNew" />
-        <activity
-            android:name=".MyCart"
-            android:label="@string/title_activity_my_cart"
-            android:theme="@style/AppTheme" />
         <activity android:name=".AddressActivity" />
         <activity android:name=".PaymentPageActivity" />
         <activity android:name=".OrderPageActivity" />

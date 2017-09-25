@@ -59,18 +59,39 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(final MyHolder holder, final int position) {
         final ModelProductList modelProductList = listdata.get(position);
+
         holder.mtitle.setText(capitalizeEveryWord(modelProductList.getF2()));
-        holder.mpublisher.setText(capitalizeEveryWord(modelProductList.getF3()));
-        holder.mauthor.setText(capitalizeEveryWord(modelProductList.getF4()));
-        holder.mcourse.setText(modelProductList.getF5());
-        holder.msem.setText(modelProductList.getF6());
+        if (modelProductList.getF3().equalsIgnoreCase("na")) {
+            holder.mpublisher.setVisibility(View.GONE);
+        } else {
+            holder.mpublisher.setVisibility(View.VISIBLE);
+            holder.mpublisher.setText(capitalizeEveryWord(modelProductList.getF3()));
+        }
+        if (modelProductList.getF4().equalsIgnoreCase("na")) {
+            holder.mauthor.setVisibility(View.GONE);
+        } else {
+            holder.mauthor.setVisibility(View.VISIBLE);
+            holder.mauthor.setText(capitalizeEveryWord(modelProductList.getF4()));
+        }
+        if (modelProductList.getF5().equalsIgnoreCase("na")) {
+            holder.mcourse.setVisibility(View.GONE);
+        } else {
+            holder.mcourse.setVisibility(View.VISIBLE);
+            holder.mcourse.setText(modelProductList.getF5());
+        }
+        if (modelProductList.getF6().equalsIgnoreCase("na")) {
+            holder.msem.setVisibility(View.GONE);
+        } else {
+            holder.msem.setVisibility(View.VISIBLE);
+            holder.msem.setText(modelProductList.getF6());
+        }
 
         setWishlistBtn(ctx, modelProductList.getF11(), holder.wishListBtnAdded);
 
         /* set price*/
-        int mrp_p = Integer.parseInt(modelProductList.getF7());
-        final int new_p = Integer.parseInt(modelProductList.getF8());
-        final int old_p = Integer.parseInt(modelProductList.getF9());
+        int mrp_p = Integer.parseInt(modelProductList.getF7().trim());
+        final int new_p = Integer.parseInt(modelProductList.getF8().trim());
+        final int old_p = Integer.parseInt(modelProductList.getF9().trim());
         holder.mrp_price.setText(modelProductList.getF7());
         holder.new_price.setText(modelProductList.getF8());
         holder.old_price.setText("\u20B9" + modelProductList.getF9());
