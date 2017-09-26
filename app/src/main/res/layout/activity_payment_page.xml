@@ -6,32 +6,19 @@
     android:layout_height="match_parent"
     tools:context="com.mybooks.mybooks.PaymentPageActivity">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/toolbar" />
+    </android.support.design.widget.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbarHeight"
-            android:background="@color/colorPrimary">
-
-            <ImageView
-                android:id="@+id/placeOrderBackBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/backButtonPadding"
-                android:src="@drawable/ic_arrow_back_white_24dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="Conform order"
-                android:textColor="@color/colorTextIcon"
-                android:textSize="@dimen/toolbarTextSize" />
-
-        </LinearLayout>
+        android:orientation="vertical"
+        android:layout_below="@+id/appBar">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -125,9 +112,21 @@
                     android:layout_marginTop="3dp">
 
                     <TextView
+                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Discount: " />
+
+                    <TextView
+                        android:id="@+id/payment_applyPromocode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toEndOf="@+id/textView2"
+                        android:layout_toRightOf="@+id/textView2"
+                        android:text="Have a promocode?"
+                        android:textColor="@color/Green" />
 
                     <TextView
                         android:id="@+id/payment_discount"
@@ -152,18 +151,18 @@
                     android:layout_marginTop="3dp">
 
                     <TextView
-                        android:textColor="@android:color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Grand total: " />
+                        android:text="Grand total: "
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/payment_grand_total"
-                        android:textColor="@android:color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="\u20B9 0.0" />
+                        android:text="\u20B9 0.0"
+                        android:textColor="@android:color/black" />
 
                 </RelativeLayout>
 
@@ -197,16 +196,16 @@
                     android:paddingTop="5dp">
 
                     <RadioButton
-                        android:id="@+id/modeCOD"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Cash on delivery" />
-
-                    <RadioButton
                         android:id="@+id/modeOnline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Pay online" />
+
+                    <RadioButton
+                        android:id="@+id/modeCOD"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cash on delivery" />
 
                 </RadioGroup>
 

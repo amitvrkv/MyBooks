@@ -19,9 +19,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Welcome"
-            android:label="@string/title_activity_login" />
-        <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/myCartCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="2dp"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -19,9 +18,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="15dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp">
 
                 <TextView
                     android:id="@+id/osid"
@@ -39,18 +38,42 @@
                     android:text="Date and Time: " />
 
                 <TextView
-                    android:id="@+id/oamount"
+                    android:id="@+id/oStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Status: " />
+
+                <TextView
+                    android:id="@+id/ototal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="Total amount: " />
 
                 <TextView
-                    android:id="@+id/oStatus"
+                    android:id="@+id/odelivery"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="Status: " />
+                    android:text="Delivey Charge: " />
+
+                <TextView
+                    android:id="@+id/odiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Discount: " />
+
+                <TextView
+                    android:textColor="@color/Red"
+                    android:id="@+id/ograndtotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Grand amount: " />
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,15 +91,17 @@
                             android:text="Comments:" />
 
                         <TextView
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
+                            android:id="@+id/oAddCommentsBtn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:background="@drawable/round_corner"
-                            android:id="@+id/oAddCommentsBtn"
                             android:gravity="right"
-                            android:text="Add comment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:paddingLeft="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:text="Add comment" />
 
                     </RelativeLayout>
 
@@ -84,50 +109,56 @@
                         android:id="@+id/oComment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="" />
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:paddingLeft="10dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <RelativeLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp">
+                android:layout_height="1dp"
+                android:layout_marginTop="1dp"
+                android:alpha="0.5"
+                android:background="@color/Light_Grey" />
 
-
-                <TextView
-                    android:id="@+id/cancelOrder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/view"
-                    android:background="#e0f2f1"
-                    android:gravity="center"
-                    android:text="CANCEL ORDER" />
-
-
-                <TextView
-                    android:id="@+id/getOrderDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_toEndOf="@+id/cancelOrder"
-                    android:layout_toRightOf="@+id/cancelOrder"
-                    android:background="#e0f2f1"
-                    android:gravity="center"
-                    android:text="GET ORDER DETAILS" />
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true">
 
                 <View
-                    android:id="@+id/view"
-                    android:layout_width="2dp"
-                    android:layout_height="23dp"
+                    android:id="@+id/view2"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:background="@color/colorTextIcon" />
+                    android:alpha="0.5"
+                    android:background="@color/Light_Grey" />
 
+                <Button
+                    android:id="@+id/cancelOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@+id/view2"
+                    android:background="@color/colorTextIcon"
+                    android:text="CANCEL ORDER"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
+
+                <Button
+                    android:id="@+id/getOrderDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_toEndOf="@+id/view2"
+                    android:layout_toRightOf="@+id/view2"
+                    android:background="@color/colorTextIcon"
+                    android:text="GET ORDER DETAILS"
+                    android:textAppearance="@style/TextAppearance.AppCompat" />
 
             </RelativeLayout>
 

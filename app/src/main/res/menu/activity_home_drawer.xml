@@ -23,6 +23,7 @@
             android:title="My Order" />
 
         <item
+            android:icon="@mipmap/ic_favorite_black_24dp"
             android:id="@+id/myWishListMenu"
             android:title="My Wishlist" />
 

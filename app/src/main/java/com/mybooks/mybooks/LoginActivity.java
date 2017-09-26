@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                     relativeLayout.setVisibility(View.GONE);
                 }
             }
-        }, 1500);
+        }, 1000);
 
         //
     }

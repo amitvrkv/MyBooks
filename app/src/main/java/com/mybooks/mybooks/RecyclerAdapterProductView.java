@@ -96,16 +96,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         holder.new_price.setText(modelProductList.getF8());
         holder.old_price.setText("\u20B9" + modelProductList.getF9());
 
-        /*if (old_p == 0) {
-            holder.old_price.setText("\u20B9" + modelProductList.getF8());
-            holder.new_price.setText(modelProductList.getF7());
-            holder.mrp_price.setVisibility(View.GONE);
-        }
-        if (new_p == 0) {
-            holder.new_price.setText(modelProductList.getF7());
-            holder.mrp_price.setVisibility(View.GONE);
-        }*/
-
         /* set book cover*/
         if (modelProductList.getF13() == null) {
             holder.mBookImage.setImageResource(R.drawable.no_image_available);
@@ -114,8 +104,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             holder.mBookImage.setImageResource(R.drawable.no_image_available);
             holder.loadimage_progress_bar.setVisibility(View.GONE);
         } else {
-            //Picasso.with(ctx).load(modelProductList.getF13()).into(holder.mBookImage);
-            //holder.loadimage_progress_bar.setVisibility(View.VISIBLE);
             Glide.with(ctx).load(modelProductList.getF13())
                     .error(R.drawable.no_image_available)
                     .thumbnail(0.5f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -163,7 +151,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 } else {
                     addProductToCart(ctx, holder.mBookImage, modelProductList.getF11(), "Old", String.valueOf(old_price));
                 }
-                //addProductToCart(ctx, modelProductList.getF11(), holder.mBookImage);
                 holder.addToCartButton.setText("ADDED");
                 holder.addToCartButton.setTextColor(Color.GREEN);
 

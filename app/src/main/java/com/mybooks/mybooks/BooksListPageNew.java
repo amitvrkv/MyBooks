@@ -112,9 +112,17 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onStart() {
         super.onStart();
+
         setFilter();
-        setDataOnPageStart();
         setCartCount();
+
+        Bundle bundle = getIntent().getExtras();
+        String key = bundle.getString("f");
+        if (key.equals("all")) {
+            setDataOnPageStart();
+        } else if (key.equals("wishlist")) {
+            productByWishlist();
+        }
     }
 
     @Override
@@ -411,7 +419,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void productByWishlist_support(List<ModelProductList> list){
+    public void productByWishlist_support(List<ModelProductList> list) {
         RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), list, cart_item_count, act);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
         recyclerView.setLayoutManager(layoutManager);

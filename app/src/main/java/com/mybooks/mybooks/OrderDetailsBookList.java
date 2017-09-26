@@ -5,44 +5,28 @@ package com.mybooks.mybooks;
  */
 
 public class OrderDetailsBookList {
-    String author;
-    String bookkey;
+    String key;
     String booktype;
-    String course;
     String price;
     String quantity;
-    String sem;
-    String title;
 
     public OrderDetailsBookList() {
 
     }
 
-    public OrderDetailsBookList(String author, String bookkey, String booktype, String course, String price, String quantity, String sem, String title) {
-        this.author = author;
-        this.bookkey = bookkey;
+    public OrderDetailsBookList(String key, String booktype, String price, String quantity) {
+        this.key = key;
         this.booktype = booktype;
-        this.course = course;
         this.price = price;
         this.quantity = quantity;
-        this.sem = sem;
-        this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getKey() {
+        return key;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getBookkey() {
-        return bookkey;
-    }
-
-    public void setBookkey(String bookkey) {
-        this.bookkey = bookkey;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getBooktype() {
@@ -51,14 +35,6 @@ public class OrderDetailsBookList {
 
     public void setBooktype(String booktype) {
         this.booktype = booktype;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
-        this.course = course;
     }
 
     public String getPrice() {
@@ -75,21 +51,5 @@ public class OrderDetailsBookList {
 
     public void setQuantity(String quantity) {
         this.quantity = quantity;
-    }
-
-    public String getSem() {
-        return sem;
-    }
-
-    public void setSem(String sem) {
-        this.sem = sem;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

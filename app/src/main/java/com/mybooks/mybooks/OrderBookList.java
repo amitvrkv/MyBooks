@@ -7,6 +7,11 @@ package com.mybooks.mybooks;
 public class OrderBookList {
     String orderid;
     String date;
+
+    String total;
+    String deliverycharge;
+    String discount;
+
     String grandtotal;
     String status;
     String comment;
@@ -15,9 +20,12 @@ public class OrderBookList {
 
     }
 
-    public OrderBookList(String orderid, String date, String grandtotal, String status, String comment) {
+    public OrderBookList(String orderid, String date, String total, String deliverycharge, String discount, String grandtotal, String status, String comment) {
         this.orderid = orderid;
         this.date = date;
+        this.total = total;
+        this.deliverycharge = deliverycharge;
+        this.discount = discount;
         this.grandtotal = grandtotal;
         this.status = status;
         this.comment = comment;
@@ -39,6 +47,30 @@ public class OrderBookList {
         this.date = date;
     }
 
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public String getDeliverycharge() {
+        return deliverycharge;
+    }
+
+    public void setDeliverycharge(String deliverycharge) {
+        this.deliverycharge = deliverycharge;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
     public String getGrandtotal() {
         return grandtotal;
     }
@@ -55,11 +87,11 @@ public class OrderBookList {
         this.status = status;
     }
 
-    public String getComments() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComments(String comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 }

@@ -57,9 +57,12 @@ public class OrderPageActivity extends AppCompatActivity {
             protected void populateViewHolder(OrderBookListHolder viewHolder, final OrderBookList model, int position) {
                 viewHolder.setOrderId(model.getOrderid());
                 viewHolder.setDate(model.getDate());
-                viewHolder.setAmount(model.getGrandtotal());
+                viewHolder.setTotal(model.getTotal());
+                viewHolder.setDeliveryCharge(model.getDeliverycharge());
+                viewHolder.setDiscount(model.getDiscount());
+                viewHolder.setGrandTotal(model.getGrandtotal());
                 viewHolder.setStatus(model.getStatus());
-                viewHolder.setComment(model.getComments());
+                viewHolder.setComment(model.getComment());
             }
         };
 
@@ -122,9 +125,24 @@ public class OrderPageActivity extends AppCompatActivity {
             mDate.setText("Data and Time: " + date);
         }
 
-        public void setAmount(String amt) {
-            TextView mAmt = (TextView) mView.findViewById(R.id.oamount);
-            mAmt.setText("Total Amount: " + amt);
+        public void setTotal(String amt) {
+            TextView total = (TextView) mView.findViewById(R.id.ototal);
+            total.setText("Total Amount: \u20B9 " + amt);
+        }
+
+        public void setDeliveryCharge(String amt) {
+            TextView odelivery = (TextView) mView.findViewById(R.id.odelivery);
+            odelivery.setText("Delivery Charge: \u20B9 " + amt);
+        }
+
+        public void setDiscount(String amt) {
+            TextView odiscount = (TextView) mView.findViewById(R.id.odiscount);
+            odiscount.setText("Discount: \u20B9 " + amt);
+        }
+
+        public void setGrandTotal(String amt) {
+            TextView grand_total = (TextView) mView.findViewById(R.id.ograndtotal);
+            grand_total.setText("Grand Amount: \u20B9 " + amt);
         }
 
         public void setStatus(String status) {

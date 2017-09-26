@@ -1,41 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mybooks.mybooks.Individual_book_details">
 
     <ScrollView
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_marginBottom="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/toolbar"
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBar"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbarHeight"
-                android:background="@color/colorPrimary">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/BackButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/backButtonPadding"
-                    android:src="@drawable/ic_arrow_back_white_24dp" />
-
-            </LinearLayout>
+                <include layout="@layout/toolbar" />
+            </android.support.design.widget.AppBarLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/toolbar"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@+id/appBar">
 
                 <ImageView
                     android:id="@+id/book_image"
@@ -51,7 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@color/Light_Grey" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,11 +51,13 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textSize="18dp"
                         android:id="@+id/BookTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="Book Title" />
+                        android:text="Book Title"
+                        android:textColor="@android:color/black" />
 
                     <TextView
                         android:id="@+id/BookPublisher"

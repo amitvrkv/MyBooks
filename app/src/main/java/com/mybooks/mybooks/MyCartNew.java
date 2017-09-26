@@ -1,6 +1,7 @@
 package com.mybooks.mybooks;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,10 +12,13 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -73,7 +77,9 @@ public class MyCartNew extends AppCompatActivity {
                 } else if (mGrandTotal.getText().toString().equals("0")) {
                     return;
                 }
-                Toast.makeText(getApplicationContext(), "payment page to be implemented", Toast.LENGTH_SHORT).show();
+                getApplicationContext().startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
+                finish();
+                //Toast.makeText(getApplicationContext(), "payment page to be implemented", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -169,6 +175,8 @@ public class MyCartNew extends AppCompatActivity {
 
             final int final_pos = position;
 
+            final CardView myCartCard = (CardView) findViewById(R.id.myCartCard);
+
             final View view = inflater.inflate(R.layout.cart_book_list_view_new, null);
             final TextView cart_product_title = (TextView) view.findViewById(R.id.cart_product_title);
             final TextView cart_product_description_1 = (TextView) view.findViewById(R.id.cart_product_description_1);
@@ -239,13 +247,9 @@ public class MyCartNew extends AppCompatActivity {
                     int new_price = Integer.parseInt(modelProductList.getF8());
                     int old_price = Integer.parseInt(modelProductList.getF9());
                     if (new_price == old_price) {
-                        //updateDatabase(modelProductList.getF11(), "booktype", "New");
-                        //updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
                         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
                         linearLayout.setVisibility(View.GONE);
                     } else {
-                        //updateDatabase(modelProductList.getF11(), "booktype", "Old");
-                        //updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
                         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
                         linearLayout.setVisibility(View.VISIBLE);
                     }
@@ -255,7 +259,6 @@ public class MyCartNew extends AppCompatActivity {
                         @Override
                         public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
                             if (checkedId == radio_button_old_type.getId()) {
-                                //Toast.makeText(getApplicationContext(), "" + modelProductList.getF9(), Toast.LENGTH_SHORT).show();
                                 updateDatabase(modelProductList.getF11(), "booktype", "Old");
                                 updateDatabase(modelProductList.getF11(), "price", modelProductList.getF9());
                                 cart_product_sell_price.setText("\u20B9 " + modelProductList.getF9());
@@ -263,7 +266,6 @@ public class MyCartNew extends AppCompatActivity {
                                 mtotal.set(final_pos, String.valueOf(Integer.parseInt(qty.get(final_pos)) * Integer.parseInt(modelProductList.getF9())));
 
                             } else if (checkedId == radio_button_new_type.getId()) {
-                                //Toast.makeText(getApplicationContext(), "" + modelProductList.getF8(), Toast.LENGTH_SHORT).show();
                                 updateDatabase(modelProductList.getF11(), "booktype", "New");
                                 updateDatabase(modelProductList.getF11(), "price", modelProductList.getF8());
                                 cart_product_sell_price.setText("\u20B9 " + modelProductList.getF8());
@@ -345,7 +347,7 @@ public class MyCartNew extends AppCompatActivity {
 
             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("GrandTotal", String.valueOf(gtotal));
+            editor.putString("Total", String.valueOf(gtotal));
             editor.commit();
         }
 
@@ -359,7 +361,6 @@ public class MyCartNew extends AppCompatActivity {
         }
 
         public void removeProductFromCart(int position) {
-            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
             sqLiteDatabase.execSQL("DELETE FROM P_CART WHERE key = '" + key.get(position) + "'");
             key.remove(position);
             type.remove(position);

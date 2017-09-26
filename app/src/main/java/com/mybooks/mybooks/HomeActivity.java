@@ -6,31 +6,20 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
-import android.text.format.DateFormat;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RatingBar;
-import android.widget.TextView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Date;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,8 +77,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if (id == R.id.blogMenu) {
-            startActivity(new Intent(getApplicationContext(), BooksListPageNew.class));
-            //Toast.makeText(getApplicationContext(),"Coming soon.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Coming soon.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -105,32 +93,32 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        if ( ! haveNetworkConnection()) {
+        if (!haveNetworkConnection()) {
             Snackbar.make(parentLayoutView, "Please check your internet connection", Snackbar.LENGTH_LONG).show();
             return false;
         }
 
+        Intent intent = new Intent(this, BooksListPageNew.class);
+        Bundle bundle = new Bundle();
+
         int id = item.getItemId();
 
         switch (item.getItemId()) {
-            case R.id.orderBookMenu :
-                startActivity(new Intent(getApplicationContext(), BooksListPageNew.class));
+            case R.id.orderBookMenu:
+                bundle.putString("f", "all");
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
 
             /*case R.id.customiseOrderMenu:
                 startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
                 break;*/
 
-            case R.id.myCartMenu :
+            case R.id.myCartMenu:
                 startActivity(new Intent(getApplicationContext(), MyCartNew.class));
                 break;
 
-            case R.id.logoutMenu :
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.signOut();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                finish();
-                break;
+
             case R.id.myAccMenu:
                 startActivity(new Intent(getApplicationContext(), MyAccountActivity.class));
                 break;
@@ -138,8 +126,20 @@ public class HomeActivity extends AppCompatActivity
             case R.id.myOrder:
                 startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
                 break;
-        }
 
+            case R.id.myWishListMenu:
+                bundle.putString("f", "wishlist");
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
+
+            case R.id.logoutMenu:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+                break;
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -164,7 +164,7 @@ public class HomeActivity extends AppCompatActivity
         return haveConnectedWifi || haveConnectedMobile;
     }
 
-    private void getHelp(final String subject){
+    private void getHelp(final String subject) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Please send an email to : orderonlinemybook@gmail.com");
         alertDialogBuilder.setPositiveButton("Send mail",
@@ -173,7 +173,7 @@ public class HomeActivity extends AppCompatActivity
                     public void onClick(DialogInterface arg0, int arg1) {
                         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
                         emailIntent.setType("text/plain");
-                        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{  "orderonlinemybooks@gmail.com"});
+                        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"orderonlinemybooks@gmail.com"});
                         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
                         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
 
@@ -193,7 +193,7 @@ public class HomeActivity extends AppCompatActivity
                 });
 
 
-        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
