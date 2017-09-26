@@ -26,8 +26,6 @@ import com.google.firebase.database.Query;
 
 public class OrderPageActivity extends AppCompatActivity {
 
-    private ImageView mOderBackBtn;
-
     FirebaseRecyclerAdapter<OrderBookList, OrderBookListHolder> firebaseRecyclerAdapter;
 
     Query databaseReference;
@@ -63,6 +61,7 @@ public class OrderPageActivity extends AppCompatActivity {
                 viewHolder.setGrandTotal(model.getGrandtotal());
                 viewHolder.setStatus(model.getStatus());
                 viewHolder.setComment(model.getComment());
+                viewHolder.setPaymentMode(model.getPaymentmode());
             }
         };
 
@@ -143,6 +142,11 @@ public class OrderPageActivity extends AppCompatActivity {
         public void setGrandTotal(String amt) {
             TextView grand_total = (TextView) mView.findViewById(R.id.ograndtotal);
             grand_total.setText("Grand Amount: \u20B9 " + amt);
+        }
+
+        public void setPaymentMode(String pm) {
+            TextView mPaymentMode = (TextView) mView.findViewById(R.id.oPaymentMode);
+            mPaymentMode.setText("Payment mode: " + pm);
         }
 
         public void setStatus(String status) {

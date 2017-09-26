@@ -16,11 +16,13 @@ public class OrderBookList {
     String status;
     String comment;
 
+    String paymentmode;
+
     public OrderBookList(){
 
     }
 
-    public OrderBookList(String orderid, String date, String total, String deliverycharge, String discount, String grandtotal, String status, String comment) {
+    public OrderBookList(String orderid, String date, String total, String deliverycharge, String discount, String grandtotal, String status, String comment, String paymentmode) {
         this.orderid = orderid;
         this.date = date;
         this.total = total;
@@ -29,10 +31,19 @@ public class OrderBookList {
         this.grandtotal = grandtotal;
         this.status = status;
         this.comment = comment;
+        this.paymentmode = paymentmode;
     }
 
     public String getOrderid() {
         return orderid;
+    }
+
+    public String getPaymentmode() {
+        return paymentmode;
+    }
+
+    public void setPaymentmode(String paymentmode) {
+        this.paymentmode = paymentmode;
     }
 
     public void setOrderid(String orderid) {

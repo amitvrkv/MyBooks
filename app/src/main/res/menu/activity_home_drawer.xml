@@ -7,6 +7,12 @@
             android:id="@+id/orderBookMenu"
             android:icon="@drawable/ic_library_books_black_24dp"
             android:title="Order Books" />
+
+        <item
+            android:id="@+id/customiseMenu"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="Customise Order" />
+
     </group>
 
     <group
@@ -18,14 +24,14 @@
             android:title="My Cart" />
 
         <item
-            android:id="@+id/myOrder"
-            android:icon="@mipmap/ic_note_black_24dp"
-            android:title="My Order" />
-
-        <item
             android:icon="@mipmap/ic_favorite_black_24dp"
             android:id="@+id/myWishListMenu"
             android:title="My Wishlist" />
+
+        <item
+            android:id="@+id/myOrder"
+            android:icon="@mipmap/ic_note_black_24dp"
+            android:title="My Order" />
 
 
         <item

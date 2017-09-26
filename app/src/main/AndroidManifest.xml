@@ -33,7 +33,8 @@
         <service android:name=".MyBooksService" />
 
         <activity android:name=".Individual_book_details" />
-        <activity android:name=".MyCartNew"></activity>
+        <activity android:name=".MyCartNew" />
+        <activity android:name=".BlogActivity"></activity>
     </application>
 
 </manifest>

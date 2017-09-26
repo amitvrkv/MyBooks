@@ -3,6 +3,7 @@ package com.mybooks.mybooks;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +27,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     View parentLayoutView;
+    NavigationView navigationView;
 
 
     @Override
@@ -42,12 +45,13 @@ public class HomeActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        //drawer.openDrawer(GravityCompat.START);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         parentLayoutView = findViewById(R.id.drawer_layout);
+
+        setWelcome();
     }
 
     @Override
@@ -77,7 +81,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if (id == R.id.blogMenu) {
-            Toast.makeText(getApplicationContext(), "Coming soon.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, BlogActivity.class));
             return true;
         }
 
@@ -202,5 +206,18 @@ public class HomeActivity extends AppCompatActivity
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void setWelcome() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+
+        View mHeaderView = navigationView.getHeaderView(0);
+        TextView welcomeMsg = (TextView) mHeaderView.findViewById(R.id.welcomeMsg);
+
+        if ( sharedPreferences.getString("Name", null) == null) {
+            welcomeMsg.setText("Hi, there.");
+        } else {
+            welcomeMsg.setText("Hi " + sharedPreferences.getString("Name", null) + ",");
+        }
     }
 }
