@@ -389,6 +389,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         listObjects.clear();
         final int[] c = {0};
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
         final Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST", null);
 
         if (cursor.getCount() <= 0 || cursor.moveToFirst() == false) {

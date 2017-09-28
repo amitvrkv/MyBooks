@@ -9,7 +9,7 @@
             android:title="Order Books" />
 
         <item
-            android:id="@+id/customiseMenu"
+            android:id="@+id/customiseOrderMenu"
             android:icon="@drawable/ic_library_books_black_24dp"
             android:title="Customise Order" />
 

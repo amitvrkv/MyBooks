@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
@@ -13,6 +13,7 @@
         <include layout="@layout/toolbar" />
 
     </android.support.design.widget.AppBarLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -33,4 +34,17 @@
         app:layout_anchorGravity="bottom|right" />
 
 </android.support.design.widget.CoordinatorLayout>
+-->
 
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <include layout="@layout/toolbar" />
+
+    <include layout="@layout/blog_view" />
+
+</LinearLayout>

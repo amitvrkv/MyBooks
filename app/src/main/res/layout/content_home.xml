@@ -9,6 +9,8 @@
     tools:showIn="@layout/app_bar_home">
 
     <ScrollView
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

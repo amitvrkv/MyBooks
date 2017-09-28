@@ -114,9 +114,9 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
                 break;
 
-            /*case R.id.customiseOrderMenu:
+            case R.id.customiseOrderMenu:
                 startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
-                break;*/
+                break;
 
             case R.id.myCartMenu:
                 startActivity(new Intent(getApplicationContext(), MyCartNew.class));
@@ -215,7 +215,7 @@ public class HomeActivity extends AppCompatActivity
         TextView welcomeMsg = (TextView) mHeaderView.findViewById(R.id.welcomeMsg);
 
         if ( sharedPreferences.getString("Name", null) == null) {
-            welcomeMsg.setText("Hi, there.");
+            welcomeMsg.setText("Hi there,");
         } else {
             welcomeMsg.setText("Hi " + sharedPreferences.getString("Name", null) + ",");
         }
