@@ -34,7 +34,8 @@
 
         <activity android:name=".Individual_book_details" />
         <activity android:name=".MyCartNew" />
-        <activity android:name=".BlogActivity"></activity>
+        <activity android:name=".BlogActivity" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>

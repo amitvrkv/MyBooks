@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +40,6 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     private TextView mDeliveryAddress, mUpdateAddressBtn;
     private Button mPlaceOrder;
     private RadioButton mModeCOD;
-    private ImageView mplaceOrderBackBtn;
     private String address;
     private int total = 0;
     private int min_order = 0;
@@ -49,6 +47,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     private int discount = 0;
     private int grand_total = 0;
     private TextView payment_applyPromocode;
+
+    public static String getDate() {
+        String dateInMilliseconds = String.valueOf(new Date().getTime());
+        String dateFormat = "dd/MM/yyyy hh:mm:ss aa";
+        return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +116,8 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     progressDialog.setTitle("Please wait...");
                     progressDialog.setMessage("Placing your order,\nPlease do not close the application.");
                     progressDialog.setCancelable(false);
-                    placeOrder("Cash on delivery");
+                    progressDialog.show();
+                    getAppLiveness("Cash on delivery");
                 } else
                     Snackbar.make(parentLayoutView, "Please select mode of payment", Snackbar.LENGTH_SHORT).show();
                 break;
@@ -134,6 +139,27 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         address = address + "\n" + sharedPreferences.getString("contact", null);
         mDeliveryAddress.setText(address);
         return address;
+    }
+
+    public void getAppLiveness(final String mop){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs").child("appset");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String live = String.valueOf(dataSnapshot.child("liveness").getValue());
+                if (live.equals("1")) {
+                    placeOrder(mop);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Somthing went wrong.\nOrder can not be place at this movement", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Getting order number and updating
@@ -313,12 +339,6 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
-    }
-
-    public static String getDate() {
-        String dateInMilliseconds = String.valueOf(new Date().getTime());
-        String dateFormat = "dd/MM/yyyy hh:mm:ss aa";
-        return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();
     }
 
     private boolean haveNetworkConnection() {

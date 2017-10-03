@@ -3,6 +3,7 @@ package com.mybooks.mybooks;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,8 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
+
+        setToolbar();
 
         mDelName = (TextView) findViewById(R.id.delName);
         mDelMobileNo = (TextView) findViewById(R.id.delmobileNumber);
@@ -121,5 +124,19 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(getApplicationContext(), "Adsress saved", Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Address");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

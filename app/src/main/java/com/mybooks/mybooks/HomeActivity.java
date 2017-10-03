@@ -22,6 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,6 +56,11 @@ public class HomeActivity extends AppCompatActivity
 
         parentLayoutView = findViewById(R.id.drawer_layout);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setWelcome();
     }
 
@@ -90,6 +100,10 @@ public class HomeActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.aboutMenu) {
+            startActivity(new Intent(this, About.class));
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -112,10 +126,13 @@ public class HomeActivity extends AppCompatActivity
                 bundle.putString("f", "all");
                 intent.putExtras(bundle);
                 startActivity(intent);
+
                 break;
 
             case R.id.customiseOrderMenu:
+
                 startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
+
                 break;
 
             case R.id.myCartMenu:
@@ -214,10 +231,31 @@ public class HomeActivity extends AppCompatActivity
         View mHeaderView = navigationView.getHeaderView(0);
         TextView welcomeMsg = (TextView) mHeaderView.findViewById(R.id.welcomeMsg);
 
-        if ( sharedPreferences.getString("Name", null) == null) {
+        if (sharedPreferences.getString("Name", null) == null) {
             welcomeMsg.setText("Hi there,");
         } else {
             welcomeMsg.setText("Hi " + sharedPreferences.getString("Name", null) + ",");
         }
+    }
+
+    private void getAppLiveness() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs").child("appset");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String live = String.valueOf(dataSnapshot.child("liveness").getValue());
+                if (live.equals("1")) {
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Somthing went wrong.\nOrder can not be place at this movement", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -22,4 +22,11 @@
         android:orderInCategory="100"
         android:title="Help"
         app:showAsAction="never" />
+
+    <item
+        android:icon="@mipmap/ic_help_black_24dp"
+        android:id="@+id/aboutMenu"
+        android:orderInCategory="100"
+        android:title="About"
+        app:showAsAction="never" />
 </menu>

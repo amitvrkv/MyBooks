@@ -3,11 +3,13 @@ package com.mybooks.mybooks;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -152,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 else {
                     relativeLayoutLogin.setVisibility(View.VISIBLE);
                     relativeLayout.setVisibility(View.GONE);
+                    hideKeyboard();
                 }
             }
         }, 1000);
@@ -169,7 +172,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     @Override
     public void onClick(View v) {
+
         hideKeyboard();
+
         switch (v.getId()) {
             case R.id.sign_in_redirect_button:
                 Animation animation1 = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
@@ -249,7 +254,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                         if (task.isSuccessful()) {
 
                         } else {
-                            Snackbar.make(parentLayoutView, "Wrong Username or Password.", Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(parentLayoutView, "", Snackbar.LENGTH_LONG).show();
+                            showAlertDialog("Error", "Wrong Username or Password.");
                         }
                         mprogressDialog.dismiss();
                         checkIfEmailVerified();
@@ -297,6 +303,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     private void attemptSignup() {
+        hideKeyboard();
+
         mprogressDialog.setTitle("Please wait.");
         mprogressDialog.setMessage("Creating your account...");
         mprogressDialog.show();
@@ -319,7 +327,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             mSignUpForm.setVisibility(View.GONE);
 
                         } else {
-                            Snackbar.make(parentLayoutView, "Failed to sign-up. Try again!", Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(parentLayoutView, "", Snackbar.LENGTH_LONG).show();
+                            showAlertDialog("Error", "Failed to sign-up. Try again!");
                         }
                         mprogressDialog.dismiss();
                     }
@@ -338,7 +347,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             finish();
         } else {
             sendVerificationEmailToUser();
-            Snackbar.make(parentLayoutView, "You have successfully signed up.\\nPlease verify your email address.", Snackbar.LENGTH_LONG).show();
+            showAlertDialog("Message", "You have successfully signed up.\nPlease verify your email address.");
+            //Snackbar.make(parentLayoutView, "You have successfully signed up.\nPlease verify your email address.", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -362,7 +372,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             return;
         }
         FirebaseAuth.getInstance().sendPasswordResetEmail(email);
-        Toast.makeText(getApplicationContext(), "Password reset email sent successfully.", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+        showAlertDialog("Message", "Password reset email sent successfully.");
         //Snackbar.make(parentLayoutView, "Password reset email sent successfully.", Snackbar.LENGTH_LONG).show();
     }
 
@@ -401,9 +412,26 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mAppLogo.startAnimation(transAnim);
     }
 
-    public void hideKeyboard(){
+    public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
+
+    public void showAlertDialog(String title, String msg) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setMessage(msg);
+        alertDialogBuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 }
 

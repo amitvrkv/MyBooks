@@ -15,10 +15,10 @@
             android:orientation="vertical">
 
             <TextView
+                android:background="@color/Light_Grey"
                 android:id="@+id/osid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/Light_Grey"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
@@ -33,6 +33,26 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
 
+                <TextView
+                    android:id="@+id/otitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Title" />
+
+                <TextView
+                    android:id="@+id/oAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Author" />
+
+                <View
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/Light_Grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
 
                 <TextView
                     android:id="@+id/odate"
@@ -47,43 +67,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:text="Status: " />
-
-                <TextView
-                    android:id="@+id/ototal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Total amount: " />
-
-                <TextView
-                    android:id="@+id/odelivery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Delivey Charge: " />
-
-                <TextView
-                    android:id="@+id/odiscount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Discount: " />
-
-                <TextView
-                    android:id="@+id/ograndtotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Grand amount: "
-                    android:textColor="@color/Red" />
-
-                <TextView
-                    android:id="@+id/oPaymentMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Payment Mode: " />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -160,6 +143,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat" />
 
                 <Button
+                    android:enabled="false"
                     android:id="@+id/getOrderDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -167,7 +151,7 @@
                     android:layout_toEndOf="@+id/view2"
                     android:layout_toRightOf="@+id/view2"
                     android:background="@color/colorTextIcon"
-                    android:text="GET ORDER DETAILS"
+                    android:text="GET DETAILS"
                     android:textAppearance="@style/TextAppearance.AppCompat" />
 
             </RelativeLayout>
