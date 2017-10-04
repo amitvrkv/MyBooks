@@ -14,11 +14,12 @@ class ModelClassBLog {
     String likeFrom;
     String email;
     String id;
+    String date;
 
     public ModelClassBLog() {
     }
 
-    public ModelClassBLog(String by, String comment, String dislike, String dislikeFrom, String like, String likeFrom, String email, String id) {
+    public ModelClassBLog(String by, String comment, String dislike, String dislikeFrom, String like, String likeFrom, String email, String id, String date) {
         this.by = by;
         this.comment = comment;
         this.dislike = dislike;
@@ -27,6 +28,15 @@ class ModelClassBLog {
         this.likeFrom = likeFrom;
         this.email = email;
         this.id = id;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getBy() {

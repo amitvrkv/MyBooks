@@ -10,7 +10,7 @@
 
         <item
             android:id="@+id/customiseOrderMenu"
-            android:icon="@drawable/ic_library_books_black_24dp"
+            android:icon="@mipmap/ic_import_contacts_black_24dp"
             android:title="Customise Order" />
 
     </group>
