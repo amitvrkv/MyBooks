@@ -224,11 +224,11 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //finish();
-                SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
-                Toast.makeText(getApplicationContext(), "Table deleted", Toast.LENGTH_SHORT).show();
-                sqLiteDatabase.execSQL("DROP TABLE IF EXISTS WISHLIST");
+                finish();
+                //SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
+                //Toast.makeText(getApplicationContext(), "Table deleted", Toast.LENGTH_SHORT).show();
+                //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS WISHLIST");
             }
         });
     }

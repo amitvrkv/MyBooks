@@ -322,6 +322,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             mRef.child("email").setValue(mEmailSignUp.getText().toString());
                             mRef.child("contact").setValue("NA");
                             mRef.child("address").setValue("NA");
+                            mRef.child("wallet").setValue("0");
 
                             mSignInForm.setVisibility(View.VISIBLE);
                             mSignUpForm.setVisibility(View.GONE);

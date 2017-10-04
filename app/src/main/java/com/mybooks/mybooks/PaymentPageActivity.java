@@ -2,6 +2,7 @@ package com.mybooks.mybooks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,11 +12,16 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +84,8 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         payment_applyPromocode.setOnClickListener(this);
 
         setCharges();
+
+        setWallet();
     }
 
     public void setToolbar() {
@@ -141,7 +149,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         return address;
     }
 
-    public void getAppLiveness(final String mop){
+    public void getAppLiveness(final String mop) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs").child("appset");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -318,27 +326,58 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     private void applyPromocode() {
 
-        final String promocode = "NEW";
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(PaymentPageActivity.this);
+        alertDialog.setTitle("Enter Promocode");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("promocode");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        final EditText editTextPromoCode = new EditText(PaymentPageActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        editTextPromoCode.setLayoutParams(lp);
+        alertDialog.setView(editTextPromoCode);
 
-                if (dataSnapshot.child(promocode) == null) {
+        alertDialog.setPositiveButton("DONE",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!TextUtils.isEmpty(editTextPromoCode.getText())) {
+                            final String promocode = editTextPromoCode.getText().toString();
 
-                } else {
-                    discount = Integer.parseInt(String.valueOf(dataSnapshot.child(promocode).getValue()));
-                }
+                            databaseReference = FirebaseDatabase.getInstance().getReference().child("promocode");
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                setCharges();
-            }
+                                    if (String.valueOf(dataSnapshot.child(promocode).getValue()) == null) {
+                                        Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        try {
+                                            discount = Integer.parseInt(String.valueOf(dataSnapshot.child(promocode).getValue()));
+                                        } catch (NumberFormatException nfe) {
+                                            Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                                    setCharges();
+                                }
 
-            }
-        });
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                });
+
+        alertDialog.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
     }
 
     private boolean haveNetworkConnection() {
@@ -356,5 +395,23 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     haveConnectedMobile = true;
         }
         return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    /*Set wallet amount*/
+    private void setWallet() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String walletAmount = String.valueOf(dataSnapshot.child("wallet").getValue());
+                CheckBox walletAmt = (CheckBox) findViewById(R.id.walletAmt);
+                walletAmt.setText("Include wallet amount: ₹ " + walletAmount);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

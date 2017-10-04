@@ -9,24 +9,25 @@
 
     <RelativeLayout
         android:id="@+id/main_welcome_page"
-        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:visibility="visible">
 
         <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/app_icon"
-            android:layout_width="70dp"
-            android:layout_height="70dp" />
+            android:src="@drawable/app_icon" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/Welcome"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
@@ -39,17 +40,17 @@
             android:id="@+id/app_logo"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:src="@drawable/logo_transparent"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:src="@drawable/logo_transparent" />
 
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/Login"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"
