@@ -20,6 +20,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -406,6 +407,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 String walletAmount = String.valueOf(dataSnapshot.child("wallet").getValue());
                 CheckBox walletAmt = (CheckBox) findViewById(R.id.walletAmt);
                 walletAmt.setText("Include wallet amount: ₹ " + walletAmount);
+                walletAmt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    }
+                });
             }
 
             @Override

@@ -1,7 +1,8 @@
 package com.mybooks.mybooks;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ public class About extends AppCompatActivity {
 
         setToolbar();
 
-        TextView textView  = (TextView) findViewById(R.id.version);
+        TextView textView = (TextView) findViewById(R.id.version);
         textView.setText("Version: " + BuildConfig.VERSION_NAME);
     }
 
@@ -29,7 +30,9 @@ public class About extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+                //onStartTransaction();
             }
         });
     }
 }
+
