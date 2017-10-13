@@ -20,9 +20,12 @@
 
 
     <Button
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
         android:onClick="onStartTransaction"
-        android:text="sadf"
+        android:text="Pay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
 </RelativeLayout>

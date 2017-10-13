@@ -14,4 +14,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Green" parent="PayumoneyAppTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/dark_gray</item>
+        <!--<item name="alertDialogTheme">@style/AlertDialogStyle_green</item>-->
+        <item name="actionMenuTextColor">@color/white</item>
+    </style>
+
 </resources>

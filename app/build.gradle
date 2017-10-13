@@ -27,7 +27,6 @@ dependencies {
 
     //compile 'com.squareup.picasso:picasso:2.5.2'
 
-
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
@@ -41,8 +40,16 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.google.firebase:firebase-config:10.2.6'
     compile 'jp.wasabeef:blurry:2.0.3'
-    compile files('libs/PGSDK_V2.0.jar')
     testCompile 'junit:junit:4.12'
+
+    //Paytm
+    compile files('libs/PGSDK_V2.1.jar')
+
+    //Pay u money
+    compile('com.payumoney.sdkui:plug-n-play:1.0.0'){
+        transitive = true;
+        //exclude module: 'payumoney-sdk'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
