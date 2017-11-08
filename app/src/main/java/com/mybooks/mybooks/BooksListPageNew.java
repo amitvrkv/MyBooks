@@ -75,10 +75,26 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         my_cart_icon = (ImageView) findViewById(R.id.my_cart_icon);
         my_cart_icon.setOnClickListener(this);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
         floatingActionButtonFilter = (FloatingActionButton) findViewById(R.id.floatingActionButtonFilter);
         floatingActionButtonFilter.setOnClickListener(this);
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0 && floatingActionButtonFilter.getVisibility() == View.VISIBLE) {
+                    floatingActionButtonFilter.hide();
+                } else if (dy < 0 && floatingActionButtonFilter.getVisibility() != View.VISIBLE) {
+                    floatingActionButtonFilter.show();
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+            }
+        });
 
         editTextSearchData = (EditText) findViewById(R.id.search_data);
         editTextSearchData.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -271,7 +287,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelProductList modelProductList = dataSnapshot1.getValue(ModelProductList.class);
-                    if (modelProductList.getF1().equals(spinnerCat1.getSelectedItem().toString())) {
+                    if (modelProductList.getF1().equalsIgnoreCase(spinnerCat1.getSelectedItem().toString())) {
                         listObjects.add(modelProductList);
                     }
                 }
