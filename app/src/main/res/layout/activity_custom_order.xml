@@ -104,10 +104,12 @@
                         android:id="@+id/customDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:hint="Description"
-                        android:imeOptions="actionDone"
-                        android:maxLines="1"
-                        android:singleLine="true" />
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="2000"
+                        android:maxLines="4"
+                        />
 
                 </android.support.design.widget.TextInputLayout>
 

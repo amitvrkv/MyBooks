@@ -149,8 +149,10 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.customiseOrderMenu:
-
-                startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
+                //startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
+                Intent intent1 = new Intent(getApplicationContext(), CustomOrderActivity.class);
+                intent1.putExtra("key", "null");
+                startActivity(intent1);
 
                 break;
 

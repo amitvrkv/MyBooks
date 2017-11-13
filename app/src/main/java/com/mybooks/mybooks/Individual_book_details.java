@@ -55,11 +55,23 @@ public class Individual_book_details extends AppCompatActivity {
                 mBookAuthor.setText("Author: " + capitalizeEveryWord(modelProductList.getF4()));
                 mBookCourse.setText("Course: " + modelProductList.getF5());
                 mBookSem.setText("Semester: " + modelProductList.getF6());
-                mBookMRP.setText("Book MRP: \u20B9 " + modelProductList.getF7());
-                mBookNewPrice.setText("New Book Price: \u20B9 " + modelProductList.getF8());
-                mBookOldPrice.setText("Old Book Price: \u20B9 " + modelProductList.getF9());
+                if (modelProductList.getF7().equals("0")) {
+                    mBookMRP.setText("Book MRP: " + "to be updated");
+                } else {
+                    mBookMRP.setText("Book MRP: \u20B9 " + modelProductList.getF7());
+                }
+                if (modelProductList.getF7().equals("0")) {
+                    mBookNewPrice.setText("New Book Price: " + "to be updated");
+                } else {
+                    mBookNewPrice.setText("New Book Price: \u20B9 " + modelProductList.getF8());
+                }
+                if (modelProductList.getF7().equals("0")) {
+                    mBookOldPrice.setText("Old Book Price: " + "to be updated");
+                } else {
+                    mBookOldPrice.setText("Old Book Price: \u20B9 " + modelProductList.getF9());
+                }
 
-                if (modelProductList.getF13().equals("na"))
+                if (modelProductList.getF13().equalsIgnoreCase("na"))
                     mBook_image.setVisibility(View.GONE);
                 else
                     //Picasso.with(getApplicationContext()).load(modelProductList.getF13()).into(mBook_image);

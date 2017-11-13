@@ -95,6 +95,13 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         holder.mrp_price.setText(modelProductList.getF7());
         holder.new_price.setText(modelProductList.getF8());
         holder.old_price.setText("\u20B9" + modelProductList.getF9());
+        if (mrp_p == 0 || new_p == 0 || old_p == 0) {
+            holder.addToCartButton.setText("CUSTOM ORDER");
+            holder.addToCartButton.setTextColor(Color.RED);
+            holder.mrp_price.setText("NA");
+            holder.new_price.setText("NA");
+            holder.old_price.setText("\u20B9" + " NA");
+        }
 
         /* set book cover*/
         if (modelProductList.getF13() == null) {
@@ -144,6 +151,13 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         holder.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (holder.addToCartButton.getText().toString().equalsIgnoreCase("CUSTOM ORDER")) {
+                    Intent intent = new Intent(ctx, CustomOrderActivity.class);
+                    intent.putExtra("key", modelProductList.getF11());
+                    ctx.startActivity(intent);
+                    return;
+                }
+
                 int new_price = Integer.parseInt(modelProductList.getF8());
                 int old_price = Integer.parseInt(modelProductList.getF9());
                 if (new_price == old_price) {
@@ -153,7 +167,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 }
                 holder.addToCartButton.setText("ADDED");
                 holder.addToCartButton.setTextColor(Color.GREEN);
-
             }
         });
 

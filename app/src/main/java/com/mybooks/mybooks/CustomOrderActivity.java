@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +30,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomOrderActivity extends AppCompatActivity {
 
@@ -36,9 +40,12 @@ public class CustomOrderActivity extends AppCompatActivity {
     private TextView mtitle;
     private TextView mAuthor;
     private TextView mPublisher;
-    private TextView mCourse;
+    private TextView mCourseSemYear;
     private TextView mDesc;
     private TextView mPlaceOrderBtn;
+    String key = "null";
+
+    private DatabaseReference mDatabase;
 
     public static String getDate() {
         String dateInMilliseconds = String.valueOf(new Date().getTime());
@@ -52,13 +59,14 @@ public class CustomOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_custom_order);
 
         setToolbar();
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
         mtitle = (TextView) findViewById(R.id.customTitle);
         mAuthor = (TextView) findViewById(R.id.customAuthor);
         mPublisher = (TextView) findViewById(R.id.customPublisher);
-        mCourse = (TextView) findViewById(R.id.customCourse);
+        mCourseSemYear = (TextView) findViewById(R.id.customCourse);
         mDesc = (TextView) findViewById(R.id.customDesc);
 
         mPlaceOrderBtn = (TextView) findViewById(R.id.customPlaceOrder);
@@ -67,7 +75,7 @@ public class CustomOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mtitle.setError(null);
                 mAuthor.setError(null);
-                mCourse.setError(null);
+                mCourseSemYear.setError(null);
                 mDesc.setError(null);
 
                 if (TextUtils.isEmpty(mtitle.getText().toString())) {
@@ -79,8 +87,8 @@ public class CustomOrderActivity extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(mPublisher.getText().toString())) {
                     mPublisher.setError("This field is required.");
                     return;
-                } else if (TextUtils.isEmpty(mCourse.getText().toString())) {
-                    mCourse.setError("This field is required.");
+                } else if (TextUtils.isEmpty(mCourseSemYear.getText().toString())) {
+                    mCourseSemYear.setError("This field is required.");
                     return;
                 } else if (TextUtils.isEmpty(mDesc.getText().toString())) {
                     mDesc.setError("This field is required.");
@@ -89,6 +97,36 @@ public class CustomOrderActivity extends AppCompatActivity {
                 progressDialog.setTitle("Please wait...");
                 progressDialog.setMessage("Placing your order,\nPlease do not close the application.");
                 getAppLiveness();
+            }
+        });
+
+        Bundle bundle = getIntent().getExtras();
+        key = bundle.getString("key");
+        if ( ! key.equalsIgnoreCase("null")) {
+            setData(key);
+        }
+    }
+
+    private void setData(String key) {
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
+                mtitle.setText(capitalizeEveryWord(modelProductList.getF2()));
+                mtitle.setEnabled(false);
+                mPublisher.setText(capitalizeEveryWord(modelProductList.getF3()));
+                mPublisher.setEnabled(false);
+                mAuthor.setText(capitalizeEveryWord(modelProductList.getF4()));
+                mAuthor.setEnabled(false);
+                mCourseSemYear.setText(modelProductList.getF5() + " / " + modelProductList.getF6());
+                mCourseSemYear.setEnabled(false);
+                mDesc.setText("NA");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
     }
@@ -107,7 +145,7 @@ public class CustomOrderActivity extends AppCompatActivity {
         });
     }
 
-    public void placeCustomOrde() {
+    public void placeCustomOrder() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
         if (sharedPreferences.getString("Name", null) == null) {
             Toast.makeText(getApplicationContext(), "Please update your address to continue.", Toast.LENGTH_SHORT).show();
@@ -152,10 +190,13 @@ public class CustomOrderActivity extends AppCompatActivity {
         databaseReference.child("title").setValue(mtitle.getText().toString());
         databaseReference.child("author").setValue(mAuthor.getText().toString());
         databaseReference.child("publisher").setValue(mPublisher.getText().toString());
-        databaseReference.child("desc1").setValue(mCourse.getText().toString());
+        databaseReference.child("desc1").setValue(mCourseSemYear.getText().toString());
         databaseReference.child("desc2").setValue(mDesc.getText().toString());
+
         databaseReference.child("comment").setValue("");
-        databaseReference.child("getdetails").setValue("na");
+
+        databaseReference.child("getdetails").setValue(key);
+
         databaseReference.child("status").setValue("Pending for My Books team approval.").addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -210,7 +251,7 @@ public class CustomOrderActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String live = String.valueOf(dataSnapshot.child("liveness").getValue());
                 if (live.equals("1")) {
-                    placeCustomOrde();
+                    placeCustomOrder();
                 } else {
                     Toast.makeText(getApplicationContext(), "Somthing went wrong.\nOrder can not be place at this movement", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
@@ -223,4 +264,22 @@ public class CustomOrderActivity extends AppCompatActivity {
             }
         });
     }
+
+    public String capitalizeEveryWord(String str) {
+
+        if (str == null)
+            return "";
+
+        System.out.println(str);
+        StringBuffer stringbf = new StringBuffer();
+        Matcher m = Pattern.compile(
+                "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+        while (m.find()) {
+            m.appendReplacement(
+                    stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+        }
+        return m.appendTail(stringbf).toString();
+    }
+
 }
