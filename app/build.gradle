@@ -38,7 +38,6 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:10.2.6'
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.google.firebase:firebase-config:10.2.6'
     compile 'jp.wasabeef:blurry:2.0.3'
     testCompile 'junit:junit:4.12'
 
@@ -46,13 +45,14 @@ dependencies {
     compile files('libs/PGSDK_V2.1.jar')
 
     //Pay u money
-    compile('com.payumoney.sdkui:plug-n-play:1.0.0'){
+    compile('com.payumoney.sdkui:plug-n-play:1.0.0') {
         transitive = true;
         //exclude module: 'payumoney-sdk'
     }
 }
 
 apply plugin: 'com.google.gms.google-services'
+
 
 
 

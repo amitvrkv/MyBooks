@@ -52,6 +52,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     private int min_order = 0;
     private int delivery_charge = 0;
     private int discount = 0;
+    private String promocode = "null";
     private int grand_total = 0;
     private TextView payment_applyPromocode;
 
@@ -151,12 +152,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void getAppLiveness(final String mop) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs").child("appset");
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String live = String.valueOf(dataSnapshot.child("liveness").getValue());
-                if (live.equals("1")) {
+                String live = String.valueOf(dataSnapshot.child("app_liveness").getValue());
+                if (live.equalsIgnoreCase("true")) {
                     placeOrder(mop);
                 } else {
                     Toast.makeText(getApplicationContext(), "Somthing went wrong.\nOrder can not be place at this movement", Toast.LENGTH_LONG).show();
@@ -286,6 +287,16 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     }
 
     private boolean setCharges() {
+
+        if (discount == 0) {
+            payment_applyPromocode.setText("Have a promocode?");
+            payment_applyPromocode.setTextColor(getResources().getColor(R.color.colorAccent));
+        } else {
+            payment_applyPromocode.setText(promocode + " applied. Try new?");
+            payment_applyPromocode.setTextColor(getResources().getColor(R.color.Green));
+        }
+
+
         TextView payment_total = (TextView) findViewById(R.id.payment_total);
         final TextView payment_delivery_charge = (TextView) findViewById(R.id.payment_delivery_charge);
         final TextView payment_discount = (TextView) findViewById(R.id.payment_discount);
@@ -326,7 +337,6 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void applyPromocode() {
-
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PaymentPageActivity.this);
         alertDialog.setTitle("Enter Promocode");
 
@@ -336,44 +346,50 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
         editTextPromoCode.setLayoutParams(lp);
+
+        if (!promocode.equals("null")) {
+            editTextPromoCode.setText(promocode);
+        } else {
+            editTextPromoCode.setText("");
+        }
+
         alertDialog.setView(editTextPromoCode);
 
-        alertDialog.setPositiveButton("DONE",
+        alertDialog.setPositiveButton("APPLY",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (!TextUtils.isEmpty(editTextPromoCode.getText())) {
-                            final String promocode = editTextPromoCode.getText().toString();
+                            final String prmCode = editTextPromoCode.getText().toString();
 
                             databaseReference = FirebaseDatabase.getInstance().getReference().child("promocode");
                             databaseReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                    if (String.valueOf(dataSnapshot.child(promocode).getValue()) == null) {
-                                        Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
+                                    if (dataSnapshot.hasChild(prmCode)) {
+                                        String value = String.valueOf(dataSnapshot.child(prmCode).child("value").getValue());
+                                        discount = Integer.parseInt(value);
+                                        promocode = prmCode;
+                                        setCharges();
                                     } else {
-                                        try {
-                                            discount = Integer.parseInt(String.valueOf(dataSnapshot.child(promocode).getValue()));
-                                        } catch (NumberFormatException nfe) {
-                                            Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
-                                        }
+                                        Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
                                     }
-
-                                    setCharges();
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-
+                                    Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
                     }
                 });
 
-        alertDialog.setNegativeButton("CANCEL",
+        alertDialog.setNegativeButton("REMOVE",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        discount = 0;
+                        promocode = "null";
+                        setCharges();
                         dialog.cancel();
                     }
                 });

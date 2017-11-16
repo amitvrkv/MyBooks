@@ -31,8 +31,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener {
@@ -323,12 +326,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                             mRef.child("contact").setValue("NA");
                             mRef.child("address").setValue("NA");
                             mRef.child("wallet").setValue("0");
+                            mRef.child("liveness").setValue("true");
 
                             mSignInForm.setVisibility(View.VISIBLE);
                             mSignUpForm.setVisibility(View.GONE);
 
                         } else {
-                            //Snackbar.make(parentLayoutView, "", Snackbar.LENGTH_LONG).show();
                             showAlertDialog("Error", "Failed to sign-up. Try again!");
                         }
                         mprogressDialog.dismiss();
@@ -344,8 +347,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         }
 
         if (user.isEmailVerified()) {
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-            finish();
+            loadHomepage();
         } else {
             sendVerificationEmailToUser();
             showAlertDialog("Message", "You have successfully signed up.\nPlease verify your email address.");
@@ -432,6 +434,32 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void loadHomepage() {
+        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        //finish();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String live = String.valueOf(dataSnapshot.child("liveness").getValue());
+                if (live.equalsIgnoreCase("true")) {
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    //finish();
+                } else {
+                    //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
+                    showAlertDialog("Account Locked", "Your account is locked. Please contact our helpline.");
+                    mprogressDialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

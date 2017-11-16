@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 public class Individual_book_details extends AppCompatActivity {
 
-    private ImageView mBook_image, mBackButton;
+    private ImageView mBook_image;
     private TextView mBookTitle, mBookPublisher, mBookAuthor, mBookCourse, mBookSem, mBookMRP, mBookNewPrice, mBookOldPrice;
 
     private DatabaseReference mDatabase;
@@ -55,19 +55,13 @@ public class Individual_book_details extends AppCompatActivity {
                 mBookAuthor.setText("Author: " + capitalizeEveryWord(modelProductList.getF4()));
                 mBookCourse.setText("Course: " + modelProductList.getF5());
                 mBookSem.setText("Semester: " + modelProductList.getF6());
-                if (modelProductList.getF7().equals("0")) {
-                    mBookMRP.setText("Book MRP: " + "to be updated");
+                if (modelProductList.getF7().equals("0") || modelProductList.getF7().equals("0") || modelProductList.getF7().equals("0")) {
+                    mBookMRP.setText("Book price: not available");
+                    mBookNewPrice.setVisibility(View.GONE);
+                    mBookOldPrice.setVisibility(View.GONE);
                 } else {
                     mBookMRP.setText("Book MRP: \u20B9 " + modelProductList.getF7());
-                }
-                if (modelProductList.getF7().equals("0")) {
-                    mBookNewPrice.setText("New Book Price: " + "to be updated");
-                } else {
                     mBookNewPrice.setText("New Book Price: \u20B9 " + modelProductList.getF8());
-                }
-                if (modelProductList.getF7().equals("0")) {
-                    mBookOldPrice.setText("Old Book Price: " + "to be updated");
-                } else {
                     mBookOldPrice.setText("Old Book Price: \u20B9 " + modelProductList.getF9());
                 }
 
