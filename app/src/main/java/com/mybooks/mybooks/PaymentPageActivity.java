@@ -44,16 +44,21 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     View parentLayoutView;
     DatabaseReference databaseReference;
     private ProgressDialog progressDialog;
+    private ProgressDialog promoProgressDialog;
     private TextView mDeliveryAddress, mUpdateAddressBtn;
     private Button mPlaceOrder;
     private RadioButton mModeCOD;
     private String address;
+    //Bill
     private int total = 0;
     private int min_order = 0;
     private int delivery_charge = 0;
     private int discount = 0;
+    private int wallet_amt = 0;
+    //Promo
     private String promocode = "null";
-    private int grand_total = 0;
+    private int my_count;
+    private int payable_amt = 0;
     private TextView payment_applyPromocode;
 
     public static String getDate() {
@@ -79,6 +84,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
         progressDialog = new ProgressDialog(this);
+        promoProgressDialog = new ProgressDialog(this);
 
         parentLayoutView = findViewById(R.id.paymentActicityParentView);
 
@@ -153,7 +159,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     public void getAppLiveness(final String mop) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String live = String.valueOf(dataSnapshot.child("app_liveness").getValue());
@@ -218,7 +224,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         databaseReference.child("total").setValue("" + total);
         databaseReference.child("deliverycharge").setValue("" + delivery_charge);
         databaseReference.child("discount").setValue("" + discount);
-        databaseReference.child("grandtotal").setValue("" + grand_total);
+        databaseReference.child("payable_amount").setValue("" + payable_amt);
 
         databaseReference.child("paymentmode").setValue(paymentmode);
 
@@ -274,11 +280,32 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     //order placed successfully
     public void orderPlacedSuccessfully() {
-        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
-        progressDialog.dismiss();
-        startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
-        finish();
+        if (promocode.equalsIgnoreCase("null")) {
+            SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
+            progressDialog.dismiss();
+            startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+            finish();
+            return;
+        }
+
+        FirebaseDatabase.getInstance().getReference().child("User")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"))
+                .child("promocode")
+                .child(promocode).setValue(my_count + 1).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+                    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
+                    progressDialog.dismiss();
+                    startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+                    finish();
+                } else {
+                    progressDialog.dismiss();
+                }
+            }
+        });
     }
 
     public void orderPlaceFailed(String msg) {
@@ -286,57 +313,13 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         progressDialog.dismiss();
     }
 
-    private boolean setCharges() {
 
-        if (discount == 0) {
-            payment_applyPromocode.setText("Have a promocode?");
-            payment_applyPromocode.setTextColor(getResources().getColor(R.color.colorAccent));
-        } else {
-            payment_applyPromocode.setText(promocode + " applied. Try new?");
-            payment_applyPromocode.setTextColor(getResources().getColor(R.color.Green));
-        }
-
-
-        TextView payment_total = (TextView) findViewById(R.id.payment_total);
-        final TextView payment_delivery_charge = (TextView) findViewById(R.id.payment_delivery_charge);
-        final TextView payment_discount = (TextView) findViewById(R.id.payment_discount);
-        final TextView payment_grand_total = (TextView) findViewById(R.id.payment_grand_total);
-
-
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-        total = Integer.parseInt(sharedPreferences.getString("Total", null));
-        payment_total.setText("\u20B9 " + String.valueOf(total));
-
-        final boolean[] result = {false};
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                delivery_charge = Integer.parseInt(String.valueOf(dataSnapshot.child("delivery_charge").getValue()));
-                min_order = Integer.parseInt(String.valueOf(dataSnapshot.child("min_order").getValue()));
-
-                if (total >= min_order) {
-                    delivery_charge = 0;
-                }
-                grand_total = total + delivery_charge - discount;
-
-                payment_delivery_charge.setText("\u20B9 " + String.valueOf(delivery_charge));
-                payment_discount.setText("\u20B9 " + String.valueOf(discount));
-                payment_grand_total.setText("\u20B9 " + String.valueOf(grand_total));
-
-                result[0] = true;
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                result[0] = false;
-            }
-        });
-
-        return result[0];
-    }
 
     private void applyPromocode() {
+        promoProgressDialog.setTitle("Please wait...");
+        promoProgressDialog.setMessage("Applying PROMOCODE");
+        promoProgressDialog.setCancelable(false);
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PaymentPageActivity.this);
         alertDialog.setTitle("Enter Promocode");
 
@@ -361,40 +344,87 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                         if (!TextUtils.isEmpty(editTextPromoCode.getText())) {
                             final String prmCode = editTextPromoCode.getText().toString();
 
-                            databaseReference = FirebaseDatabase.getInstance().getReference().child("promocode");
-                            databaseReference.addValueEventListener(new ValueEventListener() {
+                            promoProgressDialog.show();
+
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("promocode");
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     if (dataSnapshot.hasChild(prmCode)) {
-                                        String value = String.valueOf(dataSnapshot.child(prmCode).child("value").getValue());
-                                        discount = Integer.parseInt(value);
-                                        promocode = prmCode;
-                                        setCharges();
+                                        int value = Integer.parseInt(String.valueOf(dataSnapshot.child(prmCode).child("value").getValue()));
+                                        int max_count = Integer.parseInt(String.valueOf(dataSnapshot.child(prmCode).child("max_count").getValue()));
+                                        int max_order = Integer.parseInt(String.valueOf(dataSnapshot.child(prmCode).child("max_order").getValue()));
+
+                                        //discount = Integer.parseInt(value);
+                                        //promocode = prmCode;
+                                        //setCharges();
+                                        setPromoDiscount(prmCode, value, max_count, max_order);
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
+                                        promoProgressDialog.dismiss();
+                                        Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onCancelled(DatabaseError databaseError) {
-                                    Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_LONG).show();
+                                    promoProgressDialog.dismiss();
+                                    Toast.makeText(getApplicationContext(), "Invalid promocode!!! Try again.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     }
                 });
 
-        alertDialog.setNegativeButton("REMOVE",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        discount = 0;
-                        promocode = "null";
-                        setCharges();
-                        dialog.cancel();
-                    }
-                });
+        alertDialog.setNegativeButton("REMOVE", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                discount = 0;
+                promocode = "null";
+                setCharges();
+                dialog.cancel();
+            }
+        });
 
         alertDialog.show();
+    }
+
+    private void setPromoDiscount(final String my_promocode, final int value, final int max_count, final int min_order) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("promocode")) {
+                    my_count = Integer.parseInt(String.valueOf(dataSnapshot.child("promocode").child(my_promocode).getValue()));
+                    if (my_count < max_count) {
+
+                        if (total >= min_order) {
+                            discount = value;
+                            promocode = my_promocode;
+                            setCharges();
+                            //Toast.makeText(getApplicationContext(), "GT" + payable_amt + "\nMT" + max_order, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Order total amount should be minimum \u20B9 " + min_order + " or above.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Maximum utilization of this promocode has been reached.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("User")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"))
+                            .child("promocode")
+                            .child(promocode).setValue(1);
+                    discount = value;
+                    promocode = my_promocode;
+                    setCharges();
+                }
+                promoProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                promoProgressDialog.dismiss();
+            }
+        });
     }
 
     private boolean haveNetworkConnection() {
@@ -414,19 +444,80 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         return haveConnectedWifi || haveConnectedMobile;
     }
 
+    private boolean setCharges() {
+        TextView payment_total = (TextView) findViewById(R.id.payment_total);
+        final TextView payment_delivery_charge = (TextView) findViewById(R.id.payment_delivery_charge);
+        final TextView payment_discount = (TextView) findViewById(R.id.payment_discount);
+        final TextView wallet_amount = (TextView) findViewById(R.id.wallet_amount);
+        final TextView payable_amount = (TextView) findViewById(R.id.payable_amount);
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+        total = Integer.parseInt(sharedPreferences.getString("Total", null));
+        payment_total.setText("\u20B9 " + String.valueOf(total));
+
+        final boolean[] result = {false};
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                delivery_charge = Integer.parseInt(String.valueOf(dataSnapshot.child("delivery_charge").getValue()));
+                min_order = Integer.parseInt(String.valueOf(dataSnapshot.child("min_order_value").getValue()));
+
+                if (total >= min_order) {
+                    delivery_charge = 0;
+                }
+
+                payable_amt = total + delivery_charge - discount - wallet_amt;
+
+                payment_delivery_charge.setText("\u20B9 " + String.valueOf(delivery_charge));
+                payment_discount.setText("\u20B9 " + String.valueOf(discount));
+                wallet_amount.setText("₹ " + wallet_amt);
+                payable_amount.setText("\u20B9 " + String.valueOf(payable_amt));
+
+                result[0] = true;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                result[0] = false;
+            }
+        });
+
+        if (discount == 0) {
+            payment_applyPromocode.setText("Have a promocode?");
+            payment_applyPromocode.setTextColor(getResources().getColor(R.color.colorAccent));
+        } else {
+            payment_applyPromocode.setText(promocode + " applied. Try new?");
+            payment_applyPromocode.setTextColor(getResources().getColor(R.color.Green));
+        }
+
+        return result[0];
+    }
+
     /*Set wallet amount*/
     private void setWallet() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String walletAmount = String.valueOf(dataSnapshot.child("wallet").getValue());
-                CheckBox walletAmt = (CheckBox) findViewById(R.id.walletAmt);
-                walletAmt.setText("Include wallet amount: ₹ " + walletAmount);
-                walletAmt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                final String walletAmt = String.valueOf(dataSnapshot.child("wallet").getValue());
+                final CheckBox checkBoxWallet = (CheckBox) findViewById(R.id.walletAmt);
+                checkBoxWallet.setText("Include wallet amount: ₹ " + walletAmt);
+                checkBoxWallet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                        if (isChecked) {
+                            wallet_amt = Integer.parseInt(walletAmt);
+                        } else {
+                            wallet_amt = 0;
+                        }
+                        if (total < min_order) {
+                            checkBoxWallet.setChecked(false);
+                            Toast.makeText(getApplicationContext(), "Order total amount should be minimum \u20B9 " + min_order + " or above.", Toast.LENGTH_SHORT).show();
+                            wallet_amt = 0;
+                        }
+                        setCharges();
                     }
                 });
             }

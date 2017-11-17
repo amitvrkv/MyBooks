@@ -80,7 +80,7 @@
                     android:background="@android:color/darker_gray"
                     android:gravity="center"
                     android:padding="3dp"
-                    android:text="Bill Amount"
+                    android:text="Bill Details"
                     android:textColor="@color/colorTextIcon"
                     android:textSize="15dp"
                     android:textStyle="bold" />
@@ -102,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="\u20B9 0.0" />
+                        android:text="\u20B9 0" />
 
                 </RelativeLayout>
 
@@ -122,7 +122,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="\u20B9 0.0" />
+                        android:text="\u20B9 0" />
 
                 </RelativeLayout>
 
@@ -154,7 +154,27 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="\u20B9 0.0" />
+                        android:text="\u20B9 0" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wallet amount: " />
+
+                    <TextView
+                        android:id="@+id/wallet_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="\u20B9 0" />
 
                 </RelativeLayout>
 
@@ -176,15 +196,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Grand total: "
+                        android:text="Payable amount: "
                         android:textColor="@android:color/black" />
 
                     <TextView
-                        android:id="@+id/payment_grand_total"
+                        android:id="@+id/payable_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="\u20B9 0.0"
+                        android:text="\u20B9 0"
                         android:textColor="@android:color/black" />
 
                 </RelativeLayout>
@@ -236,6 +256,7 @@
                     android:layout_height="wrap_content">
 
                     <RadioButton
+                        android:enabled="false"
                         android:id="@+id/modeOnline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
