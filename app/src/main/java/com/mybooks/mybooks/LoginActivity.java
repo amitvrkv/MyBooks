@@ -321,10 +321,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                             FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
                             DatabaseReference mRef = mdatabase.getReference().child("User").child(mEmailSignUp.getText().toString().replace(".", "*"));
-                            mRef.child("name").setValue("NA");
-                            mRef.child("email").setValue(mEmailSignUp.getText().toString());
-                            mRef.child("contact").setValue("NA");
-                            mRef.child("address").setValue("NA");
                             mRef.child("wallet").setValue("0");
                             mRef.child("liveness").setValue("true");
 
@@ -447,7 +443,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 String live = String.valueOf(dataSnapshot.child("liveness").getValue());
                 if (live.equalsIgnoreCase("true")) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    //finish();
+                    finish();
                 } else {
                     //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
                     showAlertDialog("Account Locked", "Your account is locked. Please contact our helpline.");

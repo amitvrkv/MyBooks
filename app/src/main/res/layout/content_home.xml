@@ -8,6 +8,7 @@
     tools:context="com.mybooks.mybooks.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
+    <!--
     <ScrollView
         android:clipToPadding="false"
         android:paddingBottom="100dp"
@@ -20,6 +21,8 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/ad_square_products_4"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginTop="3dp"
@@ -168,6 +171,8 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/ad_square_products_3"
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
@@ -290,6 +295,8 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/ad_rectangle_products_5"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginTop="20dp"
@@ -464,5 +471,26 @@
         </LinearLayout>
 
     </ScrollView>
+    -->
+
+    <ProgressBar
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true" />
+        <me.relex.circleindicator.CircleIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 
 </RelativeLayout>

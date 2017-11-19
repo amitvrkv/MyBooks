@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -29,6 +31,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import me.relex.circleindicator.CircleIndicator;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,6 +44,15 @@ public class HomeActivity extends AppCompatActivity
     NavigationView navigationView;
 
     boolean doubleBackToExitPressedOnce = false;
+
+    //Pager
+    private static ViewPager mPager;
+    private static int currentPage = 0;
+    //private static final Integer[] XMEN= {R.drawable.ic_menu_share,R.drawable.ic_menu_manage,R.drawable.ic_menu_camera,R.drawable.ic_menu_send,R.drawable.ic_menu_gallery};
+    //private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
+
+    private ArrayList<String> arrayListImageSrc = new ArrayList<>();
+    private ArrayList<String> arrayListGoto = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +75,24 @@ public class HomeActivity extends AppCompatActivity
 
         parentLayoutView = findViewById(R.id.drawer_layout);
 
+        setAdvertisements();
+        setAddress();
+    }
+
+    private void setAddress() {
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+        if ( sharedPreferences.getString("Name", null) != null) {
+            return;
+        }
+        startActivity(new Intent(getApplicationContext(), AddressActivity.class));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setWelcome();
+
+        setWelcomeMsg();
     }
 
     @Override
@@ -218,8 +247,6 @@ public class HomeActivity extends AppCompatActivity
                         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{"orderonlinemybooks@gmail.com"});
                         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
                         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-
-
                         emailIntent.setType("message/rfc822");
 
                         try {
@@ -246,7 +273,7 @@ public class HomeActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    private void setWelcome() {
+    private void setWelcomeMsg() {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
         View mHeaderView = navigationView.getHeaderView(0);
@@ -279,4 +306,68 @@ public class HomeActivity extends AppCompatActivity
             }
         });
     }
+
+    private void setAdvertisements() {
+        arrayListImageSrc.clear();
+        arrayListGoto.clear();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("advertisements");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String img_src = (String) dataSnapshot1.child("img_src").getValue();
+                    String go_to = (String) dataSnapshot1.child("go_to").getValue();
+                    arrayListImageSrc.add(img_src);
+                    arrayListGoto.add(go_to);
+                }
+                initPager();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void initPager() {
+        //for(int i=0;i<XMEN.length;i++)
+          //  XMENArray.add(XMEN[i]);
+
+        mPager = (ViewPager) findViewById(R.id.pager);
+
+        /*
+        mPager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "" + currentPage, Toast.LENGTH_SHORT).show();
+            }
+        });
+        */
+
+        mPager.setAdapter(new MyPagerAdapter(HomeActivity.this, arrayListImageSrc, arrayListGoto));
+        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(mPager);
+
+
+
+        // Auto start of viewpager
+        final Handler handler = new Handler();
+        final Runnable Update = new Runnable() {
+            public void run() {
+                if (currentPage == arrayListImageSrc.size()) {
+                    currentPage = 0;
+                }
+                mPager.setCurrentItem(currentPage++, true);
+            }
+        };
+        Timer swipeTimer = new Timer();
+        swipeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(Update);
+            }
+        }, 2500, 2500);
+    }
+
 }

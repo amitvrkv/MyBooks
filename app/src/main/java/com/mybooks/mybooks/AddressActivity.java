@@ -1,6 +1,7 @@
 package com.mybooks.mybooks;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AddressActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -111,18 +118,43 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                 return;
             }
 
+            String name = mDelName.getText().toString().trim();
+            String contact = mDelMobileNo.getText().toString().trim();
+            String addressline1 = mDelHouseNameNumber.getText().toString().trim();
+            String addressline2 = mDelLocality.getText().toString().trim();
+            String city = "Bengaluru";
+            String state = "Karnataka";
+            String pincode = mDelPincode.getText().toString().trim();
+
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("Name", mDelName.getText().toString());
-            editor.putString("contact", mDelMobileNo.getText().toString());
-            editor.putString("addressline1", mDelHouseNameNumber.getText().toString());
-            editor.putString("addressline2", mDelLocality.getText().toString());
-            editor.putString("pincode", mDelPincode.getText().toString());
-            editor.putString("city", "Bengaluru");
-            editor.putString("state", "Karnataka");
+            editor.putString("Name", name);
+            editor.putString("contact", contact);
+            editor.putString("addressline1", addressline1);
+            editor.putString("addressline2", addressline2);
+            editor.putString("city", city);
+            editor.putString("state", state);
+            editor.putString("pincode", pincode);
             editor.commit();
 
-            Toast.makeText(getApplicationContext(), "Adsress saved", Toast.LENGTH_SHORT).show();
-            finish();
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".","*")).child("address");
+            databaseReference.child("name").setValue(name);
+            databaseReference.child("contact").setValue(contact);
+            databaseReference.child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+            databaseReference.child("addressline1").setValue(addressline1);
+            databaseReference.child("addressline2").setValue(addressline2);
+            databaseReference.child("city").setValue(city);
+            databaseReference.child("state").setValue(state);
+            databaseReference.child("pincode").setValue(pincode).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Address saved", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Something went wrong. Try again.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
