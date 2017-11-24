@@ -56,6 +56,8 @@ public class MyCartNew extends AppCompatActivity {
 
     Button cart_product_continueBtn;
 
+    ImageView app_logo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +66,8 @@ public class MyCartNew extends AppCompatActivity {
 
         my_cart_item_list = (ListView) findViewById(R.id.my_cart_item_list);
         parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
+
+        app_logo = (ImageView) findViewById(R.id.app_logo);
 
         mGrandTotal = (TextView) findViewById(R.id.grandTotal);
         TotalLayout = (RelativeLayout) findViewById(R.id.TotalLayout);
@@ -113,9 +117,11 @@ public class MyCartNew extends AppCompatActivity {
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART", null);
 
         if (cursor.moveToFirst() == false) {
+            app_logo.setVisibility(View.VISIBLE);
             TotalLayout.setVisibility(View.GONE);
             Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
         } else {
+            app_logo.setVisibility(View.GONE);
             do {
                 key.add(cursor.getString(cursor.getColumnIndex("key")));
                 type.add(cursor.getString(cursor.getColumnIndex("booktype")));

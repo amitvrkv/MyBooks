@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.mybooks.mybooks.OrderDetailsActivity">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
@@ -17,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/backButtonPadding"
-            android:src="@drawable/ic_arrow_back_white_24dp" />
+             />
 
         <TextView
             android:id="@+id/orderDetialsId"

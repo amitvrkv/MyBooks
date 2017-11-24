@@ -151,6 +151,14 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:alpha="0.1"
+        android:src="@drawable/app_icon" />
+
     <Button
         android:id="@+id/delSaveBtn"
         android:layout_width="match_parent"

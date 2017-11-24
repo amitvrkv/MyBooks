@@ -6,9 +6,11 @@
     tools:context="com.mybooks.mybooks.Individual_book_details">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="10dp">
+        android:clipToPadding="false"
+        android:paddingBottom="150dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -25,96 +27,425 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_below="@+id/appBar">
+                android:layout_below="@+id/appBar"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/book_image"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginTop="15dp"
-                    android:scaleType="fitCenter" />
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <ImageView
+                        android:id="@+id/book_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleType="fitCenter" />
+
+                    <ImageView
+                        android:id="@+id/btn_wishList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:alpha="0.7"
+                        android:padding="3dp"
+                        android:src="@mipmap/ic_favorite_border_black_24dp"
+                        android:tint="@color/Pink" />
+
+                    <ImageView
+                        android:id="@+id/btn_wishListAdded"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:alpha="0.4"
+                        android:padding="3dp"
+                        android:src="@mipmap/ic_favorite_black_24dp"
+                        android:tint="@color/Pink"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:background="@color/Light_Grey" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:id="@+id/book_title_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Title"
+                        android:textSize="18dp" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/book_title_bold"
+                        android:layout_marginTop="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/book_old_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹ NA"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/book_new_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="NA" />
+
+                        <TextView
+                            android:id="@+id/book_mrp_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="NA" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_price"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/old_per_off"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0% off on old book"
+                            android:textColor="@color/Green" />
+
+                        <TextView
+                            android:id="@+id/new_per_off"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="0% off on new book"
+                            android:textColor="@color/Green" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
                     android:background="@color/Light_Grey" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textSize="18dp"
-                        android:id="@+id/BookTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Details"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/Light_Grey" />
+
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Book Title"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:text="Highlights"
                         android:textColor="@android:color/black" />
 
-                    <TextView
-                        android:id="@+id/BookPublisher"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="Book Publisher" />
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/BookAuthor"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Book Author" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Title: " />
 
-                    <TextView
-                        android:id="@+id/BookCourse"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Book Course" />
+                        <TextView
+                            android:id="@+id/BookTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book Title" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/BookSem"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="Book Sem" />
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/BookMRP"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Book Sem" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Publisher: " />
 
-                    <TextView
-                        android:id="@+id/BookNewPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Book New Price" />
+                        <TextView
+                            android:id="@+id/BookPublisher"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book Publisher" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/BookOldPrice"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
-                        android:text="Book Old Price" />
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Author: " />
+
+                        <TextView
+                            android:id="@+id/BookAuthor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book Author" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Course: " />
+
+                        <TextView
+                            android:id="@+id/BookCourse"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Book Course" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Sem/Year/Edition: " />
+
+                        <TextView
+                            android:id="@+id/BookSem"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book Sem" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Book MRP: " />
+
+                        <TextView
+                            android:id="@+id/BookMRP"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book MRP" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 New Book Price: " />
+
+                        <TextView
+                            android:id="@+id/BookNewPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book New Price" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="\u2022 Old Book Price: " />
+
+                        <TextView
+                            android:id="@+id/BookOldPrice"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Book Old Price" />
+                    </LinearLayout>
+
                 </LinearLayout>
+                <!--
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:alpha="0.3"
+                        android:background="@drawable/gradient_grey" />
+
+                    <Button
+                        android:id="@+id/btn_add_to_cart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:layout_toStartOf="@+id/view4"
+                        android:background="@color/white"
+                        android:text="ADD TO CART" />
+
+                    <Button
+                        android:id="@+id/btn_buy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignStart="@+id/view4"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/colorAccent"
+                        android:text="BUY"
+                        android:textColor="@color/colorTextIcon" />
+
+                    <View
+                        android:id="@+id/view4"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/Green" />
+                </RelativeLayout> -->
 
             </LinearLayout>
 
+
         </RelativeLayout>
 
-
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:alpha="0.3"
+            android:background="@drawable/gradient_grey" />
+
+        <Button
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/view4"
+            android:background="@color/white"
+            android:text="ADD TO CART" />
+
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/view4"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorAccent"
+            android:text="BUY"
+            android:textColor="@color/colorTextIcon" />
+
+        <View
+            android:id="@+id/view4"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_book_image_large"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:background="@android:color/black" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/book_image_large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+
+    </RelativeLayout>
 
 </RelativeLayout>

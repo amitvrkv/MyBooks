@@ -308,12 +308,14 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setAdvertisements() {
-        arrayListImageSrc.clear();
-        arrayListGoto.clear();
+        //arrayListImageSrc.clear();
+        //arrayListGoto.clear();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("advertisements");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                arrayListImageSrc.clear();
+                arrayListGoto.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String img_src = (String) dataSnapshot1.child("img_src").getValue();
                     String go_to = (String) dataSnapshot1.child("go_to").getValue();
@@ -367,7 +369,7 @@ public class HomeActivity extends AppCompatActivity
             public void run() {
                 handler.post(Update);
             }
-        }, 2500, 2500);
+        }, 3000, 3000);
     }
 
 }

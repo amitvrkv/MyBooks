@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="70dp"
@@ -46,11 +46,12 @@
 
     </RelativeLayout>
 
+    <!-- Login form -->
     <RelativeLayout
         android:id="@+id/Login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
@@ -78,7 +79,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -90,6 +91,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
+                    android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -104,9 +106,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="Sign in"
                     android:inputType="textPassword"
+                    android:imeOptions="actionDone"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -130,7 +131,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="right"
                 android:text="Forgot Password."
-                android:textColor="@color/Red" />
+                android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/sign_up_redirect_button"
@@ -139,7 +140,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="right"
                 android:text="New user? Sign up here."
-                android:textColor="@color/Red" />
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 
@@ -155,7 +156,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -168,6 +169,7 @@
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
+                    android:imeOptions="actionNext"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -181,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:imeActionId="@+id/login"
+                    android:imeOptions="actionNext"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -197,12 +199,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Verify password"
-                    android:imeActionId="@+id/login"
+                    android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
+
+            <CheckBox
+                android:id="@+id/checkboxTnC"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/Red"
+                android:text="Accept My Books terms and conditions*"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/email_sign_up_button"
@@ -222,7 +232,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="Already registered? Sign in here."
-                android:textColor="@color/Red" />
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 

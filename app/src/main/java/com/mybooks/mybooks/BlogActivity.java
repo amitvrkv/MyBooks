@@ -378,14 +378,16 @@ public class BlogActivity extends AppCompatActivity {
                     String count = String.valueOf(dataSnapshot.child("like").getValue());
                     String likeFrom = String.valueOf(dataSnapshot.child("likeFrom").getValue());
 
-                    count = String.valueOf(Integer.parseInt(count) + 1);
-
                     if (likeFrom.contains(FirebaseAuth.getInstance().getCurrentUser().getEmail()) == false) {
+                        count = String.valueOf(Integer.parseInt(count) + 1);
                         FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("like").setValue(count);
-                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("likeFrom").setValue(likeFrom + " \n " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("likeFrom").setValue(likeFrom + " " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
                         //likeIcon.startAnimation(zoomin);
                     } else {
-                        Toast.makeText(mView.getContext(), "You have already liked this post.", Toast.LENGTH_SHORT).show();
+                        count = String.valueOf(Integer.parseInt(count) - 1);
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("like").setValue(count);
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("likeFrom").setValue(likeFrom.replace(" " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), ""));
+                        //Toast.makeText(mView.getContext(), "You have already liked this post.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -403,15 +405,16 @@ public class BlogActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String count = String.valueOf(dataSnapshot.child("dislike").getValue());
                     String dislikeFrom = String.valueOf(dataSnapshot.child("dislikeFrom").getValue());
-
-                    int setCount = Integer.parseInt(count) + 1;
-
                     if (dislikeFrom.contains(FirebaseAuth.getInstance().getCurrentUser().getEmail()) == false) {
+                        int setCount = Integer.parseInt(count) + 1;
                         FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislike").setValue("" + setCount);
-                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislikeFrom").setValue(dislikeFrom + " \n " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislikeFrom").setValue(dislikeFrom + " " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
                         //dislikeIcon.startAnimation(zoomin);
                     } else {
-                        Toast.makeText(mView.getContext(), "You have already disliked this post.", Toast.LENGTH_SHORT).show();
+                        int setCount = Integer.parseInt(count) - 1;
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislike").setValue("" + setCount);
+                        FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislikeFrom").setValue(dislikeFrom.replace(" " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), ""));
+                        //Toast.makeText(mView.getContext(), "You have already disliked this post.", Toast.LENGTH_SHORT).show();
                     }
                 }
 

@@ -79,9 +79,9 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         floatingActionButtonFilter.setOnClickListener(this);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && floatingActionButtonFilter.getVisibility() == View.VISIBLE) {
                     floatingActionButtonFilter.hide();

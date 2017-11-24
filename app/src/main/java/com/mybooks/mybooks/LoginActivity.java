@@ -20,8 +20,10 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private ProgressDialog mprogressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private CheckBox checkBoxTnC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
         mresetPassword = (TextView) findViewById(R.id.forgotPassword);
         mresetPassword.setOnClickListener(this);
+
+        checkBoxTnC = (CheckBox) findViewById(R.id.checkboxTnC);
+        checkBoxTnC.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Visit My Books official website page to learn about our terms and conditions", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -200,8 +211,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 break;
 
             case R.id.email_sign_up_button:
-                if (verifySignUp())
-                    attemptSignup();
+                if (verifySignUp()) {
+                    if (checkBoxTnC.isChecked()) {
+                        attemptSignup();
+                    } else {
+                        showAlertDialog("Alert", "Please accept My Books terms and conditions to sign up in this app.");
+                    }
+                }
                 break;
 
             case R.id.email_sign_in_button:
@@ -360,6 +376,48 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     public void sendResetPassword() {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+        alertDialog.setTitle("Enter mail id:");
+
+        final EditText editTextAlert = new EditText(LoginActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        editTextAlert.setLayoutParams(lp);
+        alertDialog.setView(editTextAlert);
+
+        alertDialog.setPositiveButton("RESET",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!TextUtils.isEmpty(editTextAlert.getText())) {
+                            String email = editTextAlert.getText().toString();
+
+                            if (TextUtils.isEmpty(email)) {
+                                mEmailSignIn.setError(getString(R.string.error_field_required));
+                                return;
+                            } else if (!email.contains("@")) {
+                                mEmailSignIn.setError(getString(R.string.error_invalid_email));
+                                return;
+                            }
+                            FirebaseAuth.getInstance().sendPasswordResetEmail(email);
+                            //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+                            showAlertDialog("Message", "Password reset email sent successfully.");
+                        }
+                    }
+                });
+
+        alertDialog.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        alertDialog.show();
+
+        /*
         mEmailSignIn.setError(null);
         String email = mEmailSignIn.getText().toString();
 
@@ -374,6 +432,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
         showAlertDialog("Message", "Password reset email sent successfully.");
         //Snackbar.make(parentLayoutView, "Password reset email sent successfully.", Snackbar.LENGTH_LONG).show();
+        */
     }
 
     private int getDisplayHeight() {

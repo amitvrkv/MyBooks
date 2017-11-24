@@ -95,7 +95,7 @@
                 android:gravity="right"
                 android:padding="5dp"
                 android:text="update address"
-                android:textColor="@color/Red" />
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
 
@@ -126,6 +126,7 @@
 
 
             <TextView
+                android:textColor="@color/Green"
                 android:id="@+id/walletAmt"
                 android:layout_margin="5dp"
                 android:textSize="18dp"
