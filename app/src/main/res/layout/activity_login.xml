@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="70dp"
@@ -51,7 +51,7 @@
         android:id="@+id/Login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <View
             android:layout_width="match_parent"

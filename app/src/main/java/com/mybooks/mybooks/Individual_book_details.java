@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class Individual_book_details extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,8 +51,6 @@ public class Individual_book_details extends AppCompatActivity implements View.O
     Button btn_buy;
 
     ScrollView scrollView;
-    private ScaleGestureDetector scaleGestureDetector;
-    private Matrix matrix = new Matrix();
 
     private ImageView mBook_image;
     private TextView mBookTitle, mBookPublisher, mBookAuthor, mBookCourse, mBookSem, mBookMRP, mBookNewPrice, mBookOldPrice;
@@ -95,7 +97,9 @@ public class Individual_book_details extends AppCompatActivity implements View.O
         btn_buy.setOnClickListener(this);
 
         relativeLayout_book_image_large = (RelativeLayout) findViewById(R.id.relativeLayout_book_image_large);
+
         book_image_large = (ImageView) findViewById(R.id.book_image_large);
+
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
@@ -138,21 +142,19 @@ public class Individual_book_details extends AppCompatActivity implements View.O
                             .crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mBook_image);
 
-
                 try {
-                    float mrp = Float.parseFloat(mBookMRP.getText().toString());
-                    float newp = Float.parseFloat(mBookNewPrice.getText().toString());
-                    float old = Float.parseFloat(mBookOldPrice.getText().toString());
-                    int old_per = Math.round(old / mrp * 100);
-                    int new_per = Math.round(newp / mrp * 100);
-
-                    old_per_off.setText("" + old_per + "% off on old book");
-                    new_per_off.setText("" + new_per + "% off on new book");
-
+                    int mrp = Integer.parseInt(mBookMRP.getText().toString());
+                    int newp = Integer.parseInt(mBookNewPrice.getText().toString());
+                    int old = Integer.parseInt(mBookOldPrice.getText().toString());
+                    int old_per = mrp - old;
+                    int new_per = mrp - newp;
+                    old_per_off.setText("₹ " + old_per + " off on old book");
+                    new_per_off.setText("₹ " + new_per + " off on new book");
                 } catch (Exception e) {
                     old_per_off.setVisibility(View.GONE);
                     new_per_off.setVisibility(View.GONE);
                 }
+                setWishList();
             }
 
             @Override
@@ -161,15 +163,8 @@ public class Individual_book_details extends AppCompatActivity implements View.O
             }
         });
 
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        scaleGestureDetector.onTouchEvent(event);
-        //return super.onTouchEvent(event);
-        return true;
-    }
 
     public void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -255,6 +250,27 @@ public class Individual_book_details extends AppCompatActivity implements View.O
     }
 
     private void addToWishList() {
+        Animation zoomin = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_in);
+        final Animation zoomout = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.zoom_out);
+        wishListBtn.setAnimation(zoomin);
+        zoomin.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                wishListBtn.setAnimation(zoomout);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + modelProductList.getF11() + "'", null);
@@ -270,6 +286,7 @@ public class Individual_book_details extends AppCompatActivity implements View.O
         }
     }
 
+
     private void showLargeImage() {
         if (modelProductList.getF13().equalsIgnoreCase("na")) {
             //book_image_large.setVisibility(View.GONE);
@@ -281,6 +298,12 @@ public class Individual_book_details extends AppCompatActivity implements View.O
                     .error(R.drawable.no_image_available)
                     .crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(book_image_large);
+
+            PhotoViewAttacher photoAttacher;
+            photoAttacher = new PhotoViewAttacher(book_image_large);
+            photoAttacher.update();
+
+            photoAttacher.setDisplayMatrix(photoAttacher.getDisplayMatrix());
         }
     }
 
@@ -294,17 +317,15 @@ public class Individual_book_details extends AppCompatActivity implements View.O
         }
     }
 
-    private class ScaleListener extends ScaleGestureDetector.
-            SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            float scaleFactor = detector.getScaleFactor();
-            scaleFactor = Math.max(0.1f, Math.min(scaleFactor, 5.0f));
-            matrix.setScale(scaleFactor, scaleFactor);
-            book_image_large.setImageMatrix(matrix);
-            return true;
+    public void setWishList() {
+        SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
+        Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + modelProductList.getF11() + "'", null);
+        if (cursor.getCount() <= 0) {
+            wishListBtnAdded.setVisibility(View.GONE);
+        } else {
+            wishListBtnAdded.setVisibility(View.VISIBLE);
         }
     }
-
 
 }

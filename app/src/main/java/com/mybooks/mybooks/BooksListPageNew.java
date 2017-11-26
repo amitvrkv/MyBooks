@@ -127,7 +127,30 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     @Override
     protected void onStart() {
+
+        //Toast.makeText(getApplicationContext(), "onStart", Toast.LENGTH_SHORT).show();
+
         super.onStart();
+
+        /*
+        setFilter();
+        setCartCount();
+
+        Bundle bundle = getIntent().getExtras();
+        String key = bundle.getString("f");
+        if (key.equals("all")) {
+            setDataOnPageStart();
+        } else if (key.equals("wishlist")) {
+            productByWishlist();
+        }
+        */
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_SHORT).show();
 
         setFilter();
         setCartCount();
@@ -210,7 +233,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             //Toast.makeText(getApplicationContext(),"> 2" , Toast.LENGTH_SHORT).show();
             productByCat2();
         } else if (spinnerCat4.getSelectedItem().equals("select")) {
-            //Toast.makeText(getApplicationContext(),"> 3\n" +  modelProductList.getF1() + "\n" +  modelProductList.getF5() , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),"> 3 " + spinnerCat3.getSelectedItem() , Toast.LENGTH_SHORT).show();
             productByCat3();
         } else {
             //Toast.makeText(getApplicationContext(),"> 4" , Toast.LENGTH_SHORT).show();
@@ -342,8 +365,10 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 listObjects.clear();
 
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
                     ModelProductList modelProductList = dataSnapshot1.getValue(ModelProductList.class);
-                    if (modelProductList.getF1().equals(spinnerCat1.getSelectedItem().toString()) && modelProductList.getF5().equals(spinnerCat3.getSelectedItem().toString())) {
+
+                    if (modelProductList.getF1().equalsIgnoreCase(spinnerCat1.getSelectedItem().toString()) && modelProductList.getF5().equals(spinnerCat3.getSelectedItem().toString())) {
                         listObjects.add(modelProductList);
                     }
                 }
@@ -365,18 +390,24 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         listObjects = new ArrayList<>();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("ProductbyCourse")
                 .child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString()).child(spinnerCat3.getSelectedItem().toString()).child(spinnerCat4.getSelectedItem().toString());
+
+        //Toast.makeText(getApplicationContext(), spinnerCat1.getSelectedItem().toString() +  spinnerCat2.getSelectedItem().toString() + spinnerCat3.getSelectedItem().toString() +spinnerCat4.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listObjects.clear();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String key = dataSnapshot1.getKey();
+
+                    Toast.makeText(getApplicationContext(), ">>"+key, Toast.LENGTH_SHORT).show();
+
                     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
                     databaseReference1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
                             listObjects.add(modelProductList);
+                            Toast.makeText(getApplicationContext(), "}}" + modelProductList.getF2(), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -464,6 +495,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list1);
                 arrayAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerCat1.setAdapter(arrayAdapter1);
+                spinnerCat1.setSelection(1);
             }
 
             @Override
