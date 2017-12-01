@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Description"
+                        android:hint="Description ( Old/New Book , Edition etc.)"
                         android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="2000"
                         android:maxLines="4" />
@@ -126,9 +126,40 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorAccent"
-                android:text="SAVE AND PLACE ORDER"
+                android:text="PLACE ORDER"
                 android:textColor="@color/colorTextIcon"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/customPlaceOrder">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NOTE:" />
+
+                <TextView
+                    android:text="  1. Used Book upto 50% on MRP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="  2. New Book upto 30% on MRP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:text="  3. Order placed is subject to availability."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

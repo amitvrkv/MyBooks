@@ -29,6 +29,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder> firebaseRecyclerAdapter;
 
+    String orderId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,22 +41,20 @@ public class OrderDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Bundle bundle = getIntent().getExtras();
-        String orderId = bundle.getString("orderId");
+        orderId = bundle.getString("orderId");
 
         TextView titleOrderId = (TextView) findViewById(R.id.orderDetialsId);
         titleOrderId.setText("Orders ID: " + orderId);
+    }
 
-        ImageView backBtn = (ImageView) findViewById(R.id.oderDetailsBackBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setData();
+    }
 
-
+    public void setData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
-
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder>(
                 OrderDetailsBookList.class,
@@ -69,8 +69,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         };
 
         recyclerView.setAdapter(firebaseRecyclerAdapter);
-
     }
+
 
     public static class OrderDetailsViewHolder extends RecyclerView.ViewHolder {
         View view;

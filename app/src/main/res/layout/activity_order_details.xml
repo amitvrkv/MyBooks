@@ -7,19 +7,11 @@
     tools:context="com.mybooks.mybooks.OrderDetailsActivity">
 
 
-
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbarHeight"
-        android:background="@color/colorPrimary"
-        android:id="@+id/linearLayout3">
-
-        <ImageView
-            android:id="@+id/oderDetailsBackBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/backButtonPadding"
-             />
+        android:background="@color/colorPrimary">
 
         <TextView
             android:id="@+id/orderDetialsId"
@@ -35,8 +27,41 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/orderDetailsRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout3"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout3"
+    />
+
+    <!--
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout3">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="jkghjh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:src="@drawable/dbms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.RecyclerView
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:id="@+id/orderDetailsRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+    -->
 
 
 </RelativeLayout>

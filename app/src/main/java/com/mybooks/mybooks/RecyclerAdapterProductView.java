@@ -71,7 +71,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             holder.mauthor.setVisibility(View.GONE);
         } else {
             holder.mauthor.setVisibility(View.VISIBLE);
-            holder.mauthor.setText(capitalizeEveryWord(modelProductList.getF4()));
+            holder.mauthor.setText(capitalizeEveryWord(modelProductList.getF4()).replace("; ","\n"));
         }
         if (modelProductList.getF5().equalsIgnoreCase("na")) {
             holder.mcourse.setVisibility(View.GONE);

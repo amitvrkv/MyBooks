@@ -102,6 +102,9 @@ public class HomeActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
 
+
+            startActivity(new Intent(getApplicationContext(), OrderMainPage.class));
+
             //super.onBackPressed();
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
