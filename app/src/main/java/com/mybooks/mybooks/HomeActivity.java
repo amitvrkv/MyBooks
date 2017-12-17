@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -40,17 +39,14 @@ import me.relex.circleindicator.CircleIndicator;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    View parentLayoutView;
-    NavigationView navigationView;
-
-    boolean doubleBackToExitPressedOnce = false;
-
     //Pager
     private static ViewPager mPager;
     private static int currentPage = 0;
+    View parentLayoutView;
+    NavigationView navigationView;
+    boolean doubleBackToExitPressedOnce = false;
     //private static final Integer[] XMEN= {R.drawable.ic_menu_share,R.drawable.ic_menu_manage,R.drawable.ic_menu_camera,R.drawable.ic_menu_send,R.drawable.ic_menu_gallery};
     //private ArrayList<Integer> XMENArray = new ArrayList<Integer>();
-
     private ArrayList<String> arrayListImageSrc = new ArrayList<>();
     private ArrayList<String> arrayListGoto = new ArrayList<>();
 
@@ -82,7 +78,7 @@ public class HomeActivity extends AppCompatActivity
     private void setAddress() {
         SharedPreferences sharedPreferences;
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-        if ( sharedPreferences.getString("Name", null) != null) {
+        if (sharedPreferences.getString("Name", null) != null) {
             return;
         }
         startActivity(new Intent(getApplicationContext(), AddressActivity.class));
@@ -119,7 +115,7 @@ public class HomeActivity extends AppCompatActivity
 
                 @Override
                 public void run() {
-                    doubleBackToExitPressedOnce =false;
+                    doubleBackToExitPressedOnce = false;
                 }
             }, 2000);
         }
@@ -177,7 +173,7 @@ public class HomeActivity extends AppCompatActivity
                 bundle.putString("f", "all");
                 intent.putExtras(bundle);
                 startActivity(intent);
-
+                //overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
                 break;
 
             case R.id.customiseOrderMenu:
@@ -337,7 +333,7 @@ public class HomeActivity extends AppCompatActivity
 
     private void initPager() {
         //for(int i=0;i<XMEN.length;i++)
-          //  XMENArray.add(XMEN[i]);
+        //  XMENArray.add(XMEN[i]);
 
         mPager = (ViewPager) findViewById(R.id.pager);
 
@@ -353,7 +349,6 @@ public class HomeActivity extends AppCompatActivity
         mPager.setAdapter(new MyPagerAdapter(HomeActivity.this, arrayListImageSrc, arrayListGoto));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
         indicator.setViewPager(mPager);
-
 
 
         // Auto start of viewpager

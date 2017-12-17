@@ -4,7 +4,7 @@ package com.mybooks.mybooks;
  * Created by am361000 on 03/10/17.
  */
 
-class ModelClassBLog {
+public class ModelClassBLog {
 
     String by;
     String comment;

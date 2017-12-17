@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,29 +32,73 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
     String orderId;
 
+    List<OrderDetailsActivity> orderDetailsActivityList;
+
+    private LinearLayoutManager mLayoutManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
 
         recyclerView = (RecyclerView) findViewById(R.id.orderDetailsRecycleView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
+        //recyclerView.setHasFixedSize(true);
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         Bundle bundle = getIntent().getExtras();
         orderId = bundle.getString("orderId");
 
-        TextView titleOrderId = (TextView) findViewById(R.id.orderDetialsId);
-        titleOrderId.setText("Orders ID: " + orderId);
+        //TextView titleOrderId = (TextView) findViewById(R.id.orderDetialsId);
+        //titleOrderId.setText("Orders ID: " + orderId);
+
+        setToolbar();
+        setShippingAddress();
+        setProductDetails();
+    }
+
+    private void setShippingAddress() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("Order")
+                .child(orderId);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String address = String.valueOf(dataSnapshot.child("deliveryaddress").getValue());
+                TextView add = (TextView) findViewById(R.id.address);
+                add.setText(address.replaceFirst(", ","\n"));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void setToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Orders ID: " + orderId);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setData();
+
     }
 
-    public void setData() {
+
+    public void setProductDetails() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder>(
@@ -68,6 +113,11 @@ public class OrderDetailsActivity extends AppCompatActivity {
             }
         };
 
+        mLayoutManager = new LinearLayoutManager(OrderDetailsActivity.this);
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
+
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
     }
 
@@ -99,15 +149,18 @@ public class OrderDetailsActivity extends AppCompatActivity {
             TextView mbook_grand = (TextView) view.findViewById(R.id.obookGrandTotal);
             final ImageView mBookImage = (ImageView) view.findViewById(R.id.obookImage);
 
+
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     mTitle.setText(capitalizeEveryWord(dataSnapshot.child("f2").getValue().toString()));
                     mPublisher.setText(capitalizeEveryWord(dataSnapshot.child("f3").getValue().toString()));
+                    mPublisher.setVisibility(View.GONE);
                     mAuthor.setText(capitalizeEveryWord(dataSnapshot.child("f4").getValue().toString()));
+                    mAuthor.setVisibility(View.GONE);
 
-                    if ( ! dataSnapshot.child("f13").getValue().toString().equalsIgnoreCase("na")) {
+                    if (!dataSnapshot.child("f13").getValue().toString().equalsIgnoreCase("na")) {
                         Glide.with(view.getContext())
                                 .load(dataSnapshot.child("f13").getValue().toString())
                                 .into(mBookImage);
@@ -120,12 +173,14 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                 }
             });
+
             mType.setText("Book Type: " + capitalizeEveryWord(type));
             mPricePerBook.setText("Price per Book: \u20B9 " + price_per_book);
-            mQty.setText("Qty: " + qty);
+            mQty.setText("Quantity: " + qty);
             int grand = Integer.parseInt(price_per_book) * Integer.parseInt(qty);
             mbook_grand.setText("Total Price: \u20B9 " + grand);
         }
+
 
         public String capitalizeEveryWord(String str) {
 
@@ -150,6 +205,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             ctx.startActivity(intent);
         }
     }
-
-
 }
+
+
+

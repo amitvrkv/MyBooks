@@ -28,7 +28,6 @@
 
 
     <Button
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:onClick="onStartTransaction"
         android:text="Pay"

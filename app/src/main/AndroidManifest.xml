@@ -25,6 +25,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".BooksListPageNew" />
         <activity android:name=".AddressActivity" />
+        <activity android:name=".BlogActivity"/>
         <activity android:name=".PaymentPageActivity" />
         <activity android:name=".OrderPageActivity" />
         <activity android:name=".OrderDetailsActivity" />
@@ -35,7 +36,6 @@
 
         <activity android:name=".Individual_book_details" />
         <activity android:name=".MyCartNew" />
-        <activity android:name=".BlogActivity" />
         <activity android:name=".About" />
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"

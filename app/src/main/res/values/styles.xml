@@ -6,7 +6,10 @@
         <!-- Start -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item><!-- End -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/dark_gray</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <!-- End -->
 
     </style>
 
@@ -22,6 +25,14 @@
         <item name="colorButtonNormal">@color/dark_gray</item>
         <!--<item name="alertDialogTheme">@style/AlertDialogStyle_green</item>-->
         <item name="actionMenuTextColor">@color/white</item>
+    </style>
+
+
+    <!-- Custom Progress Bar-->
+    <style name="MyProgressBarRectangle" parent="@style/Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progressbar_book</item>
+        <item name="android:minHeight">80dp</item>
+        <item name="android:minWidth">200dp</item>
     </style>
 
 

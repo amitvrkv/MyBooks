@@ -100,6 +100,44 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:text="Book Type:"
+                            android:textSize="17dp" />
+
+                        <RadioButton
+                            android:id="@+id/radioButton3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_toStartOf="@+id/book_type_new"
+                            android:text="Old" />
+
+                        <RadioButton
+                            android:id="@+id/book_type_new"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:text="New" />
+
+                    </RelativeLayout>
+
+                </RadioGroup>
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -111,7 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Description ( Old/New Book , Edition etc.)"
+                        android:hint="Description ( Edition etc.)"
                         android:inputType="textCapSentences|textMultiLine"
                         android:maxLength="2000"
                         android:maxLines="4" />
@@ -131,33 +169,33 @@
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/customPlaceOrder">
+                android:layout_above="@id/customPlaceOrder"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="NOTE:" />
+                    android:text="NOTE:"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:text="  1. Used Book upto 50% on MRP"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="  1. Used Book upto 50% on MRP" />
 
                 <TextView
-                    android:text="  2. New Book upto 30% on MRP"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="  2. New Book upto 30% on MRP" />
 
                 <TextView
-                    android:text="  3. Order placed is subject to availability."
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:text="  3. Order placed is subject to availability." />
 
             </LinearLayout>
 

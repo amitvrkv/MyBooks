@@ -37,12 +37,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.mybooks.mybooks.AddressActivity;
+import com.mybooks.mybooks.ModelClassBLog;
+import com.mybooks.mybooks.R;
 
 import java.util.Date;
 
 public class BlogActivity extends AppCompatActivity {
 
-    FirebaseRecyclerAdapter<ModelClassBLog, BlogActivity.BlogHolder> firebaseRecyclerAdapter;
+    FirebaseRecyclerAdapter<ModelClassBLog, BlogHolder> firebaseRecyclerAdapter;
 
     Query databaseReference;
 
@@ -71,14 +74,14 @@ public class BlogActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog");
 
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ModelClassBLog, BlogActivity.BlogHolder>(
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ModelClassBLog, BlogHolder>(
                 ModelClassBLog.class,
                 R.layout.blog_view,
-                BlogActivity.BlogHolder.class,
+                BlogHolder.class,
                 databaseReference
         ) {
             @Override
-            protected void populateViewHolder(BlogActivity.BlogHolder viewHolder, ModelClassBLog model, int position) {
+            protected void populateViewHolder(BlogHolder viewHolder, ModelClassBLog model, int position) {
                 viewHolder.setId(model.getId(), model.getEmail());
                 viewHolder.setFrom(model.getBy());
                 viewHolder.setMsg(model.getComment());
