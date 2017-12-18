@@ -6,13 +6,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".MyBooks"
+        android:name=".app_pref.MyBooks"
         android:allowBackup="false"
         android:icon="@drawable/app_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,28 +20,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".BooksListPageNew" />
-        <activity android:name=".AddressActivity" />
-        <activity android:name=".BlogActivity"/>
-        <activity android:name=".PaymentPageActivity" />
-        <activity android:name=".OrderPageActivity" />
-        <activity android:name=".OrderDetailsActivity" />
-        <activity android:name=".CustomOrderActivity" />
-        <activity android:name=".MyAccountActivity" />
+        <activity android:name=".activities.BooksListPageNew" />
+        <activity android:name=".activities.AddressActivity" />
+        <activity android:name=".activities.BlogActivity" />
+        <activity android:name=".activities.PaymentPageActivity" />
+        <activity android:name=".activities.OrderPageActivity" />
+        <activity android:name=".activities.OrderDetailsActivity" />
+        <activity android:name=".activities.CustomOrderActivity" />
+        <activity android:name=".activities.MyAccountActivity" />
 
-        <service android:name=".MyBooksService" />
+        <service android:name=".services.MyBooksService" />
 
-        <activity android:name=".Individual_book_details" />
-        <activity android:name=".MyCartNew" />
-        <activity android:name=".About" />
+        <activity android:name=".activities.Individual_book_details" />
+        <activity android:name=".activities.MyCartNew" />
+        <activity android:name=".activities.About" />
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
             android:screenOrientation="portrait" />
-        <activity android:name=".OrderMainPage"></activity>
+        <activity android:name=".activities.OrderMainPage" />
+        <activity android:name=".activities.CustomOrderMainPage" />
+        <activity android:name=".activities.CustomOrderAddProduct"></activity>
     </application>
 
 </manifest>

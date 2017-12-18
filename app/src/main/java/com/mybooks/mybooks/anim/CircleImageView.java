@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.anim;
 
 /**
  * Created by am361000 on 08/09/17.

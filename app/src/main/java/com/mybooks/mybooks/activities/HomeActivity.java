@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,6 +29,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mybooks.mybooks.services.MyBooksService;
+import com.mybooks.mybooks.adapters.MyPagerAdapter;
+import com.mybooks.mybooks.R;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -177,11 +180,10 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.customiseOrderMenu:
-                //startActivity(new Intent(getApplicationContext(), CustomOrderActivity.class));
-                Intent intent1 = new Intent(getApplicationContext(), CustomOrderActivity.class);
+                //Intent intent1 = new Intent(getApplicationContext(), CustomOrderActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), CustomOrderMainPage.class);
                 intent1.putExtra("key", "null");
                 startActivity(intent1);
-
                 break;
 
             case R.id.myCartMenu:
@@ -194,7 +196,7 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.myOrder:
-                startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+                startActivity(new Intent(getApplicationContext(), OrderMainPage.class));
                 break;
 
             case R.id.myWishListMenu:
@@ -277,6 +279,12 @@ public class HomeActivity extends AppCompatActivity
 
         View mHeaderView = navigationView.getHeaderView(0);
         TextView welcomeMsg = (TextView) mHeaderView.findViewById(R.id.welcomeMsg);
+        welcomeMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AddressActivity.class));
+            }
+        });
 
         if (sharedPreferences.getString("Name", null) == null) {
             welcomeMsg.setText("Hi there,");

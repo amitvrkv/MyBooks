@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.activities.AddressActivity;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener {
 

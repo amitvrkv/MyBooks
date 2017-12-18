@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.adapters;
 
 import android.animation.Animator;
 import android.app.Activity;
@@ -25,6 +25,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.mybooks.mybooks.anim.CircleAnimationUtil;
+import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.activities.CustomOrderActivity;
+import com.mybooks.mybooks.activities.Individual_book_details;
+import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.List;
 import java.util.regex.Matcher;

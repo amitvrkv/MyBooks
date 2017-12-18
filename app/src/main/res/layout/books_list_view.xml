@@ -12,17 +12,16 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:tint="@color/Pink"
             android:id="@+id/wishListBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:alpha="0.7"
             android:padding="3dp"
-            android:src="@mipmap/ic_favorite_border_black_24dp" />
+            android:src="@mipmap/ic_favorite_border_black_24dp"
+            android:tint="@color/Pink" />
 
         <ImageView
-            android:tint="@color/Pink"
             android:id="@+id/wishListBtnAdded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,6 +29,7 @@
             android:alpha="0.4"
             android:padding="3dp"
             android:src="@mipmap/ic_favorite_black_24dp"
+            android:tint="@color/Pink"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -46,13 +46,13 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
                 android:id="@+id/p_f13"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/no_image_available" />
 
@@ -71,8 +71,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true" />
 
         </RelativeLayout>
 
@@ -84,9 +83,12 @@
             android:padding="10dp">
 
             <TextView
+                android:layout_marginRight="15dp"
                 android:id="@+id/p_f2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="F2"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="14dp" />
@@ -96,6 +98,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="F3"
                 android:textSize="13dp" />
 
@@ -104,6 +108,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="F4"
                 android:textSize="13dp" />
 

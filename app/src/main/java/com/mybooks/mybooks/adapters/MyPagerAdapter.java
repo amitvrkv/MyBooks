@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.adapters;
 
 /**
  * Created by am361000 on 18/11/17.
@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ImageView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -19,12 +19,16 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.activities.BooksListPageNew;
+import com.mybooks.mybooks.activities.CustomOrderActivity;
+import com.mybooks.mybooks.activities.OrderPageActivity;
 
 import java.util.ArrayList;
 
 public class MyPagerAdapter extends PagerAdapter {
 
-//    private ArrayList<Integer> images;
+    //    private ArrayList<Integer> images;
     private LayoutInflater inflater;
     private Context context;
     private ArrayList<String> arrayListImages;
@@ -88,9 +92,11 @@ public class MyPagerAdapter extends PagerAdapter {
                     Intent intent1 = new Intent(context, CustomOrderActivity.class);
                     intent1.putExtra("key", "null");
                     context.startActivity(intent1);
-                } else if (arrayListGoto.get(position).equalsIgnoreCase("order")) { {
-                    context.startActivity(new Intent(context, OrderPageActivity.class));
-                }}
+                } else if (arrayListGoto.get(position).equalsIgnoreCase("order")) {
+                    {
+                        context.startActivity(new Intent(context, OrderPageActivity.class));
+                    }
+                }
             }
         });
 

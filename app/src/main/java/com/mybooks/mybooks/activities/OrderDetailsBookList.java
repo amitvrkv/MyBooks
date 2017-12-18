@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 /**
  * Created by am361000 on 21/06/17.

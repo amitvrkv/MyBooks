@@ -49,10 +49,10 @@ dependencies {
 
     //Pay u money
     //compile('com.payumoney.sdkui:plug-n-play:1.0.0') {
-      //  transitive = true;
-        //  exclude module: 'payumoney-sdk'
+    //  transitive = true;
+    //  exclude module: 'payumoney-sdk'
     //}
-    compile('com.payumoney.sdkui:plug-n-play:1.0.0'){
+    compile('com.payumoney.sdkui:plug-n-play:1.0.0') {
         transitive = true;
         exclude module: 'payumoney-sdk'
     }

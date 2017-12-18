@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.mybooks.mybooks.models.ModelClassCustomOrder;
+import com.mybooks.mybooks.models.OrderBookList;
+import com.mybooks.mybooks.R;
 
 public class OrderPageActivity extends AppCompatActivity {
 
@@ -132,7 +135,7 @@ public class OrderPageActivity extends AppCompatActivity {
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setAuthor(model.getAuthor());
                 viewHolder.setComment(model.getComment());
-                viewHolder.setGetDetails(model.getdetails);
+                //viewHolder.setGetDetails(model.getdetails);
             }
         };
 

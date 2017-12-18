@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;

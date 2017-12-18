@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.app_pref;
 
 import android.app.Application;
 

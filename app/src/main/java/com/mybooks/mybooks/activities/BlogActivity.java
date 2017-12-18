@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -37,8 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.mybooks.mybooks.AddressActivity;
-import com.mybooks.mybooks.ModelClassBLog;
+import com.mybooks.mybooks.models.ModelClassBLog;
 import com.mybooks.mybooks.R;
 
 import java.util.Date;

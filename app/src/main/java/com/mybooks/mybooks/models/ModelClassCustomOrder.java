@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.models;
 
 /**
  * Created by am361000 on 20/06/17.

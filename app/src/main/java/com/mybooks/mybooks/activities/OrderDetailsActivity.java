@@ -1,4 +1,4 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mybooks.mybooks.R;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,6 +32,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder> firebaseRecyclerAdapter;
 
     String orderId;
+    String orderType;
 
     List<OrderDetailsActivity> orderDetailsActivityList;
 
@@ -49,12 +51,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         orderId = bundle.getString("orderId");
-
-        //TextView titleOrderId = (TextView) findViewById(R.id.orderDetialsId);
-        //titleOrderId.setText("Orders ID: " + orderId);
+        orderType = bundle.getString("orderType");
 
         setToolbar();
+
         setShippingAddress();
+
         setProductDetails();
     }
 
@@ -67,7 +69,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String address = String.valueOf(dataSnapshot.child("deliveryaddress").getValue());
                 TextView add = (TextView) findViewById(R.id.address);
-                add.setText(address.replaceFirst(", ","\n"));
+                add.setText(address.replaceFirst(", ", "\n"));
             }
 
             @Override
@@ -80,7 +82,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Orders ID: " + orderId);
+        getSupportActionBar().setTitle("Orders ID: " + getOrderId());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -91,12 +93,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    public String getOrderId() {
+        int len = orderId.length();
+        int setLen = 10 - len;
+        String final_order_id = "0000000000";
+        final_order_id = orderType + final_order_id.substring(0, setLen) + orderId;
+        return  final_order_id;
     }
-
 
     public void setProductDetails() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
@@ -120,7 +123,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(firebaseRecyclerAdapter);
     }
-
 
     public static class OrderDetailsViewHolder extends RecyclerView.ViewHolder {
         View view;

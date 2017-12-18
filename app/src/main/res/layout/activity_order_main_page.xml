@@ -37,10 +37,10 @@
                 android:textStyle="bold" />
 
             <View
-                android:id="@+id/myOrderActiveLine"
+                android:id="@+id/myOrderMainPageActiveLine"
                 android:layout_width="wrap_content"
                 android:layout_height="3dp"
-                android:layout_alignEnd="@+id/myOrderTab"
+                android:layout_alignEnd="@+id/orderMainPageMyOrderTab"
                 android:layout_alignParentBottom="true"
                 android:background="@color/colorAccent" />
 
@@ -64,12 +64,12 @@
                 android:textStyle="bold" />
 
             <View
-                android:id="@+id/customiseOrderActiveLine"
+                android:id="@+id/customiseOrderMainPageActiveLine"
                 android:layout_width="wrap_content"
                 android:layout_height="3dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/myOrderTab"
+                android:layout_alignStart="@+id/view3"
                 android:background="@color/Light_Grey" />
 
         </RelativeLayout>

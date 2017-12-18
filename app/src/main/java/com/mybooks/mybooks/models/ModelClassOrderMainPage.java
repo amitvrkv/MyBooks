@@ -1,28 +1,24 @@
-package com.mybooks.mybooks;
+package com.mybooks.mybooks.models;
 
 /**
- * Created by am361000 on 20/06/17.
+ * Created by am361000 on 28/11/17.
  */
 
-public class OrderBookList {
+public class ModelClassOrderMainPage {
     String orderid;
     String date;
-
     String total;
     String deliverycharge;
     String discount;
-
     String grandtotal;
     String status;
     String comment;
-
     String paymentmode;
 
-    public OrderBookList(){
-
+    public ModelClassOrderMainPage() {
     }
 
-    public OrderBookList(String orderid, String date, String total, String deliverycharge, String discount, String grandtotal, String status, String comment, String paymentmode) {
+    public ModelClassOrderMainPage(String orderid, String date, String total, String deliverycharge, String discount, String grandtotal, String status, String comment, String paymentmode) {
         this.orderid = orderid;
         this.date = date;
         this.total = total;
@@ -36,14 +32,6 @@ public class OrderBookList {
 
     public String getOrderid() {
         return orderid;
-    }
-
-    public String getPaymentmode() {
-        return paymentmode;
-    }
-
-    public void setPaymentmode(String paymentmode) {
-        this.paymentmode = paymentmode;
     }
 
     public void setOrderid(String orderid) {
@@ -104,5 +92,13 @@ public class OrderBookList {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getPaymentmode() {
+        return paymentmode;
+    }
+
+    public void setPaymentmode(String paymentmode) {
+        this.paymentmode = paymentmode;
     }
 }
