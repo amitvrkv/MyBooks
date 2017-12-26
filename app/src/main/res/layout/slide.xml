@@ -3,6 +3,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="fill_parent"
@@ -10,4 +20,5 @@
         android:adjustViewBounds="true"
         android:layout_gravity="center"
         android:scaleType="fitXY"/>
+
 </FrameLayout>

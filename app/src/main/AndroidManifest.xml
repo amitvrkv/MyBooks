@@ -29,7 +29,6 @@
         <activity android:name=".activities.PaymentPageActivity" />
         <activity android:name=".activities.OrderPageActivity" />
         <activity android:name=".activities.OrderDetailsActivity" />
-        <activity android:name=".activities.CustomOrderActivity" />
         <activity android:name=".activities.MyAccountActivity" />
 
         <service android:name=".services.MyBooksService" />

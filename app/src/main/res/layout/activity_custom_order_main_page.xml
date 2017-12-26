@@ -13,11 +13,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/customOrderRecyclerView"
+    <ListView
+        android:id="@+id/customOrderListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10dp"
         android:paddingBottom="120dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

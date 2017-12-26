@@ -81,7 +81,7 @@ public class OrderMainPage extends AppCompatActivity {
     }
 
     public void setDataForMyOrder() {
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").orderByChild("from").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("MYORDER").orderByChild("from").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ModelClassOrderMainPage, OrderBookListHolder>(
                 ModelClassOrderMainPage.class,
@@ -108,7 +108,7 @@ public class OrderMainPage extends AppCompatActivity {
     }
 
     public void setDataForCustomOrder() {
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderCustom").orderByChild("from").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("CUSTOMORDER").orderByChild("from").equalTo(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
 
         firebaseRecyclerAdapterCustomOrder = new FirebaseRecyclerAdapter<ModelClassCustomOrder, OrderMainPage.CustomOrderBookListHolder>(
                 ModelClassCustomOrder.class,
@@ -150,13 +150,17 @@ public class OrderMainPage extends AppCompatActivity {
             });
         }
 
+
         public void setOrderId(String od_id) {
+            /*
             int len = od_id.length();
             int setLen = 10 - len;
             String final_order_id = "0000000000";
             final_order_id = "OD" + final_order_id.substring(0, setLen) + od_id;
+            */
+
             TextView order_id = (TextView) mView.findViewById(R.id.order_id);
-            order_id.setText(final_order_id);
+            order_id.setText(od_id);
 
             this.orderId = od_id;
         }
@@ -218,12 +222,14 @@ public class OrderMainPage extends AppCompatActivity {
         }
 
         public void setOrderId(String od_id) {
+            /*
             int len = od_id.length();
             int setLen = 10 - len;
             String final_order_id = "0000000000";
             final_order_id = "CD" + final_order_id.substring(0, setLen) + od_id;
+            */
             TextView order_id = (TextView) mView.findViewById(R.id.order_id);
-            order_id.setText(final_order_id);
+            order_id.setText(od_id);
 
             this.orderId = od_id;
         }

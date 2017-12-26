@@ -34,9 +34,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mybooks.mybooks.models.ModelProductList;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.adapters.RecyclerAdapterProductView;
+import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,8 +153,6 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     protected void onResume() {
         super.onResume();
 
-        //Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_SHORT).show();
-
         setFilter();
         setCartCount();
 
@@ -267,17 +265,13 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 finish();
-                //SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
-                //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
-                //Toast.makeText(getApplicationContext(), "Table deleted", Toast.LENGTH_SHORT).show();
-                //sqLiteDatabase.execSQL("DROP TABLE IF EXISTS WISHLIST");
             }
         });
     }
 
     public void setDataOnPageStart() {
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Products");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS");
         databaseReference.keepSynced(true);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -305,7 +299,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     public void productByCat1() {
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Products");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -333,7 +327,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     public void productByCat2() {
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Products");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -361,7 +355,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     public void productByCat3() {
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Products");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -391,19 +385,27 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
     public void productByCat4() {
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("ProductbyCourse")
-                .child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString()).child(spinnerCat3.getSelectedItem().toString()).child(spinnerCat4.getSelectedItem().toString());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTBYCOURSE")
+                .child(spinnerCat1.getSelectedItem().toString())
+                .child(spinnerCat2.getSelectedItem().toString())
+                .child(spinnerCat3.getSelectedItem().toString())
+                .child(spinnerCat4.getSelectedItem().toString());
 
         //Toast.makeText(getApplicationContext(), spinnerCat1.getSelectedItem().toString() +  spinnerCat2.getSelectedItem().toString() + spinnerCat3.getSelectedItem().toString() +spinnerCat4.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listObjects.clear();
+                ArrayList<String> str = new ArrayList<>();
+
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     String key = dataSnapshot1.getKey();
 
-                    Toast.makeText(getApplicationContext(), ">>"+key, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), ">>"+key, Toast.LENGTH_SHORT).show();
 
+                    str.add(key);
+
+                    /*
                     DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
                     databaseReference1.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -418,12 +420,18 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
                         }
                     });
+                    */
                 }
+
+                productByCat4Support(str);
+
+                /*
                 RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.setAdapter(recyclerAdapterProductView);
+                */
             }
 
             @Override
@@ -432,6 +440,41 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+
+    public void productByCat4Support(final ArrayList<String> str) {
+        final int[] count = {0};
+
+        listObjects.clear();
+        for (String key : str) {
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key);
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
+                    listObjects.add(modelProductList);
+                    //Toast.makeText(getApplicationContext(), "}}" + modelProductList.getF2(), Toast.LENGTH_SHORT).show();
+                    count[0]++;
+                    if (count[0] >= str.size()) {
+                        productByWishlist_support(listObjects);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        /*
+        RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerAdapterProductView);
+        */
+    }
+
 
     public void productByWishlist() {
         getSupportActionBar().setTitle("Wish list");
@@ -448,7 +491,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         } else {
             do {
                 String key = cursor.getString(0);
-                databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key);
                 databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -485,7 +528,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         list4 = new ArrayList<>();
 
         /*Spinner 1 data collection*/
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Category");
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("Category");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -552,7 +595,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 if (spinnerCat2.getSelectedItem().equals("select")) {
                     spinnerCat3.setVisibility(View.GONE);
                 } else {
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Category").child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString());
+                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("Category").child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString());
                     databaseReference1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -588,7 +631,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 if (spinnerCat3.getSelectedItem().equals("select")) {
                     spinnerCat4.setVisibility(View.GONE);
                 } else {
-                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("Category").child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString()).child(spinnerCat3.getSelectedItem().toString());
+                    DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("Category").child(spinnerCat1.getSelectedItem().toString()).child(spinnerCat2.getSelectedItem().toString()).child(spinnerCat3.getSelectedItem().toString());
                     databaseReference1.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -628,7 +671,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         }
 
         listObjects = new ArrayList<>();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Products");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS");
         databaseReference.orderByChild("f2").startAt(editTextSearchData.getText().toString().toUpperCase()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -657,391 +700,4 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART ", null);
         cart_item_count.setText("" + cursor.getCount());
     }
-
-    /*public static class BlogActivity extends AppCompatActivity {
-
-        FirebaseRecyclerAdapter<ModelClassBLog, BlogHolder> firebaseRecyclerAdapter;
-
-        Query databaseReference;
-
-        RecyclerView recyclerView;
-        ProgressDialog progressDialog;
-        private LinearLayoutManager mLayoutManager;
-
-        public static String getDate() {
-            String dateInMilliseconds = String.valueOf(new Date().getTime());
-            String dateFormat = "dd/MM/yyyy hh:mm:ss aa";
-            return DateFormat.format(dateFormat, Long.parseLong(dateInMilliseconds)).toString();
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_blog);
-            setToolbar();
-
-            progressDialog = new ProgressDialog(this);
-            progressDialog.setCancelable(false);
-
-            recyclerView = (RecyclerView) findViewById(R.id.blogRecyclerView);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog");
-
-            firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ModelClassBLog, BlogHolder>(
-                    ModelClassBLog.class,
-                    R.layout.blog_view,
-                    BlogHolder.class,
-                    databaseReference
-            ) {
-                @Override
-                protected void populateViewHolder(BlogHolder viewHolder, ModelClassBLog model, int position) {
-                    viewHolder.setId(model.getId(), model.getEmail());
-                    viewHolder.setFrom(model.getBy());
-                    viewHolder.setMsg(model.getComment());
-                    viewHolder.setLikeCount(model.getLike());
-                    viewHolder.setdislikeCount(model.getDislike());
-                    viewHolder.setDate(model.getDate());
-                }
-            };
-
-            mLayoutManager = new LinearLayoutManager(BlogActivity.this);
-            mLayoutManager.setReverseLayout(true);
-            mLayoutManager.setStackFromEnd(true);
-
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setAdapter(firebaseRecyclerAdapter);
-
-            FloatingActionButton sendBtn = (FloatingActionButton) findViewById(R.id.floatingActionSendBtn);
-            sendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    sendNewMsg();
-                }
-            });
-        }
-
-        public void setToolbar() {
-            Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(myToolbar);
-            getSupportActionBar().setTitle("Blog");
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
-
-        public void sendNewMsg() {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(BlogActivity.this);
-            alertDialog.setTitle("Type a message");
-
-            final EditText editTextMsg = new EditText(BlogActivity.this);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-            );
-            editTextMsg.setLayoutParams(lp);
-            alertDialog.setView(editTextMsg);
-
-            alertDialog.setPositiveButton("SEND",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (!TextUtils.isEmpty(editTextMsg.getText())) {
-                                updateId(editTextMsg.getText().toString());
-                            }
-                        }
-                    });
-
-            alertDialog.setNegativeButton("CANCEL",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-            alertDialog.show();
-        }
-
-        public void updateId(final String msg) {
-            if (haveNetworkConnection() == false) {
-                Toast.makeText(getApplicationContext(), "Please check your internet connection.", Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-            if (sharedPreferences.getString("Name", null) == null) {
-                Toast.makeText(getApplicationContext(), "Please update your NAME.", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(), AddressActivity.class));
-                return;
-            }
-
-            progressDialog.setTitle("Please wait...");
-            progressDialog.setMessage("Posting your message.");
-            progressDialog.show();
-
-            final int[] blogId = {0};
-            final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks").child("blog");
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    blogId[0] = Integer.parseInt(dataSnapshot.getValue().toString());
-                    blogId[0] = blogId[0] + 1;
-                    databaseReference.setValue(String.valueOf(blogId[0]));
-
-                    postMsg(String.valueOf(blogId[0]), msg);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(getApplicationContext(), "Failed to post your message. Try again.", Toast.LENGTH_LONG).show();
-                    progressDialog.cancel();
-                }
-            });
-        }
-
-        public void postMsg(final String id, String msg) {
-            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-            String name = sharedPreferences.getString("Name", null);
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog").child(id);
-            databaseReference.child("id").setValue(id);
-            databaseReference.child("by").setValue(name);
-            databaseReference.child("comment").setValue(msg);
-            databaseReference.child("dislike").setValue("0");
-            databaseReference.child("dislikeFrom").setValue("");
-            databaseReference.child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-            databaseReference.child("like").setValue("0");
-            databaseReference.child("likeFrom").setValue("");
-            databaseReference.child("date").setValue(getDate()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getApplicationContext(), "Posted your message.", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Failed to post your message. Try again.", Toast.LENGTH_LONG).show();
-                    }
-                    progressDialog.dismiss();
-                }
-            });
-        }
-
-        private boolean haveNetworkConnection() {
-            boolean haveConnectedWifi = false;
-            boolean haveConnectedMobile = false;
-
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-            for (NetworkInfo ni : netInfo) {
-                if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                    if (ni.isConnected())
-                        haveConnectedWifi = true;
-                if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                    if (ni.isConnected())
-                        haveConnectedMobile = true;
-            }
-            return haveConnectedWifi || haveConnectedMobile;
-        }
-
-        public static class BlogHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-            View mView;
-
-            String id;
-            ImageView likeIcon;
-            ImageView dislikeIcon;
-
-            public BlogHolder(View itemView) {
-                super(itemView);
-                mView = itemView;
-
-                RelativeLayout likeBtn = (RelativeLayout) mView.findViewById(R.id.likeBtn);
-                likeBtn.setOnClickListener(this);
-                RelativeLayout dislikeBtn = (RelativeLayout) mView.findViewById(R.id.dislikeBtn);
-                dislikeBtn.setOnClickListener(this);
-
-                likeIcon = (ImageView) mView.findViewById(R.id.likeIcon);
-                dislikeIcon = (ImageView) mView.findViewById(R.id.dislikeIcon);
-            }
-
-            public void setId(String id, String email) {
-                this.id = id;
-
-                TextView textViewId = (TextView) mView.findViewById(R.id.blogId);
-                textViewId.setText("#" + id);
-
-                if (FirebaseAuth.getInstance().getCurrentUser().getEmail().equals(email)) {
-                    RelativeLayout blogHeader = (RelativeLayout) mView.findViewById(R.id.blogHeader);
-                    blogHeader.setBackgroundColor(mView.getResources().getColor(R.color.colorAccent));
-                }
-            }
-
-            public void setFrom(String name) {
-                TextView from = (TextView) mView.findViewById(R.id.from);
-                from.setText(name);
-            }
-
-            public void setMsg(String message) {
-                TextView msg = (TextView) mView.findViewById(R.id.msg);
-                msg.setText(message);
-            }
-
-            public void setLikeCount(String num) {
-                TextView likeCount = (TextView) mView.findViewById(R.id.likeCount);
-                likeCount.setText(num);
-            }
-
-            public void setdislikeCount(String num) {
-                TextView dislikeCount = (TextView) mView.findViewById(R.id.dislikeCount);
-                dislikeCount.setText(num);
-            }
-
-            public void setDate(String date) {
-                TextView textViewDate = (TextView) mView.findViewById(R.id.date);
-                textViewDate.setText(date);
-            }
-
-            @Override
-            public void onClick(View v) {
-                final Animation zoomin = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_in);
-                final Animation zoomout = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_out);
-                switch (v.getId()) {
-                    case R.id.likeBtn:
-                        //final Animation zoomin = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_in);
-                        //final Animation zoomout = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_out);
-                        likeIcon.startAnimation(zoomin);
-                        zoomin.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                likeIcon.startAnimation(zoomout);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        zoomout.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                incLike();
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        break;
-
-                    case R.id.dislikeBtn:
-                        //final Animation zoomin = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_in);
-                        //final Animation zoomout = AnimationUtils.loadAnimation(mView.getContext(), R.anim.zoom_out);
-                        dislikeIcon.startAnimation(zoomin);
-                        zoomin.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                dislikeIcon.startAnimation(zoomout);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        zoomout.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                incDislike();
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        break;
-                }
-            }
-
-            public void incLike() {
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog").child(id);
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String count = String.valueOf(dataSnapshot.child("like").getValue());
-                        String likeFrom = String.valueOf(dataSnapshot.child("likeFrom").getValue());
-
-                        if (likeFrom.contains(FirebaseAuth.getInstance().getCurrentUser().getEmail()) == false) {
-                            count = String.valueOf(Integer.parseInt(count) + 1);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("like").setValue(count);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("likeFrom").setValue(likeFrom + " " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                            //likeIcon.startAnimation(zoomin);
-                        } else {
-                            count = String.valueOf(Integer.parseInt(count) - 1);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("like").setValue(count);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("likeFrom").setValue(likeFrom.replace(" " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), ""));
-                            //Toast.makeText(mView.getContext(), "You have already liked this post.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            public void incDislike() {
-                final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Blog").child(id);
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String count = String.valueOf(dataSnapshot.child("dislike").getValue());
-                        String dislikeFrom = String.valueOf(dataSnapshot.child("dislikeFrom").getValue());
-                        if (dislikeFrom.contains(FirebaseAuth.getInstance().getCurrentUser().getEmail()) == false) {
-                            int setCount = Integer.parseInt(count) + 1;
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislike").setValue("" + setCount);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislikeFrom").setValue(dislikeFrom + " " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                            //dislikeIcon.startAnimation(zoomin);
-                        } else {
-                            int setCount = Integer.parseInt(count) - 1;
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislike").setValue("" + setCount);
-                            FirebaseDatabase.getInstance().getReference().child("Blog").child(id).child("dislikeFrom").setValue(dislikeFrom.replace(" " + FirebaseAuth.getInstance().getCurrentUser().getEmail(), ""));
-                            //Toast.makeText(mView.getContext(), "You have already disliked this post.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        }
-    } */
 }

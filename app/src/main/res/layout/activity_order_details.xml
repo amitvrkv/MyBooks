@@ -298,15 +298,4 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <!--
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/orderDetailsRecycleView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="120dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-         />
-         -->
-
 </android.support.design.widget.CoordinatorLayout>

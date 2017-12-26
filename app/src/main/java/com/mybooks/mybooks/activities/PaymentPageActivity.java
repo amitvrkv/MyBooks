@@ -131,7 +131,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
             case R.id.placeOrderBtn:
                 if (mModeCOD.isChecked()) {
                     progressDialog.setTitle("Please wait...");
-                    progressDialog.setMessage("Placing your order,\nPlease do not close the application.");
+                    progressDialog.setMessage("Placing your order,\nPlease do not close this window.");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     getAppLiveness("Cash on delivery");
@@ -196,7 +196,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         progressDialog.show();
 
         final int[] ordernumber = {0};
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks").child("order");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERCOUNT").child("MYORDER");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -204,7 +204,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 ordernumber[0] = ordernumber[0] + 1;
                 databaseReference.setValue(String.valueOf(ordernumber[0]));
 
-                placeOrderOnFirebase(String.valueOf(ordernumber[0]), paymentmode);
+                placeOrderOnFirebase( getOrderId( String.valueOf(ordernumber[0]) ), paymentmode);
             }
 
             @Override
@@ -214,10 +214,21 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
+    public String getOrderId(String orderId) {
+        int len = orderId.length();
+        int setLen = 10 - len;
+        String final_order_id = "0000000000";
+        final_order_id = "OD" + final_order_id.substring(0, setLen) + orderId;
+        return  final_order_id;
+    }
+
     //Updataing order details on firebase
     public void placeOrderOnFirebase(final String ordernumber, String paymentmode) {
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Order").child(ordernumber);
+        databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("ORDER")
+                .child("MYORDER")
+                .child(ordernumber);
         databaseReference.child("orderid").setValue(ordernumber);
         databaseReference.child("from").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
         databaseReference.child("date").setValue(String.valueOf(getDate()));
@@ -253,7 +264,9 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(getApplicationContext(), "Your Cart is empty!", Toast.LENGTH_SHORT).show();
         } else {
             do {
-                databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails")
+                databaseReference = FirebaseDatabase.getInstance().getReference()
+                        .child("ORDER")
+                        .child("ORDERDETAILS")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
                         .child(ordernumber)
                         .child("prod" + count);
@@ -313,7 +326,6 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         progressDialog.dismiss();
     }
-
 
 
     private void applyPromocode() {
@@ -458,12 +470,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         payment_total.setText("\u20B9 " + String.valueOf(total));
 
         final boolean[] result = {false};
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("mybooks");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERCHARGES");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                delivery_charge = Integer.parseInt(String.valueOf(dataSnapshot.child("delivery_charge").getValue()));
-                min_order = Integer.parseInt(String.valueOf(dataSnapshot.child("min_order_value").getValue()));
+                delivery_charge = Integer.parseInt(String.valueOf(dataSnapshot.child("DELIVERY_CHARGE").getValue()));
+                min_order = Integer.parseInt(String.valueOf(dataSnapshot.child("MIN_ORDER").getValue()));
 
                 if (total >= min_order) {
                     delivery_charge = 0;

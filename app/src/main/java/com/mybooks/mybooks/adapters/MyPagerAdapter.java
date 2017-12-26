@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +22,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.activities.BooksListPageNew;
-import com.mybooks.mybooks.activities.CustomOrderActivity;
 import com.mybooks.mybooks.activities.OrderPageActivity;
 
 import java.util.ArrayList;
@@ -58,8 +58,10 @@ public class MyPagerAdapter extends PagerAdapter {
         View myImageLayout = inflater.inflate(R.layout.slide, view, false);
         ImageView myImage = (ImageView) myImageLayout
                 .findViewById(R.id.image);
-        //myImage.setImageResource(images.get(position));
 
+        final ProgressBar progressBar = (ProgressBar) myImageLayout.findViewById(R.id.progressBar);
+
+        //myImage.setImageResource(images.get(position));
 
         Glide.with(context).load(arrayListImages.get(position))
                 .error(R.drawable.no_image_available)
@@ -67,11 +69,13 @@ public class MyPagerAdapter extends PagerAdapter {
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
                         return false;
                     }
                 })
@@ -89,9 +93,9 @@ public class MyPagerAdapter extends PagerAdapter {
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                 } else if (arrayListGoto.get(position).equalsIgnoreCase("custom")) {
-                    Intent intent1 = new Intent(context, CustomOrderActivity.class);
-                    intent1.putExtra("key", "null");
-                    context.startActivity(intent1);
+                    //Intent intent1 = new Intent(context, CustomOrderActivity.class);
+                    //intent1.putExtra("key", "null");
+                    //context.startActivity(intent1);
                 } else if (arrayListGoto.get(position).equalsIgnoreCase("order")) {
                     {
                         context.startActivity(new Intent(context, OrderPageActivity.class));

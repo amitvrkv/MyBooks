@@ -101,7 +101,7 @@ public class Individual_book_details extends AppCompatActivity implements View.O
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

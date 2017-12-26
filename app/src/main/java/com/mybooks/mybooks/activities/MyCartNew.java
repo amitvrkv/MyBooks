@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mybooks.mybooks.models.ModelProductList;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,8 +180,6 @@ public class MyCartNew extends AppCompatActivity {
 
             final int final_pos = position;
 
-            final CardView myCartCard = (CardView) findViewById(R.id.myCartCard);
-
             final View view = inflater.inflate(R.layout.cart_book_list_view_new, null);
             final TextView cart_product_title = (TextView) view.findViewById(R.id.cart_product_title);
             final TextView cart_product_description_1 = (TextView) view.findViewById(R.id.cart_product_description_1);
@@ -227,7 +224,7 @@ public class MyCartNew extends AppCompatActivity {
                 radio_button_old_type.setChecked(true);
             }
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key.get(position));
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key.get(position));
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -358,7 +355,7 @@ public class MyCartNew extends AppCompatActivity {
         }
 
         public void updateDatabase(String key, String column, String value) {
-            if ( ! haveNetworkConnection()){
+            if (!haveNetworkConnection()) {
                 Toast.makeText(getApplicationContext(), "Check your internet connection \nChanges not updated", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -366,7 +363,7 @@ public class MyCartNew extends AppCompatActivity {
             sqLiteDatabase.execSQL("UPDATE P_CART SET " + column + "='" + value + "' WHERE key='" + key + "'");
         }
 
-        public void removeProductFromCart(int position) {
+        public void removeProductFromCart(final int position) {
             sqLiteDatabase.execSQL("DELETE FROM P_CART WHERE key = '" + key.get(position) + "'");
             key.remove(position);
             type.remove(position);
@@ -379,11 +376,9 @@ public class MyCartNew extends AppCompatActivity {
                 TotalLayout.setVisibility(View.GONE);
                 Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
             }
-
-            MyCartNew.listViewCustomAdapter.this.notifyDataSetChanged();
         }
 
-        public void addProductToWishList(int position){
+        public void addProductToWishList(int position) {
             SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getApplicationContext().getString(R.string.database_path), null);
             sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
             Cursor cursor = sqLiteDatabase.rawQuery("Select * from WISHLIST WHERE key = '" + key.get(position) + "'", null);

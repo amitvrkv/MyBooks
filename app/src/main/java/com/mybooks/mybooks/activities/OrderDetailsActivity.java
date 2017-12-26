@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.models.OrderDetailsBookList;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -61,9 +62,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     private void setShippingAddress() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
-                .child("Order")
-                .child(orderId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("MYORDER").child(orderId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,7 +81,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     public void setToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Orders ID: " + getOrderId());
+        getSupportActionBar().setTitle("Order ID: " + orderId);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,16 +92,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
         });
     }
 
-    public String getOrderId() {
-        int len = orderId.length();
-        int setLen = 10 - len;
-        String final_order_id = "0000000000";
-        final_order_id = orderType + final_order_id.substring(0, setLen) + orderId;
-        return  final_order_id;
-    }
-
     public void setProductDetails() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("OrderDetails").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder>(
                 OrderDetailsBookList.class,
@@ -152,7 +143,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             final ImageView mBookImage = (ImageView) view.findViewById(R.id.obookImage);
 
 
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Products").child(key);
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
