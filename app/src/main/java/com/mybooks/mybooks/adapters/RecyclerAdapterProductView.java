@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.mybooks.mybooks.activities.CustomOrderAddProduct;
 import com.mybooks.mybooks.anim.CircleAnimationUtil;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.activities.Individual_book_details;
@@ -156,9 +157,9 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             @Override
             public void onClick(View v) {
                 if (holder.addToCartButton.getText().toString().equalsIgnoreCase("CUSTOM ORDER")) {
-                    //Intent intent = new Intent(ctx, CustomOrderActivity.class);
-                    //intent.putExtra("key", modelProductList.getF11());
-                    //ctx.startActivity(intent);
+                    Intent intent = new Intent(ctx, CustomOrderAddProduct.class);
+                    intent.putExtra("key", modelProductList.getF11());
+                    ctx.startActivity(intent);
                     return;
                 }
 

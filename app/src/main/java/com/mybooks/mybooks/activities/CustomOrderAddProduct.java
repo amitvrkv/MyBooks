@@ -1,5 +1,6 @@
 package com.mybooks.mybooks.activities;
 
+import android.app.ProgressDialog;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,19 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomOrderAddProduct extends AppCompatActivity implements View.OnClickListener {
 
+    ProgressDialog progressDialog;
     private EditText customTitle;
     private EditText customAuthor;
     private EditText customPublisher;
@@ -30,7 +40,7 @@ public class CustomOrderAddProduct extends AppCompatActivity implements View.OnC
     private TextView customEstimatedPrice;
     private EditText customDescription;
     private Button customAddBookBtn;
-
+    private String kkey = "";
     private String title;
     private String author;
     private String publisher;
@@ -45,6 +55,11 @@ public class CustomOrderAddProduct extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_order_add_product);
 
+        setToolbar();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setCancelable(false);
+
         customTitle = (EditText) findViewById(R.id.customTitle);
         customAuthor = (EditText) findViewById(R.id.customAuthor);
         customPublisher = (EditText) findViewById(R.id.customPublisher);
@@ -53,7 +68,7 @@ public class CustomOrderAddProduct extends AppCompatActivity implements View.OnC
         customBooktype = (RadioGroup) findViewById(R.id.customBooktype);
         customOld = (RadioButton) findViewById(R.id.customOld);
         customNew = (RadioButton) findViewById(R.id.customNew);
-        final TextView customEstimatedPrice = (TextView) findViewById(R.id.customEstimatedPrice);
+        customEstimatedPrice = (TextView) findViewById(R.id.customEstimatedPrice);
         customDescription = (EditText) findViewById(R.id.customDescription);
         customAddBookBtn = (Button) findViewById(R.id.customAddBookBtn);
         customAddBookBtn.setOnClickListener(this);
@@ -119,6 +134,62 @@ public class CustomOrderAddProduct extends AppCompatActivity implements View.OnC
             }
         });
 
+
+        Bundle bundle = getIntent().getExtras();
+        String key = bundle.getString("key");
+        if (key.equals("null")) {
+
+        } else {
+            fetchDataFromFirebase(key);
+        }
+    }
+
+    public void fetchDataFromFirebase(String key) {
+        progressDialog.setMessage("Fetching data");
+        progressDialog.show();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("PRODUCTS").child(key);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                title = (String) dataSnapshot.child("f2").getValue();
+                customTitle.setText(capitalizeEveryWord(title));
+                customTitle.setEnabled(false);
+                publisher = (String) dataSnapshot.child("f3").getValue();
+                customPublisher.setText(capitalizeEveryWord(publisher));
+                customPublisher.setEnabled(false);
+                author = (String) dataSnapshot.child("f4").getValue();
+                customAuthor.setText(capitalizeEveryWord(author));
+                customAuthor.setEnabled(false);
+                course = (String) dataSnapshot.child("f5").getValue();
+                customCourse.setText(course);
+                customCourse.setEnabled(false);
+                kkey = (String) dataSnapshot.child("f11").getValue();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    public String capitalizeEveryWord(String str) {
+        if (str == null)
+            return "";
+
+        System.out.println(str);
+        StringBuffer stringbf = new StringBuffer();
+        Matcher m = Pattern.compile(
+                "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+        while (m.find()) {
+            m.appendReplacement(
+                    stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+        }
+        return m.appendTail(stringbf).toString();
     }
 
     public void setToolbar() {
@@ -190,13 +261,17 @@ public class CustomOrderAddProduct extends AppCompatActivity implements View.OnC
             description = customDescription.getText().toString().trim();
         }
 
+        if (kkey.equals("")) {
+            kkey = String.valueOf(System.currentTimeMillis());
+        }
+
         addProductToDatabase();
     }
 
     public void addProductToDatabase() {
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(this.getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS CUSTOM_BOOK (kkey VARCHAR, title VARCHAR, author VARCHAR, publisher VARCHAR, course VARCHAR, mrp VARCHAR, bookType VARCHAR, estPrice VARCHAR, description VARCHAR, qty VARCAHR, total VARCHAR);");
-        sqLiteDatabase.execSQL("INSERT INTO CUSTOM_BOOK VALUES('" + title + author + "','" + title + "','" + author + "','" + publisher + "','" + course + "','" + bookMRP + "','" + bookType + "','" + estimatedPrice + "','" + description + "','" + "1" + "','" + estimatedPrice + "');");
+        sqLiteDatabase.execSQL("INSERT INTO CUSTOM_BOOK VALUES('" + kkey + "','" + title + "','" + author + "','" + publisher + "','" + course + "','" + bookMRP + "','" + bookType + "','" + estimatedPrice + "','" + description + "','" + "1" + "','" + estimatedPrice + "');");
 
         Toast.makeText(getApplicationContext(), "Book added successfully", Toast.LENGTH_SHORT).show();
         finish();

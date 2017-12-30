@@ -56,19 +56,59 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         setToolbar();
 
-        setShippingAddress();
+        setBillDetailsAndShippingAddress();
 
         setProductDetails();
+
+        setProductCounts();
     }
 
-    private void setShippingAddress() {
+    private void setProductCounts() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long count = dataSnapshot.getChildrenCount();
+                TextView product_count = (TextView) findViewById(R.id.product_count);
+                product_count.setText("( " + count + " )");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void setBillDetailsAndShippingAddress() {
+        final TextView textViewAddress = (TextView) findViewById(R.id.address);
+        final TextView payment_total = (TextView) findViewById(R.id.payment_total);
+        final TextView payment_delivery_charge = (TextView) findViewById(R.id.payment_delivery_charge);
+        final TextView payment_discount = (TextView) findViewById(R.id.payment_discount);
+        final TextView wallet_amount = (TextView) findViewById(R.id.wallet_amount);
+        final TextView payment_payable_amt = (TextView) findViewById(R.id.payment_payable_amt);
+        final TextView payment_mode = (TextView) findViewById(R.id.payment_mode);
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("MYORDER").child(orderId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String address = String.valueOf(dataSnapshot.child("deliveryaddress").getValue());
-                TextView add = (TextView) findViewById(R.id.address);
-                add.setText(address.replaceFirst(", ", "\n"));
+                String total = (String) dataSnapshot.child("total").getValue();
+                String delivey_charge = (String) dataSnapshot.child("deliverycharge").getValue();
+                String address = (String) dataSnapshot.child("deliveryaddress").getValue();
+                String discount = (String) dataSnapshot.child("discount").getValue();
+                //String wallet = (String) dataSnapshot.child("").getValue();
+                String payable_amt = (String) dataSnapshot.child("payable_amount").getValue();
+                String payMode = (String) dataSnapshot.child("paymentmode").getValue();
+
+                payment_total.setText("\u20B9 " + total);
+                payment_delivery_charge.setText("\u20B9 " + delivey_charge);
+                payment_discount.setText("\u20B9 " + discount);
+                //wallet_amount.setText("");
+                payment_payable_amt.setText("\u20B9 " + payable_amt);
+
+                payment_mode.setText("Payment mode: " + payMode);
+                textViewAddress.setText(address.replaceFirst(", ", "\n"));
             }
 
             @Override

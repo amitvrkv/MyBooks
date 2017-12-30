@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mybooks.mybooks.activities.CustomOrderActivity">
+    tools:context="com.mybooks.mybooks.activities.CustomOrderAddProduct">
 
 
     <include
@@ -42,7 +42,7 @@
                         android:id="@+id/customTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Book Title"
+                        android:hint="Book Title*"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -59,7 +59,7 @@
                         android:id="@+id/customAuthor"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Book Author"
+                        android:hint="Book Author*"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -76,7 +76,7 @@
                         android:id="@+id/customPublisher"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Publisher"
+                        android:hint="Publisher*"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -93,7 +93,7 @@
                         android:id="@+id/customCourse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Course / Year / Semester"
+                        android:hint="Course / Year / Semester*"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -110,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="10dp"
-                        android:text="Book Type:"
+                        android:text="Book Type:*"
                         android:textSize="17dp" />
 
                     <RadioGroup
@@ -151,7 +151,7 @@
                         android:id="@+id/customMRP"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="MRP"
+                        android:hint="MRP ( Optional )"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
                         android:singleLine="true" />

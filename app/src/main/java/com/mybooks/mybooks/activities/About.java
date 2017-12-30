@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.mybooks.mybooks.BuildConfig;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.app_pref.MyFormat;
 
 public class About extends AppCompatActivity {
 
@@ -46,7 +47,6 @@ public class About extends AppCompatActivity {
 
     public void onStartTransaction() {
         Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
-
     }
 
     public void navigateToBaseActivity() {

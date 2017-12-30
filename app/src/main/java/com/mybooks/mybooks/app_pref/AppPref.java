@@ -12,7 +12,7 @@ public class AppPref {
 
     //Context ctx;
 
-    private boolean haveNetworkConnection(Context ctx) {
+    private static boolean checkNetworkConnection(Context ctx) {
         boolean haveConnectedWifi = false;
         boolean haveConnectedMobile = false;
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);

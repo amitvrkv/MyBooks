@@ -22,6 +22,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +41,8 @@ import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BooksListPageNew extends AppCompatActivity implements View.OnClickListener {
 
@@ -60,11 +63,15 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
     FloatingActionButton floatingActionButtonFilter;
 
     //Search
-    EditText editTextSearchData;
+    AutoCompleteTextView editTextSearchData;
 
     TextView cart_item_count;
     ImageView my_cart_icon;
     Activity act;
+
+    //AutoCompleteTextView autoCompleteTextView;
+    List<String> autoCompleteTextViewList;
+    ArrayAdapter<String> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +106,13 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        editTextSearchData = (EditText) findViewById(R.id.search_data);
+        editTextSearchData = (AutoCompleteTextView) findViewById(R.id.search_data);
+
+        autoCompleteTextViewList = new ArrayList<>();
+        arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, autoCompleteTextViewList);
+        editTextSearchData.setThreshold(1);
+        editTextSearchData.setAdapter(arrayAdapter);
+
         editTextSearchData.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -107,6 +120,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                     editTextSearchData.setCursorVisible(false);
                     searchProduct();
                     hideKeyboard();
+                    editTextSearchData.dismissDropDown();
                     return true;
                 }
                 return false;
@@ -155,6 +169,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
         setFilter();
         setCartCount();
+        //setAutoCompleteTextViewListForCourses();
 
         Bundle bundle = getIntent().getExtras();
         String key = bundle.getString("f");
@@ -282,12 +297,17 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelProductList modelProductList = dataSnapshot1.getValue(ModelProductList.class);
                     listObjects.add(modelProductList);
+
+                    autoCompleteTextViewList.add(capitalizeEveryWord(modelProductList.getF2()));
+
                 }
                 RecyclerAdapterProductView recyclerAdapterProductView = new RecyclerAdapterProductView(getApplicationContext(), listObjects, cart_item_count, act);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(BooksListPageNew.this);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.setAdapter(recyclerAdapterProductView);
+
+                arrayAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -295,6 +315,21 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
             }
         });
+    }
+
+    public String capitalizeEveryWord(String str) {
+        if (str == null)
+            return "";
+        System.out.println(str);
+        StringBuffer stringbf = new StringBuffer();
+        Matcher m = Pattern.compile(
+                "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
+
+        while (m.find()) {
+            m.appendReplacement(
+                    stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
+        }
+        return m.appendTail(stringbf).toString();
     }
 
     public void productByCat1() {
@@ -699,5 +734,23 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART ", null);
         cart_item_count.setText("" + cursor.getCount());
+    }
+
+    public void setAutoCompleteTextViewListForCourses(){
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("PRODUCT").child("Category").child("Book").child("Under Graduate");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    autoCompleteTextViewList.add(dataSnapshot1.getKey());
+                }
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
