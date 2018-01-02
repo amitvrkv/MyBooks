@@ -56,18 +56,18 @@
                 android:text="Book type" />
 
             <TextView
-                android:id="@+id/obookPricePerBook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Price per book" />
-
-            <TextView
                 android:id="@+id/oQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="Quantity:" />
+
+            <TextView
+                android:id="@+id/obookPricePerBook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Price per book" />
 
             <TextView
                 android:id="@+id/obookGrandTotal"

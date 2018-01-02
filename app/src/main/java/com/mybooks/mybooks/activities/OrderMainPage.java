@@ -216,21 +216,14 @@ public class OrderMainPage extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(mView.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
-                    //loadBookDetails();
+                    loadBookDetails();
                 }
             });
         }
 
         public void setOrderId(String od_id) {
-            /*
-            int len = od_id.length();
-            int setLen = 10 - len;
-            String final_order_id = "0000000000";
-            final_order_id = "CD" + final_order_id.substring(0, setLen) + od_id;
-            */
             TextView order_id = (TextView) mView.findViewById(R.id.order_id);
             order_id.setText(od_id);
-
             this.orderId = od_id;
         }
 
@@ -263,6 +256,13 @@ public class OrderMainPage extends AppCompatActivity {
             newDateStr = postFormater.format(date);
             TextView month = (TextView) mView.findViewById(R.id.order_month);
             month.setText(newDateStr);
+        }
+
+        public void loadBookDetails() {
+            Intent intent = new Intent(mView.getContext(), OrderCustomDetailsActivity.class);
+            intent.putExtra("orderType", "CD");
+            intent.putExtra("orderId", orderId);
+            mView.getContext().startActivity(intent);
         }
     }
 }

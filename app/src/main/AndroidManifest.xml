@@ -23,7 +23,9 @@
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.BooksListPageNew" />
+        <activity android:name=".activities.BooksListPageNew"
+            android:windowSoftInputMode="stateHidden"
+            />
         <activity android:name=".activities.AddressActivity" />
         <activity android:name=".activities.BlogActivity" />
         <activity android:name=".activities.PaymentPageActivity" />
@@ -42,7 +44,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activities.OrderMainPage" />
         <activity android:name=".activities.CustomOrderMainPage" />
-        <activity android:name=".activities.CustomOrderAddProduct"></activity>
+        <activity android:name=".activities.CustomOrderAddProduct" />
+        <activity android:name=".activities.OrderCustomDetailsActivity"></activity>
     </application>
 
 </manifest>

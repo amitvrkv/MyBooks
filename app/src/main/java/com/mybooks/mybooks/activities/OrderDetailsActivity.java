@@ -174,8 +174,10 @@ public class OrderDetailsActivity extends AppCompatActivity {
         public void setFields(String key, String type, String qty, String price_per_book) {
             this.key = key;
             final TextView mTitle = (TextView) view.findViewById(R.id.obookTitle);
-            final TextView mPublisher = (TextView) view.findViewById(R.id.obookPublisher);
-            final TextView mAuthor = (TextView) view.findViewById(R.id.obookAuthor);
+            TextView mPublisher = (TextView) view.findViewById(R.id.obookPublisher);
+            mPublisher.setVisibility(View.GONE);
+            TextView mAuthor = (TextView) view.findViewById(R.id.obookAuthor);
+            mAuthor.setVisibility(View.GONE);
             TextView mType = (TextView) view.findViewById(R.id.obooktype);
             TextView mPricePerBook = (TextView) view.findViewById(R.id.obookPricePerBook);
             TextView mQty = (TextView) view.findViewById(R.id.oQuantity);
@@ -188,10 +190,6 @@ public class OrderDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     mTitle.setText(capitalizeEveryWord(dataSnapshot.child("f2").getValue().toString()));
-                    mPublisher.setText(capitalizeEveryWord(dataSnapshot.child("f3").getValue().toString()));
-                    mPublisher.setVisibility(View.GONE);
-                    mAuthor.setText(capitalizeEveryWord(dataSnapshot.child("f4").getValue().toString()));
-                    mAuthor.setVisibility(View.GONE);
 
                     if (!dataSnapshot.child("f13").getValue().toString().equalsIgnoreCase("na")) {
                         Glide.with(view.getContext())
