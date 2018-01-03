@@ -268,6 +268,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                         .child("ORDER")
                         .child("ORDERDETAILS")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                        .child("MYORDER")
                         .child(ordernumber)
                         .child("prod" + count);
                 databaseReference.child("key").setValue(cursor.getString(cursor.getColumnIndex("key")));
@@ -288,17 +289,23 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
             } while (cursor.moveToNext());
 
-            orderPlacedSuccessfully();
+            orderPlacedSuccessfully(ordernumber);
         }
     }
 
     //order placed successfully
-    public void orderPlacedSuccessfully() {
+    public void orderPlacedSuccessfully(final String ordernumber) {
+        Toast.makeText(getApplicationContext(), "Order Placed successfully", Toast.LENGTH_LONG).show();
+
         if (promocode.equalsIgnoreCase("null")) {
             SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
             progressDialog.dismiss();
-            startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+            //startActivity(new Intent(getApplicationContext(), OrderMainPage.class));
+            Intent intent = new Intent(this, OrderDetailsActivity.class);
+            intent.putExtra("orderId", ordernumber);
+            startActivity(intent);
+
             finish();
             return;
         }
@@ -313,7 +320,11 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
                     sqLiteDatabase.execSQL("DROP TABLE IF EXISTS P_CART");
                     progressDialog.dismiss();
-                    startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+                    //startActivity(new Intent(getApplicationContext(), OrderMainPage.class));
+                    Intent intent = new Intent(getApplicationContext(), OrderDetailsActivity.class);
+                    intent.putExtra("orderId", ordernumber);
+                    startActivity(intent);
+
                     finish();
                 } else {
                     progressDialog.dismiss();

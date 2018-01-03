@@ -21,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
-import com.mybooks.mybooks.activities.OrderPageActivity;
 
 /**
  * Created by am361000 on 29/06/17.
@@ -113,11 +112,11 @@ public class MyBooksService extends Service {
         builder.setSound(alarmSound);
         builder.setVibrate(new long[]{300, 300, 300, 300});
 
-        Intent notificationIntent = new Intent(this, OrderPageActivity.class);
+        //Intent notificationIntent = new Intent(this, OrderPageActivity.class);
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(contentIntent);
+        //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
+          //      PendingIntent.FLAG_UPDATE_CURRENT);
+        //builder.setContentIntent(contentIntent);
 
         // Add as notification
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

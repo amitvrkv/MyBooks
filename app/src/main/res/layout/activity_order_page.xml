@@ -1,80 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.mybooks.mybooks.activities.OrderPageActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/orderRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="120dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/toolbar" />
-
-        <RelativeLayout
-            android:id="@+id/checkoutAndFilterOption"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@android:color/white">
-
-            <TextView
-                android:id="@+id/myOrderTab"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignEnd="@+id/view3"
-                android:gravity="center"
-                android:text="My Order"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/myOrderActiveLine"
-                android:layout_width="wrap_content"
-                android:layout_height="3dp"
-                android:layout_alignEnd="@+id/myOrderTab"
-                android:layout_alignParentBottom="true"
-                android:background="@color/colorAccent" />
-
-            <View
-                android:id="@+id/view3"
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
-                android:background="@color/Light_Grey" />
-
-            <TextView
-                android:id="@+id/customiseOrderTab"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_alignStart="@+id/view3"
-                android:gravity="center"
-                android:text="Customise Order"
-                android:textStyle="bold" />
-
-            <View
-                android:id="@+id/customiseOrderActiveLine"
-                android:layout_width="wrap_content"
-                android:layout_height="3dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/myOrderTab"
-                android:background="@color/Light_Grey" />
-
-        </RelativeLayout>
-
-
-    </android.support.design.widget.AppBarLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+</android.support.constraint.ConstraintLayout>

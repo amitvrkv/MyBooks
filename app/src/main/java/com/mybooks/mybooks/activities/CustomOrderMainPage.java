@@ -244,6 +244,7 @@ public class CustomOrderMainPage extends AppCompatActivity implements View.OnCli
                         .child("ORDER")
                         .child("ORDERDETAILS")
                         .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                        .child("CUSTOMORDER")
                         .child(ordernumber)
                         .child("prod" + count);
                 databaseReference.child("key").setValue("na");
@@ -273,16 +274,22 @@ public class CustomOrderMainPage extends AppCompatActivity implements View.OnCli
 
             } while (cursor.moveToNext());
 
-            orderPlacedSuccessfully();
+            orderPlacedSuccessfully(ordernumber);
         }
     }
 
     //order placed successfully
-    public void orderPlacedSuccessfully() {
+    public void orderPlacedSuccessfully(String ordernumber) {
+        Toast.makeText(getApplicationContext(), "Order Placed successfully", Toast.LENGTH_LONG).show();
+
         SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(getString(R.string.database_path), null);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS CUSTOM_BOOK");
         progressDialog.dismiss();
-        startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+        //startActivity(new Intent(getApplicationContext(), OrderPageActivity.class));
+        Intent intent = new Intent(getApplicationContext(), OrderCustomDetailsActivity.class);
+        intent.putExtra("orderId", ordernumber);
+        startActivity(intent);
+
         finish();
     }
 

@@ -29,7 +29,6 @@ public class OrderCustomDetailsActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<OrderCustomDetailsBookList, OrderCustomDetailsViewHolder> firebaseRecyclerAdapter;
     RecyclerView recyclerView;
     private String orderId;
-    private String orderType;
     private LinearLayoutManager mLayoutManager;
 
     @Override
@@ -39,7 +38,6 @@ public class OrderCustomDetailsActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         orderId = bundle.getString("orderId");
-        orderType = bundle.getString("orderType");
 
         recyclerView = (RecyclerView) findViewById(R.id.orderDetailsRecycleView);
         recyclerView.setNestedScrollingEnabled(false);
@@ -104,7 +102,12 @@ public class OrderCustomDetailsActivity extends AppCompatActivity {
     }
 
     private void setProductCounts() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("ORDER")
+                .child("ORDERDETAILS")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                .child("CUSTOMORDER")
+                .child(orderId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -121,7 +124,12 @@ public class OrderCustomDetailsActivity extends AppCompatActivity {
     }
 
     public void setProductDetails() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("ORDER")
+                .child("ORDERDETAILS")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                .child("CUSTOMORDER")
+                .child(orderId);
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrderCustomDetailsBookList, OrderCustomDetailsViewHolder>(
                 OrderCustomDetailsBookList.class,

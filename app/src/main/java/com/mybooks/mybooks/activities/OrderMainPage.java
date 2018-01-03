@@ -260,7 +260,6 @@ public class OrderMainPage extends AppCompatActivity {
 
         public void loadBookDetails() {
             Intent intent = new Intent(mView.getContext(), OrderCustomDetailsActivity.class);
-            intent.putExtra("orderType", "CD");
             intent.putExtra("orderId", orderId);
             mView.getContext().startActivity(intent);
         }

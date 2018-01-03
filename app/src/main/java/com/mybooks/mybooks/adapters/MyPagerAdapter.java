@@ -22,7 +22,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.activities.BooksListPageNew;
-import com.mybooks.mybooks.activities.OrderPageActivity;
 
 import java.util.ArrayList;
 
@@ -98,8 +97,14 @@ public class MyPagerAdapter extends PagerAdapter {
                     //context.startActivity(intent1);
                 } else if (arrayListGoto.get(position).equalsIgnoreCase("order")) {
                     {
-                        context.startActivity(new Intent(context, OrderPageActivity.class));
+                        //context.startActivity(new Intent(context, OrderPageActivity.class));
                     }
+                } else if (arrayListGoto.get(position).equalsIgnoreCase("individual")) {
+
+                } else if (arrayListGoto.get(position).equalsIgnoreCase("orderdetails")) {
+
+                } else if (arrayListGoto.get(position).equalsIgnoreCase("ordercustomdetails")) {
+
                 }
             }
         });

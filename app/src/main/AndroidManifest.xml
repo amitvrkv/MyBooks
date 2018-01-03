@@ -14,8 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -23,13 +22,12 @@
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activities.BooksListPageNew"
-            android:windowSoftInputMode="stateHidden"
-            />
+        <activity
+            android:name=".activities.BooksListPageNew"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activities.AddressActivity" />
         <activity android:name=".activities.BlogActivity" />
         <activity android:name=".activities.PaymentPageActivity" />
-        <activity android:name=".activities.OrderPageActivity" />
         <activity android:name=".activities.OrderDetailsActivity" />
         <activity android:name=".activities.MyAccountActivity" />
 
@@ -45,7 +43,9 @@
         <activity android:name=".activities.OrderMainPage" />
         <activity android:name=".activities.CustomOrderMainPage" />
         <activity android:name=".activities.CustomOrderAddProduct" />
-        <activity android:name=".activities.OrderCustomDetailsActivity"></activity>
+        <activity android:name=".activities.OrderCustomDetailsActivity" />
+        <activity android:name=".activities.OrderPageActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>

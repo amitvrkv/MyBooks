@@ -1,5 +1,6 @@
 package com.mybooks.mybooks.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,12 +34,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
     FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder> firebaseRecyclerAdapter;
 
     String orderId;
-    String orderType;
 
     List<OrderDetailsActivity> orderDetailsActivityList;
 
     private LinearLayoutManager mLayoutManager;
 
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,12 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         orderId = bundle.getString("orderId");
-        orderType = bundle.getString("orderType");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle("Please wait...");
+        progressDialog.setMessage("Loading data");
+        //progressDialog.show();
 
         setToolbar();
 
@@ -64,13 +70,21 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     private void setProductCounts() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        progressDialog.show();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("ORDER")
+                .child("ORDERDETAILS")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                .child("MYORDER")
+                .child(orderId);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 long count = dataSnapshot.getChildrenCount();
                 TextView product_count = (TextView) findViewById(R.id.product_count);
                 product_count.setText("( " + count + " )");
+
+                progressDialog.dismiss();
             }
 
             @Override
@@ -81,6 +95,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     private void setBillDetailsAndShippingAddress() {
+        progressDialog.show();
+
         final TextView textViewAddress = (TextView) findViewById(R.id.address);
         final TextView payment_total = (TextView) findViewById(R.id.payment_total);
         final TextView payment_delivery_charge = (TextView) findViewById(R.id.payment_delivery_charge);
@@ -109,6 +125,8 @@ public class OrderDetailsActivity extends AppCompatActivity {
 
                 payment_mode.setText("Payment mode: " + payMode);
                 textViewAddress.setText(address.replaceFirst(", ", "\n"));
+
+                progressDialog.dismiss();
             }
 
             @Override
@@ -133,7 +151,13 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     public void setProductDetails() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("ORDER").child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*")).child(orderId);
+        progressDialog.show();
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("ORDER")
+                .child("ORDERDETAILS").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString().replace(".", "*"))
+                .child("MYORDER")
+                .child(orderId);
 
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<OrderDetailsBookList, OrderDetailsViewHolder>(
                 OrderDetailsBookList.class,
@@ -144,6 +168,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(OrderDetailsViewHolder viewHolder, OrderDetailsBookList model, int position) {
                 viewHolder.setFields(model.getKey(), model.getBooktype(), model.getQuantity(), model.getPrice());
+                progressDialog.dismiss();
             }
         };
 
