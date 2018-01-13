@@ -40,63 +40,15 @@ public class About extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                onStartTransaction();
             }
         });
     }
 
-    public void onStartTransaction() {
-        Toast.makeText(this, "Started", Toast.LENGTH_SHORT).show();
+    public void startTransaction(View view){
+        Toast.makeText(getApplicationContext(), "startTransaction", Toast.LENGTH_SHORT).show();
+
+        
     }
-
-    public void navigateToBaseActivity() {
-
-/*
-        intent = new Intent(getApplicationContext(), PayUBaseActivity.class);
-        mPaymentParams = new PaymentParams();
-        payuConfig = new PayuConfig();
-
-        mPaymentParams.setKey(merchantKey);
-        key = merchantKey;
-        // txt_totals.getText()+""
-        mPaymentParams.setAmount("3533");
-
-        mPaymentParams.setProductInfo(size + "_" + qty + "_" + pid);
-
-        mPaymentParams.setFirstName("sandeep khandelwal");
-
-        mPaymentParams.setEmail("tutorialsee9@gmail.com");
-
-        mPaymentParams.setTxnId("" + System.currentTimeMillis());
-
-        mPaymentParams.setSurl("https://payu.herokuapp.com/success");
-
-        mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
-
-        mPaymentParams.setUdf1("");
-
-        mPaymentParams.setUdf2("");
-
-        mPaymentParams.setUdf3("");
-
-        mPaymentParams.setUdf4("");
-
-        mPaymentParams.setUdf5("");
-        mPaymentParams.setUserCredentials(merchantKey + ":payutest@payu.in");
-        var1 = merchantKey + ":payutest@payu.in";
-        mPaymentParams.setOfferKey("");
-        intent.putExtra(PayuConstants.SALT, merchantSalt);
-        salt = merchantSalt;
-        String environment = "0";
-        payuConfig.setEnvironment(0);
-        cardBin = "";
-
-        generateHashFromSDK(mPaymentParams, merchantSalt);
-
-        */
-
-    }
-
 
 }
 

@@ -36,6 +36,10 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     String state;
     String pincode;
 
+    String isVerified;
+
+    String updated_contact;
+
     SharedPreferences sharedPreferences;
 
     ProgressDialog progressDialog;
@@ -49,7 +53,6 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait...");
-        progressDialog.setMessage("Updating you address details");
         progressDialog.setCancelable(false);
 
         mDelName = (TextView) findViewById(R.id.delName);
@@ -62,35 +65,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
-        if ( sharedPreferences.getString("Name", null) == null) {
-            mDelName.setText("");
-        } else {
-            mDelName.setText(sharedPreferences.getString("Name", null));
-        }
-
-        if ( sharedPreferences.getString("contact", null) == null) {
-            mDelMobileNo.setText("");
-        } else {
-            mDelMobileNo.setText(sharedPreferences.getString("contact", null));
-        }
-
-        if ( sharedPreferences.getString("addressline1", null) == null) {
-            mDelHouseNameNumber.setText("");
-        } else {
-            mDelHouseNameNumber.setText(sharedPreferences.getString("addressline1", null));
-        }
-
-        if ( sharedPreferences.getString("addressline2", null) == null) {
-            mDelLocality.setText("");
-        } else {
-            mDelLocality.setText(sharedPreferences.getString("addressline2", null));
-        }
-
-        if ( sharedPreferences.getString("pincode", null) == null) {
-            mDelPincode.setText("");
-        } else {
-            mDelPincode.setText(sharedPreferences.getString("pincode", null));
-        }
+        getAddressFromServer();
     }
 
     @Override
@@ -120,13 +95,65 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+    public void setField() {
+        if ( sharedPreferences.getString("Name", null) == null) {
+            mDelName.setText("");
+        } else {
+            mDelName.setText(sharedPreferences.getString("Name", null));
+        }
 
-    public void setFields() {
+        if ( sharedPreferences.getString("contact", null) == null) {
+            mDelMobileNo.setText("");
+            contact = "";
+        } else {
+            contact = sharedPreferences.getString("contact",null);
+            mDelMobileNo.setText(contact);
+        }
+
+        if ( sharedPreferences.getString("isVerified", null) == null) {
+            isVerified = "false";
+        } else {
+            isVerified = sharedPreferences.getString("isVerified", null);
+        }
+
+        if ( sharedPreferences.getString("addressline1", null) == null) {
+            mDelHouseNameNumber.setText("");
+        } else {
+            mDelHouseNameNumber.setText(sharedPreferences.getString("addressline1", null));
+        }
+
+        if ( sharedPreferences.getString("addressline2", null) == null) {
+            mDelLocality.setText("");
+        } else {
+            mDelLocality.setText(sharedPreferences.getString("addressline2", null));
+        }
+
+        if ( sharedPreferences.getString("pincode", null) == null) {
+            mDelPincode.setText("");
+        } else {
+            mDelPincode.setText(sharedPreferences.getString("pincode", null));
+        }
+    }
+
+    public void getAddressFromServer() {
+        progressDialog.setMessage("Loading your data...");
+        progressDialog.show();
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".","*")).child("address");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                name = dataSnapshot.child("name").getValue().toString();
+                updated_contact = dataSnapshot.child("contact").getValue().toString();
+                addressline1 = dataSnapshot.child("addressline1").getValue().toString();
+                addressline2 = dataSnapshot.child("addressline2").getValue().toString();
+                isVerified = dataSnapshot.child("isVerified").getValue().toString();
+                city = dataSnapshot.child("city").getValue().toString();
+                state = dataSnapshot.child("state").getValue().toString();
+                pincode = dataSnapshot.child("pincode").getValue().toString();
 
+                updateOnSharedPref();
+                setField();
             }
 
             @Override
@@ -139,7 +166,9 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
     public void validateDate() {
         name = mDelName.getText().toString().trim();
-        contact = mDelMobileNo.getText().toString().trim();
+
+        updated_contact = mDelMobileNo.getText().toString().trim();
+
         addressline1 = mDelHouseNameNumber.getText().toString().trim();
         addressline2 = mDelLocality.getText().toString().trim();
         city = "Bengaluru";
@@ -186,12 +215,21 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void updateOnFirebase(){
+        if (updated_contact.equals(contact)) {
+            //isVerified = "true";
+        } else {
+            isVerified = "false";
+        }
 
+        progressDialog.setMessage("Updating you address details");
         progressDialog.show();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".","*")).child("address");
         databaseReference.child("name").setValue(name);
-        databaseReference.child("contact").setValue(contact);
+
+        databaseReference.child("contact").setValue(updated_contact);
+        databaseReference.child("isVerified").setValue(isVerified);
+
         databaseReference.child("email").setValue(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         databaseReference.child("addressline1").setValue(addressline1);
         databaseReference.child("addressline2").setValue(addressline2);
@@ -214,14 +252,20 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     public void updateOnSharedPref(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Name", name);
-        editor.putString("contact", contact);
+
+        editor.putString("contact", updated_contact);
+        editor.putString("isVerified",isVerified);
+
         editor.putString("addressline1", addressline1);
         editor.putString("addressline2", addressline2);
         editor.putString("city", city);
         editor.putString("state", state);
         editor.putString("pincode", pincode);
+
         editor.commit();
         progressDialog.dismiss();
-        finish();
+
+        //Toast.makeText(getApplicationContext(), ""+ sharedPreferences.getString("isVerified", null), Toast.LENGTH_SHORT).show();
+        //finish();
     }
 }

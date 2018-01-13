@@ -1,7 +1,6 @@
 package com.mybooks.mybooks.services;
 
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +10,12 @@ import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.app_pref.MyFirebase;
+import com.mybooks.mybooks.app_pref.MyFormat;
 
 /**
  * Created by am361000 on 29/06/17.
@@ -29,6 +33,8 @@ import com.mybooks.mybooks.R;
 public class MyBooksService extends Service {
 
     DatabaseReference databaseReference;
+
+    DatabaseReference databaseReferenceNumberVerification;
 
     @Nullable
     @Override
@@ -52,7 +58,7 @@ public class MyBooksService extends Service {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-                    if (ds.child("status").getValue() == null ) {
+                    if (ds.child("status").getValue() == null) {
                         continue;
                     }
 
@@ -76,6 +82,8 @@ public class MyBooksService extends Service {
 
             }
         });
+
+        getContactNumber();
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -115,11 +123,50 @@ public class MyBooksService extends Service {
         //Intent notificationIntent = new Intent(this, OrderPageActivity.class);
 
         //PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-          //      PendingIntent.FLAG_UPDATE_CURRENT);
+        //      PendingIntent.FLAG_UPDATE_CURRENT);
         //builder.setContentIntent(contentIntent);
 
         // Add as notification
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(0, builder.build());
+    }
+
+    private void getContactNumber() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"))
+                .child("address");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String number = dataSnapshot.child("contact").getValue().toString();
+                isVerified(number);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void isVerified(final String number) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("MOBILE_VERIFICATION")
+                .child("PENDING_VERIFICATION");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String get_number = String.valueOf(dataSnapshot.child(number).getValue());
+
+                if ( ! get_number.equals("null")) {
+                    MyFirebase.updateOnMobileVerification(number);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

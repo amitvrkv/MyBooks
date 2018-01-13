@@ -275,7 +275,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                         } else {
                             //Snackbar.make(parentLayoutView, "", Snackbar.LENGTH_LONG).show();
-                            showAlertDialog("Error", "Wrong Username or Password.");
+                            showAlertDialog("Error", "Wrong Username or Password");
                         }
                         mprogressDialog.dismiss();
                         checkIfEmailVerified();
@@ -379,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     public void sendResetPassword() {
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-        alertDialog.setTitle("Enter mail id:");
+        alertDialog.setTitle("Enter you Email ID:");
 
         final EditText editTextAlert = new EditText(LoginActivity.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(

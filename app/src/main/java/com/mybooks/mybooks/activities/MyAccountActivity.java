@@ -1,12 +1,18 @@
 package com.mybooks.mybooks.activities;
 
+import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -15,12 +21,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
-import com.mybooks.mybooks.activities.AddressActivity;
 
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener {
 
     String address;
     SharedPreferences sharedPreferences;
+    TextView verify_btn;
+    String customerCareNumber = "";
+    ProgressDialog progressDialog;
     private TextView mName, mMobile, mEmail, mDelAddress, mUpdateAddBtn;
 
     @Override
@@ -29,6 +37,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_my_account);
         setToolbar();
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         mName = (TextView) findViewById(R.id.myAccName);
         mMobile = (TextView) findViewById(R.id.myAccContactNumber);
         mEmail = (TextView) findViewById(R.id.myAccEmailId);
@@ -36,11 +49,20 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         mUpdateAddBtn = (TextView) findViewById(R.id.myAccUpdateAddBtn);
         mUpdateAddBtn.setOnClickListener(this);
 
+        verify_btn = (TextView) findViewById(R.id.verify_btn);
+
         sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
-        setMyAccDetails();
 
+        if (sharedPreferences.getString("isVerified", null).equals("true")) {
+            verify_btn.setVisibility(View.GONE);
+        } else {
+            verify_btn.setVisibility(View.VISIBLE);
+        }
+
+        setMyAccDetails();
         setWallet();
+        getCustomerCareNumber();
     }
 
     public void setToolbar() {
@@ -116,4 +138,37 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+
+    private void getCustomerCareNumber() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("MOBILE_VERIFICATION").child("SETTING").child("CALL_TO");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                customerCareNumber = dataSnapshot.getValue().toString();
+                //callNow(number);
+                verify_btn.setText("Verification pending...\nCALL NOW ( Give a miss-call to " + customerCareNumber + " )");
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void callNow(View view) {
+
+
+
+        Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + customerCareNumber));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+            Toast.makeText(this, "Allow PHONE CALLS permission and try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        startActivity(intent);
+    }
 }

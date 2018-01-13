@@ -1,13 +1,18 @@
 package com.mybooks.mybooks.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +35,11 @@ public class OrderMainPage extends AppCompatActivity {
     private Query databaseReference;
     private LinearLayoutManager mLayoutManager;
 
+    TextView myOrderTab;
+    View myOrderActiveLine;
+    TextView customiseOrderTab;
+    View customiseOrderActiveLine;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +50,16 @@ public class OrderMainPage extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        recyclerView.setOnTouchListener(new OnSwipeTouchListener(this));
+
         setDataForMyOrder();
 
 
-        TextView myOrderTab = (TextView) findViewById(R.id.orderMainPageMyOrderTab);
-        final View myOrderActiveLine = findViewById(R.id.myOrderMainPageActiveLine);
-        TextView customiseOrderTab = (TextView) findViewById(R.id.orderMainPageCustomiseOrderTab);
-        final View customiseOrderActiveLine = findViewById(R.id.customiseOrderMainPageActiveLine);
+        myOrderTab = (TextView) findViewById(R.id.orderMainPageMyOrderTab);
+        myOrderActiveLine = findViewById(R.id.myOrderMainPageActiveLine);
+        customiseOrderTab = (TextView) findViewById(R.id.orderMainPageCustomiseOrderTab);
+        customiseOrderActiveLine = findViewById(R.id.customiseOrderMainPageActiveLine);
+
         myOrderTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -262,6 +275,61 @@ public class OrderMainPage extends AppCompatActivity {
             Intent intent = new Intent(mView.getContext(), OrderCustomDetailsActivity.class);
             intent.putExtra("orderId", orderId);
             mView.getContext().startActivity(intent);
+        }
+    }
+
+    public class OnSwipeTouchListener implements View.OnTouchListener{
+
+        private final GestureDetector gestureDetector;
+        Context context;
+
+        public OnSwipeTouchListener(Context context) {
+            gestureDetector = new GestureDetector(context, new GestureListener());
+            this.context = context;
+        }
+
+        public void onSwipeLeft() {
+            //Toast.makeText(context.getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+            myOrderActiveLine.setBackgroundColor(getResources().getColor(R.color.Light_Grey));
+            customiseOrderActiveLine.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            setDataForCustomOrder();
+        }
+
+        public void onSwipeRight() {
+            //Toast.makeText(context.getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+            myOrderActiveLine.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            customiseOrderActiveLine.setBackgroundColor(getResources().getColor(R.color.Light_Grey));
+            setDataForMyOrder();
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                float distanceX = e2.getX() - e1.getX();
+                float distanceY = e2.getY() - e1.getY();
+                if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (distanceX > 0)
+                        onSwipeRight();
+                    else
+                        onSwipeLeft();
+                    return true;
+                }
+                return false;
+            }
         }
     }
 }

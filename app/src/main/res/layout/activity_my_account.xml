@@ -14,8 +14,7 @@
         android:layout_below="@+id/toolbar"
         android:layout_marginTop="2dp"
         android:background="@color/colorPrimary"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:orientation="vertical">
 
 
         <ImageView
@@ -24,6 +23,7 @@
             android:layout_height="80dp"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
             android:src="@drawable/accounticon" />
 
 
@@ -41,6 +41,7 @@
             android:id="@+id/myAccContactNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="9999999999"
             android:textColor="@color/colorTextIcon"
@@ -50,10 +51,23 @@
             android:id="@+id/myAccEmailId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="name@gmail.com"
             android:textColor="@color/colorTextIcon"
             android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/verify_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Red"
+            android:gravity="center"
+            android:onClick="callNow"
+            android:padding="2dp"
+            android:text="Verification pending. Verify Now"
+            android:textColor="@color/white"
+            android:textIsSelectable="true" />
 
     </LinearLayout>
 

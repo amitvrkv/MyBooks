@@ -1,5 +1,6 @@
 package com.mybooks.mybooks.activities;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mybooks.mybooks.app_pref.MyFormat;
 import com.mybooks.mybooks.models.ModelProductList;
 import com.mybooks.mybooks.R;
 
@@ -107,11 +109,11 @@ public class Individual_book_details extends AppCompatActivity implements View.O
             public void onDataChange(DataSnapshot dataSnapshot) {
                 modelProductList = dataSnapshot.getValue(ModelProductList.class);
 
-                mBookTitle.setText(capitalizeEveryWord(modelProductList.getF2()));
+                mBookTitle.setText(MyFormat.capitalizeEveryWord(modelProductList.getF2()));
                 book_title_bold.setText(mBookTitle.getText().toString());
 
-                mBookPublisher.setText(capitalizeEveryWord(modelProductList.getF3()));
-                mBookAuthor.setText(capitalizeEveryWord(modelProductList.getF4()));
+                mBookPublisher.setText(MyFormat.capitalizeEveryWord(modelProductList.getF3()));
+                mBookAuthor.setText(MyFormat.capitalizeEveryWord(modelProductList.getF4()));
                 mBookCourse.setText(modelProductList.getF5());
                 mBookSem.setText(modelProductList.getF6());
                 if (modelProductList.getF7().equals("0") || modelProductList.getF7().equals("0") || modelProductList.getF7().equals("0")) {
@@ -179,23 +181,6 @@ public class Individual_book_details extends AppCompatActivity implements View.O
         });
     }
 
-    public String capitalizeEveryWord(String str) {
-
-        if (str == null)
-            return "";
-
-        System.out.println(str);
-        StringBuffer stringbf = new StringBuffer();
-        Matcher m = Pattern.compile(
-                "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
-
-        while (m.find()) {
-            m.appendReplacement(
-                    stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
-        }
-        return m.appendTail(stringbf).toString();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -218,7 +203,9 @@ public class Individual_book_details extends AppCompatActivity implements View.O
     }
 
     private void buy() {
-
+        addToCart();
+        startActivity(new Intent(this, MyCartNew.class));
+        finish();
     }
 
     private void addToCart() {

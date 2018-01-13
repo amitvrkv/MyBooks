@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,13 +30,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mybooks.mybooks.services.MyBooksService;
-import com.mybooks.mybooks.adapters.MyPagerAdapter;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.adapters.MyPagerAdapter;
+import com.mybooks.mybooks.services.MyBooksService;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -76,6 +75,7 @@ public class HomeActivity extends AppCompatActivity
 
         setAdvertisements();
         setAddress();
+        //checkPermission();
     }
 
     private void setAddress() {
@@ -359,7 +359,25 @@ public class HomeActivity extends AppCompatActivity
         indicator.setViewPager(mPager);
 
 
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                currentPage = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
         // Auto start of viewpager
+        /*
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
             public void run() {
@@ -369,6 +387,7 @@ public class HomeActivity extends AppCompatActivity
                 mPager.setCurrentItem(currentPage++, true);
             }
         };
+
         Timer swipeTimer = new Timer();
         swipeTimer.schedule(new TimerTask() {
             @Override
@@ -376,6 +395,72 @@ public class HomeActivity extends AppCompatActivity
                 handler.post(Update);
             }
         }, 3000, 3000);
+        */
+
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (currentPage == arrayListImageSrc.size()) {
+                    currentPage = 0;
+                }
+                mPager.setCurrentItem(currentPage++, true);
+                handler.postDelayed(this, 3000);
+            }
+        };
+        handler.postDelayed(runnable, 3000);
+
     }
 
+    /*
+    private void checkPermission(){
+        ArrayList<String> arrPerm = new ArrayList<>();
+
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            arrPerm.add(Manifest.permission.CALL_PHONE);
+        }
+
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            arrPerm.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if(!arrPerm.isEmpty()) {
+            String[] permissions = new String[arrPerm.size()];
+            permissions = arrPerm.toArray(permissions);
+            ActivityCompat.requestPermissions(this, permissions, 10);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        String permission = permissions[i];
+                        if (Manifest.permission.CALL_PHONE.equals(permission)) {
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                // you now have permission
+                            } else {
+                                Toast.makeText(getApplicationContext(), "CALL_PHONE", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
+                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                                // you now have permission
+                            } else {
+                                Toast.makeText(getApplicationContext(), "ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+            }
+        }
+    }
+    */
 }

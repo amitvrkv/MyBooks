@@ -84,13 +84,13 @@ public class MyPagerAdapter extends PagerAdapter {
         myImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "" + arrayListGoto.get(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "" + arrayListGoto.get(position), Toast.LENGTH_SHORT).show();
                 if (arrayListGoto.get(position).equalsIgnoreCase("buy")) {
                     Intent intent = new Intent(context, BooksListPageNew.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("f", "all");
                     intent.putExtras(bundle);
-                    context.startActivity(intent);
+                    //context.startActivity(intent);
                 } else if (arrayListGoto.get(position).equalsIgnoreCase("custom")) {
                     //Intent intent1 = new Intent(context, CustomOrderActivity.class);
                     //intent1.putExtra("key", "null");

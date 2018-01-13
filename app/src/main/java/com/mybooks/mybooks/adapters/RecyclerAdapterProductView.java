@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,22 +26,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.mybooks.mybooks.activities.CustomOrderAddProduct;
-import com.mybooks.mybooks.anim.CircleAnimationUtil;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.activities.CustomOrderAddProduct;
 import com.mybooks.mybooks.activities.Individual_book_details;
+import com.mybooks.mybooks.anim.CircleAnimationUtil;
+import com.mybooks.mybooks.app_pref.MyFormat;
 import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by am361000 on 31/08/17.
  */
 
 public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAdapterProductView.MyHolder> {
-
     List<ModelProductList> listdata;
     Context ctx;
     TextView cart_item_count;
@@ -65,18 +64,18 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
     public void onBindViewHolder(final MyHolder holder, final int position) {
         final ModelProductList modelProductList = listdata.get(position);
 
-        holder.mtitle.setText(capitalizeEveryWord(modelProductList.getF2()));
+        holder.mtitle.setText(MyFormat.capitalizeEveryWord(modelProductList.getF2()));
         if (modelProductList.getF3().equalsIgnoreCase("na")) {
             holder.mpublisher.setVisibility(View.GONE);
         } else {
             holder.mpublisher.setVisibility(View.VISIBLE);
-            holder.mpublisher.setText(capitalizeEveryWord(modelProductList.getF3()));
+            holder.mpublisher.setText(MyFormat.capitalizeEveryWord(modelProductList.getF3()));
         }
         if (modelProductList.getF4().equalsIgnoreCase("na")) {
             holder.mauthor.setVisibility(View.GONE);
         } else {
             holder.mauthor.setVisibility(View.VISIBLE);
-            holder.mauthor.setText(capitalizeEveryWord(modelProductList.getF4()).replace("; ","\n"));
+            holder.mauthor.setText(MyFormat.capitalizeEveryWord(modelProductList.getF4()).replace("; ", "\n"));
         }
         if (modelProductList.getF5().equalsIgnoreCase("na")) {
             holder.mcourse.setVisibility(View.GONE);
@@ -94,19 +93,23 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         setWishlistBtn(ctx, modelProductList.getF11(), holder.wishListBtnAdded);
 
         /* set price*/
-        int mrp_p = Integer.parseInt(modelProductList.getF7().trim());
+        int mrp_p = Integer.parseInt(modelProductList.getF7());
         final int new_p = Integer.parseInt(modelProductList.getF8().trim());
         final int old_p = Integer.parseInt(modelProductList.getF9().trim());
         holder.mrp_price.setText(modelProductList.getF7());
         holder.new_price.setText(modelProductList.getF8());
         holder.old_price.setText("\u20B9" + modelProductList.getF9());
+
+        /*
         if (mrp_p == 0 || new_p == 0 || old_p == 0) {
+            Toast.makeText(ctx.getApplicationContext(), modelProductList.getF2(), Toast.LENGTH_SHORT).show();
             holder.addToCartButton.setText("CUSTOM ORDER");
             holder.addToCartButton.setTextColor(Color.RED);
             holder.mrp_price.setText("NA");
             holder.new_price.setText("NA");
             holder.old_price.setText("\u20B9" + " NA");
         }
+        */
 
         /* set book cover*/
         if (modelProductList.getF13() == null) {
@@ -150,12 +153,14 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 holder.addToCartButton.setText("ADDED");
                 holder.addToCartButton.setTextColor(Color.GREEN);
             }
+            cursor.close();
         }
 
         /* ADD to cart button click handler*/
         holder.addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (holder.addToCartButton.getText().toString().equalsIgnoreCase("CUSTOM ORDER")) {
                     Intent intent = new Intent(ctx, CustomOrderAddProduct.class);
                     intent.putExtra("key", modelProductList.getF11());
@@ -214,29 +219,50 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
                 }
             }
         });
+
+        checkCartandWishlist(holder, ctx, modelProductList.getF11());
     }
+
+    /* */
+    public void checkCartandWishlist(final MyHolder holder, Context ctx, final String key) {
+        final SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+
+        final SQLiteDatabase sqLiteDatabaseWishlist = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
+        sqLiteDatabaseWishlist.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
+
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + key + "'", null);
+                Cursor cursorWishlist = sqLiteDatabaseWishlist.rawQuery("Select * from WISHLIST WHERE key = '" + key + "'", null);
+
+                if (cursor.getCount() > 0) {
+                    holder.addToCartButton.setText("ADDED");
+                    holder.addToCartButton.setTextColor(Color.GREEN);
+                }
+
+                if (cursorWishlist.getCount() == 1) {
+                    holder.wishListBtnAdded.setVisibility(View.VISIBLE);
+                } else {
+                    //holder.wishListBtnAdded.setVisibility(View.GONE);
+                }
+
+                cursor.close();
+                cursorWishlist.close();
+                handler.postDelayed(this, 100);
+            }
+        };
+        handler.postDelayed(runnable, 100);
+    }
+
 
     public void loadBookDetails(Context ctx, String key) {
         Intent intent = new Intent(ctx, Individual_book_details.class);
         intent.putExtra("key", key);
         ctx.startActivity(intent);
-    }
-
-    public String capitalizeEveryWord(String str) {
-
-        if (str == null)
-            return "";
-
-        System.out.println(str);
-        StringBuffer stringbf = new StringBuffer();
-        Matcher m = Pattern.compile(
-                "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
-
-        while (m.find()) {
-            m.appendReplacement(
-                    stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
-        }
-        return m.appendTail(stringbf).toString();
     }
 
     public void addProductToCart(Context ctx, View targetView, String key, String type, String price) {
@@ -251,6 +277,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         } else {
             Toast.makeText(ctx, "Already added to your Cart", Toast.LENGTH_SHORT).show();
         }
+        cursor.close();
     }
 
     private void addProductToWishList(Context ctx, String key, ImageView imageView) {
@@ -265,6 +292,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         } else {
             //Toast.makeText(ctx, "Already added to Wishlist", Toast.LENGTH_SHORT).show();
         }
+        cursor.close();
     }
 
     private void removeProductToWishList(Context ctx, String key, ImageView imageView) {
@@ -279,6 +307,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
         Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART ", null);
         cart_item_count.setText("" + cursor.getCount());
+        cursor.close();
     }
 
     private void makeFlyAnimation(final View targetView) {
@@ -310,7 +339,6 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             }
         }).startAnimation();
 
-
     }
 
     public void setWishlistBtn(Context ctx, String key, ImageView imageView) {
@@ -322,8 +350,8 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         } else {
             imageView.setVisibility(View.VISIBLE);
         }
+        cursor.close();
     }
-
 
     @Override
     public int getItemCount() {

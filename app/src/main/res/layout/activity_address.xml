@@ -46,11 +46,12 @@
                         android:id="@+id/delmobileNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Phone No.*"
+                        android:hint="Phone No.* ( Eg. 9999999999 )"
                         android:imeOptions="actionNext"
                         android:inputType="number"
                         android:maxLines="1"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:text="9999999999" />
 
                 </android.support.design.widget.TextInputLayout>
 

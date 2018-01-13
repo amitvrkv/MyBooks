@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
+import com.mybooks.mybooks.app_pref.MyFormat;
 import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.ArrayList;
@@ -156,8 +157,7 @@ public class MyCartNew extends AppCompatActivity {
             this.price = price;
             this.qty = qty;
             this.mtotal = mtotal;
-            inflater = (LayoutInflater) context.
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -229,9 +229,9 @@ public class MyCartNew extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     final ModelProductList modelProductList = dataSnapshot.getValue(ModelProductList.class);
-                    cart_product_title.setText(capitalizeEveryWord(modelProductList.getF2()));
-                    cart_product_description_1.setText(capitalizeEveryWord(modelProductList.getF3()));
-                    cart_product_description_2.setText(capitalizeEveryWord(modelProductList.getF4()));
+                    cart_product_title.setText(MyFormat.capitalizeEveryWord(modelProductList.getF2()));
+                    cart_product_description_1.setText(MyFormat.capitalizeEveryWord(modelProductList.getF3()));
+                    cart_product_description_2.setText(MyFormat.capitalizeEveryWord(modelProductList.getF4()));
                     cart_product_mrp.setText(modelProductList.getF7());
 
                     if (modelProductList.getF13() == null) {
@@ -324,23 +324,6 @@ public class MyCartNew extends AppCompatActivity {
             return view;
         }
 
-        public String capitalizeEveryWord(String str) {
-
-            if (str == null)
-                return "";
-
-            System.out.println(str);
-            StringBuffer stringbf = new StringBuffer();
-            Matcher m = Pattern.compile(
-                    "([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(str);
-
-            while (m.find()) {
-                m.appendReplacement(
-                        stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
-            }
-            return m.appendTail(stringbf).toString();
-        }
-
         public void setGrandTotal() {
             int gtotal = 0;
             for (int i = 0; i < mtotal.size(); i++) {
@@ -365,17 +348,20 @@ public class MyCartNew extends AppCompatActivity {
 
         public void removeProductFromCart(final int position) {
             sqLiteDatabase.execSQL("DELETE FROM P_CART WHERE key = '" + key.get(position) + "'");
+
             key.remove(position);
             type.remove(position);
             qty.remove(position);
             price.remove(position);
-
             mtotal.remove(position);
 
             if (mtotal.size() == 0) {
                 TotalLayout.setVisibility(View.GONE);
                 Snackbar.make(parentLayout, "Your Cart is empty!", Snackbar.LENGTH_INDEFINITE).show();
             }
+
+            setMy_cart_item_list();
+
         }
 
         public void addProductToWishList(int position) {
@@ -392,5 +378,4 @@ public class MyCartNew extends AppCompatActivity {
             removeProductFromCart(position);
         }
     }
-
 }

@@ -150,7 +150,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
         super.onStart();
 
-        /*
+
         setFilter();
         setCartCount();
 
@@ -161,7 +161,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         } else if (key.equals("wishlist")) {
             productByWishlist();
         }
-        */
+
     }
 
     @Override
@@ -169,6 +169,9 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         super.onResume();
         editTextSearchData.setCursorVisible(false);
 
+        setCartCount();
+
+        /*
         setFilter();
         setCartCount();
         //setAutoCompleteTextViewListForCourses();
@@ -180,6 +183,7 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         } else if (key.equals("wishlist")) {
             productByWishlist();
         }
+        */
     }
 
     @Override
