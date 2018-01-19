@@ -1,7 +1,9 @@
 package com.mybooks.mybooks.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -147,7 +149,7 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
             public void onDataChange(DataSnapshot dataSnapshot) {
                 customerCareNumber = dataSnapshot.getValue().toString();
                 //callNow(number);
-                verify_btn.setText("Verification pending...\nCALL NOW ( Give a miss-call to " + customerCareNumber + " )");
+                //verify_btn.setText("Verification pending...\nCALL NOW ( Give a miss-call to " + customerCareNumber + " )");
                 progressDialog.dismiss();
             }
 
@@ -159,16 +161,31 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
     }
 
     public void callNow(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("VERIFY NOW");
+        builder.setMessage("Give a miss-call to " + customerCareNumber);
+        builder.setCancelable(false);
+        builder.setPositiveButton("CALL NOW", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + customerCareNumber));
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MyAccountActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                    Toast.makeText(getApplicationContext(), "Allow PHONE CALLS permission and try again.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 
-
-
-        Intent intent = new Intent(Intent.ACTION_CALL);
-        intent.setData(Uri.parse("tel:" + customerCareNumber));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
-            Toast.makeText(this, "Allow PHONE CALLS permission and try again.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        startActivity(intent);
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }

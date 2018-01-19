@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyCartNew extends AppCompatActivity {
+public class MyCartNew extends AppCompatActivity implements View.OnClickListener {
 
     RelativeLayout parentLayout;
     ListView my_cart_item_list;
@@ -73,6 +73,9 @@ public class MyCartNew extends AppCompatActivity {
         TotalLayout = (RelativeLayout) findViewById(R.id.TotalLayout);
 
         cart_product_continueBtn = (Button) findViewById(R.id.cart_product_continueBtn);
+        cart_product_continueBtn.setOnClickListener(this);
+
+        /*
         cart_product_continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,11 +84,14 @@ public class MyCartNew extends AppCompatActivity {
                 } else if (mGrandTotal.getText().toString().equals("0")) {
                     return;
                 }
+
                 getApplicationContext().startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
+
                 finish();
                 //Toast.makeText(getApplicationContext(), "payment page to be implemented", Toast.LENGTH_SHORT).show();
             }
         });
+        */
 
         setMy_cart_item_list();
     }
@@ -138,6 +144,21 @@ public class MyCartNew extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.cart_product_continueBtn) {
+            if (!haveNetworkConnection()) {
+                Toast.makeText(getApplicationContext(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+            } else if (mGrandTotal.getText().toString().equals("0")) {
+                return;
+            }
+
+            startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
+
+            finish();
+        }
     }
 
     public class listViewCustomAdapter extends BaseAdapter {

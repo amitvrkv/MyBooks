@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private ProgressDialog mprogressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
     private CheckBox checkBoxTnC;
 
     @Override
@@ -70,8 +71,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mPasswordSignIn = (EditText) findViewById(R.id.password_sign_in);
 
         mSignInForm = findViewById(R.id.email_sign_in_form);
-        mSignInForm.setVisibility(View.VISIBLE);
-        //Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        mSignInForm.setVisibility(View.GONE);
 
         mSignInRed = (TextView) findViewById(R.id.sign_in_redirect_button);
         mSignInRed.setOnClickListener(this);
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         mPasswordSignUpTwo = (EditText) findViewById(R.id.password_sign_up_two);
 
         mSignUpForm = findViewById(R.id.email_sign_up_form);
-        mSignUpForm.setVisibility(View.GONE);
+        mSignUpForm.setVisibility(View.VISIBLE);
 
         mSignUpRed = (TextView) findViewById(R.id.sign_up_redirect_button);
         mSignUpRed.setOnClickListener(this);
@@ -128,36 +128,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        //animateLogo();
-
-        //
-        /*ImageView imageView = (ImageView) findViewById(R.id.app_logo);
-        Animation animation1 =
-                AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.fade);
-        imageView.startAnimation(animation1);
-        animation1.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (user_logged_in)
-                    checkIfEmailVerified();
-                else {
-                    relativeLayoutLogin.setVisibility(View.VISIBLE);
-                    relativeLayoutWelcome.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });*/
-
 
         final RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.main_welcome_page);
         Handler handler = new Handler();
@@ -173,8 +143,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 }
             }
         }, 1000);
-
-        //
     }
 
     @Override
@@ -183,6 +151,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), Login_2.class));
     }
 
     @Override
@@ -275,9 +249,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
                         } else {
                             //Snackbar.make(parentLayoutView, "", Snackbar.LENGTH_LONG).show();
+                            mprogressDialog.dismiss();
                             showAlertDialog("Error", "Wrong Username or Password");
                         }
-                        mprogressDialog.dismiss();
+                        //>>>mprogressDialog.dismiss();
                         checkIfEmailVerified();
                     }
                 });
@@ -362,9 +337,31 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         if (user.isEmailVerified()) {
             loadHomepage();
         } else {
+            mprogressDialog.dismiss();
             sendVerificationEmailToUser();
-            showAlertDialog("Message", "You have successfully signed up.\nPlease verify your email address.");
+            //showAlertDialog("Message", "You have successfully signed up.\nPlease verify your email address.");
             //Snackbar.make(parentLayoutView, "You have successfully signed up.\nPlease verify your email address.", Snackbar.LENGTH_LONG).show();
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle("Message");
+            alertDialogBuilder.setMessage("You have successfully signed up.\nPlease verify your email address.");
+            alertDialogBuilder.setPositiveButton("Verify Now",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                            startActivity(intent);
+                        }
+                    });
+            alertDialogBuilder.setNegativeButton("", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
     }
 
@@ -493,9 +490,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     public void loadHomepage() {
-        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-        //finish();
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

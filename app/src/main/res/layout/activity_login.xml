@@ -7,12 +7,13 @@
     android:orientation="vertical"
     tools:context="com.mybooks.mybooks.activities.LoginActivity">
 
+    <!-- flash screen -->
     <RelativeLayout
         android:id="@+id/main_welcome_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="70dp"
@@ -51,7 +52,7 @@
         android:id="@+id/Login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
@@ -90,8 +91,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
-                    android:inputType="textEmailAddress"
                     android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -106,8 +107,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:inputType="textPassword"
                     android:imeOptions="actionDone"
+                    android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -167,9 +168,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
+                    android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
-                    android:imeOptions="actionNext"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -208,11 +209,11 @@
 
             <CheckBox
                 android:id="@+id/checkboxTnC"
-                android:layout_marginTop="12dp"
-                android:textColor="@color/Red"
-                android:text="Accept My Books terms and conditions*"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Accept My Books terms and conditions*"
+                android:textColor="@color/Red" />
 
             <Button
                 android:id="@+id/email_sign_up_button"

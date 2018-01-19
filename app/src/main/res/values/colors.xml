@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Start -->
+
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
-    <!--<color name="colorAccent">#E040FB</color>-->
+
     <color name="colorAccent">#ff9500</color>
     <color name="colorLightPrimary">#B2DFDB</color>
     <color name="colorTextIcon">#FFFFFF</color>
@@ -22,5 +23,12 @@
 
 
     <color name="Light_Grey">#e8e8e8</color>
+
+    <!-- test-->
+    <color name="background_color">#009688</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white_greyish">#EEEEEE</color>
+    <color name="button_selectorcolor">#9E9E9E</color>
 
 </resources>

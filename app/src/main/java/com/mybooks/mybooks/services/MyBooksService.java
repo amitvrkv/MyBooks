@@ -36,6 +36,8 @@ public class MyBooksService extends Service {
 
     DatabaseReference databaseReferenceNumberVerification;
 
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -138,8 +140,10 @@ public class MyBooksService extends Service {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String number = dataSnapshot.child("contact").getValue().toString();
-                isVerified(number);
+
+                //String number = String.valueOf(dataSnapshot.child("contact").getValue());
+
+                //isVerified(number);
             }
 
             @Override
@@ -150,6 +154,9 @@ public class MyBooksService extends Service {
     }
 
     private void isVerified(final String number) {
+        if (number.equals("null"))
+            return;
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
                 .child("MOBILE_VERIFICATION")
                 .child("PENDING_VERIFICATION");
@@ -159,7 +166,7 @@ public class MyBooksService extends Service {
                 String get_number = String.valueOf(dataSnapshot.child(number).getValue());
 
                 if ( ! get_number.equals("null")) {
-                    MyFirebase.updateOnMobileVerification(number);
+                    MyFirebase.updateOnMobileVerification(getApplicationContext(), number);
                 }
             }
 

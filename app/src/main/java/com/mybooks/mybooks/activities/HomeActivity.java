@@ -102,9 +102,9 @@ public class HomeActivity extends AppCompatActivity
         } else {
 
 
-            startActivity(new Intent(getApplicationContext(), OrderMainPage.class));
+            startActivity(new Intent(getApplicationContext(), Login_2.class));
 
-            //super.onBackPressed();
+            super.onBackPressed();
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;

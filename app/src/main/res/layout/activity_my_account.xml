@@ -65,7 +65,7 @@
             android:gravity="center"
             android:onClick="callNow"
             android:padding="2dp"
-            android:text="Verification pending. Verify Now"
+            android:text="Verification pending. Click here to verify."
             android:textColor="@color/white"
             android:textIsSelectable="true" />
 

@@ -143,14 +143,14 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                name = dataSnapshot.child("name").getValue().toString();
-                updated_contact = dataSnapshot.child("contact").getValue().toString();
-                addressline1 = dataSnapshot.child("addressline1").getValue().toString();
-                addressline2 = dataSnapshot.child("addressline2").getValue().toString();
-                isVerified = dataSnapshot.child("isVerified").getValue().toString();
-                city = dataSnapshot.child("city").getValue().toString();
-                state = dataSnapshot.child("state").getValue().toString();
-                pincode = dataSnapshot.child("pincode").getValue().toString();
+                name = String.valueOf(dataSnapshot.child("name").getValue());
+                updated_contact = String.valueOf(dataSnapshot.child("contact").getValue());
+                addressline1 = String.valueOf(dataSnapshot.child("addressline1").getValue());
+                addressline2 = String.valueOf(dataSnapshot.child("addressline2").getValue());
+                isVerified = String.valueOf(dataSnapshot.child("isVerified").getValue());
+                city = String.valueOf(dataSnapshot.child("city").getValue());
+                state = String.valueOf(dataSnapshot.child("state").getValue());
+                pincode = String.valueOf(dataSnapshot.child("pincode").getValue());
 
                 updateOnSharedPref();
                 setField();
