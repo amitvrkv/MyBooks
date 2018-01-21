@@ -101,7 +101,7 @@ public class MyBooksService extends Service {
     private void showNotification(String orderId, String oldStatus, String newStatus) {
         Bitmap bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.app_icon);
 
-        String title = "My Books ";
+        String title = "Shopy Club ";
         String msg;
 
         if (oldStatus.equals("new")) {

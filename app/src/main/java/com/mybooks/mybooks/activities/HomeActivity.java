@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -19,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,16 @@ public class HomeActivity extends AppCompatActivity
     private ArrayList<String> arrayListImageSrc = new ArrayList<>();
     private ArrayList<String> arrayListGoto = new ArrayList<>();
 
+    //Status bar height
+    public static int getStatusBarHeight(final Context context) {
+        final Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0)
+            return resources.getDimensionPixelSize(resourceId);
+        else
+            return (int) Math.ceil((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? 24 : 25) * resources.getDisplayMetrics().density);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +81,7 @@ public class HomeActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setPadding(0, getStatusBarHeight(this), 0, 0);
 
         parentLayoutView = findViewById(R.id.drawer_layout);
 
@@ -100,11 +112,7 @@ public class HomeActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-
-
-            startActivity(new Intent(getApplicationContext(), Login_2.class));
-
-            super.onBackPressed();
+            //super.onBackPressed();
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed();
                 return;
@@ -157,7 +165,6 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -208,7 +215,7 @@ public class HomeActivity extends AppCompatActivity
             case R.id.logoutMenu:
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                startActivity(new Intent(getApplicationContext(), Login_2.class));
                 finish();
                 break;
         }
@@ -287,9 +294,9 @@ public class HomeActivity extends AppCompatActivity
         });
 
         if (sharedPreferences.getString("Name", null) == null) {
-            welcomeMsg.setText("Hi there,");
+            welcomeMsg.setText("There");
         } else {
-            welcomeMsg.setText("Hi " + sharedPreferences.getString("Name", null) + ",");
+            welcomeMsg.setText(sharedPreferences.getString("Name", null));
         }
     }
 

@@ -1,14 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="20dp" >
+    android:background="@color/colorPrimary"
+    android:padding="20dp">
+
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:padding="5dp"
+        android:src="@drawable/shopyclubiconwhite" />
 
     <LinearLayout
         android:id="@+id/login_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="fill_parent"
@@ -22,7 +30,6 @@
 
         <EditText
             android:id="@+id/login_emailid"
-            android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -33,6 +40,7 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:padding="10dp"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="16sp" />
@@ -44,16 +52,17 @@
 
         <EditText
             android:id="@+id/login_password"
-            android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:drawableLeft="@drawable/password"
+            android:drawableTint="@color/white"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="10dp"
+            android:singleLine="true"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="16sp" />
@@ -63,7 +72,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="5dp"
-            android:paddingTop="8dp" >
+            android:paddingTop="8dp">
 
             <CheckBox
                 android:id="@+id/show_hide_password"
@@ -94,7 +103,7 @@
             android:background="@drawable/loginbutton_selector"
             android:padding="3dp"
             android:text="@string/login"
-            android:textColor="#009688"
+            android:textColor="@color/colorPrimary"
             android:textSize="17sp"
             android:textStyle="bold" />
     </LinearLayout>

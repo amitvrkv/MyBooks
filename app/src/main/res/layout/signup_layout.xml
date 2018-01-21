@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:padding="20dp"
-    android:background="@color/colorPrimary"
+    android:id="@+id/signup_layout"
     >
 
     <TextView
@@ -72,6 +73,7 @@
         android:gravity="center_vertical"
         android:hint="@string/mobileNumber"
         android:inputType="phone"
+        android:maxLength="10"
         android:padding="10dp"
         android:singleLine="true"
         android:textColor="@color/white"
@@ -96,6 +98,7 @@
         android:inputType="textCapWords"
         android:padding="10dp"
         android:singleLine="true"
+        android:text="Bengaluru"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="16sp" />
@@ -113,6 +116,7 @@
         android:background="@android:color/transparent"
         android:drawableLeft="@drawable/password"
         android:drawablePadding="8dp"
+        android:drawableTint="@color/white"
         android:gravity="center_vertical"
         android:hint="@string/passowrd"
         android:inputType="textPassword"
@@ -161,7 +165,7 @@
         android:background="@drawable/loginbutton_selector"
         android:padding="3dp"
         android:text="@string/signUp"
-        android:textColor="@color/background_color"
+        android:textColor="@color/colorPrimary"
         android:textSize="17sp"
         android:textStyle="bold" />
 

@@ -30,6 +30,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
     String name;
     String contact;
+    String email;
     String addressline1;
     String addressline2;
     String city;
@@ -116,19 +117,19 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             isVerified = sharedPreferences.getString("isVerified", null);
         }
 
-        if ( sharedPreferences.getString("addressline1", null) == null) {
+        if ( sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null) == "null") {
             mDelHouseNameNumber.setText("");
         } else {
             mDelHouseNameNumber.setText(sharedPreferences.getString("addressline1", null));
         }
 
-        if ( sharedPreferences.getString("addressline2", null) == null) {
+        if ( sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null) == "null") {
             mDelLocality.setText("");
         } else {
             mDelLocality.setText(sharedPreferences.getString("addressline2", null));
         }
 
-        if ( sharedPreferences.getString("pincode", null) == null) {
+        if ( sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null) == "null") {
             mDelPincode.setText("");
         } else {
             mDelPincode.setText(sharedPreferences.getString("pincode", null));
@@ -145,6 +146,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             public void onDataChange(DataSnapshot dataSnapshot) {
                 name = String.valueOf(dataSnapshot.child("name").getValue());
                 updated_contact = String.valueOf(dataSnapshot.child("contact").getValue());
+                email = String.valueOf(dataSnapshot.child("email").getValue());
                 addressline1 = String.valueOf(dataSnapshot.child("addressline1").getValue());
                 addressline2 = String.valueOf(dataSnapshot.child("addressline2").getValue());
                 isVerified = String.valueOf(dataSnapshot.child("isVerified").getValue());
@@ -252,10 +254,9 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     public void updateOnSharedPref(){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Name", name);
-
         editor.putString("contact", updated_contact);
+        editor.putString("email", email);
         editor.putString("isVerified",isVerified);
-
         editor.putString("addressline1", addressline1);
         editor.putString("addressline2", addressline2);
         editor.putString("city", city);

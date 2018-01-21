@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
@@ -21,9 +22,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -40,6 +45,8 @@ import com.mybooks.mybooks.Utils.Utils;
 import com.mybooks.mybooks.activities.Login_2;
 import com.mybooks.mybooks.app_pref.AppPref;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SignUp_Fragment extends Fragment implements OnClickListener {
     private static View view;
     private static EditText fullName, emailId, mobileNumber, location,
@@ -48,10 +55,15 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
     private static Button signUpButton;
     private static CheckBox terms_conditions;
 
+    private LinearLayout signup_layout;
+    private static Animation shakeAnimation;
+
     private FirebaseAuth mAuth;
     private ProgressDialog mprogressDialog;
 
     private static FragmentManager fragmentManager;
+
+    SharedPreferences sharedPreferences;
 
     public SignUp_Fragment() {
 
@@ -75,6 +87,11 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
         mprogressDialog = new ProgressDialog(getContext());
         mprogressDialog.setCancelable(false);
 
+        signup_layout = (LinearLayout) view.findViewById(R.id.signup_layout);
+        // Load ShakeAnimation
+        shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
+                R.anim.shake);
+
         fullName = (EditText) view.findViewById(R.id.fullName);
         emailId = (EditText) view.findViewById(R.id.userEmailId);
         mobileNumber = (EditText) view.findViewById(R.id.mobileNumber);
@@ -86,7 +103,9 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
         terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
 
         // Setting text selector over textviews
+        //XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
         XmlResourceParser xrp = getResources().getXml(R.drawable.text_selector);
+
         try {
             ColorStateList csl = ColorStateList.createFromXml(getResources(),
                     xrp);
@@ -145,7 +164,6 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
                 || getPassword.equals("") || getPassword.length() == 0
                 || getConfirmPassword.equals("")
                 || getConfirmPassword.length() == 0)
-
             new CustomToast().Show_Toast(getActivity(), view,
                     "All fields are required.");
 
@@ -162,17 +180,16 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
             // Make sure user should check Terms and Conditions checkbox
         else if (!terms_conditions.isChecked())
             new CustomToast().Show_Toast(getActivity(), view,
-                    "Please select Terms and Conditions.");
+                    "Please accept Terms and Conditions.");
 
             // Else do signup or do your stuff
         else {
-            Toast.makeText(getActivity(), "Do SignUp.", Toast.LENGTH_SHORT)
-                    .show();
-            attemptSignup(getEmailId, getPassword);
+            //Toast.makeText(getActivity(), "Do SignUp.", Toast.LENGTH_SHORT).show();
+            attemptSignup(getEmailId, getPassword, getFullName, getMobileNumber);
         }
     }
 
-    private void attemptSignup(final String email, String password) {
+    private void attemptSignup(final String email, String password, final String name, final String mobile) {
         mprogressDialog.setTitle("Please wait.");
         mprogressDialog.setMessage("Creating your account...");
         mprogressDialog.show();
@@ -188,7 +205,31 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
                             mRef.child("wallet").setValue("0");
                             mRef.child("liveness").setValue("true");
 
+                            mRef.child("address").child("name").setValue(name);
+                            mRef.child("address").child("email").setValue(email);
+                            mRef.child("address").child("contact").setValue(mobile);
+                            mRef.child("address").child("addressline1").setValue("null");
+                            mRef.child("address").child("addressline2").setValue("null");
+                            mRef.child("address").child("city").setValue("Bengaluru");
+                            mRef.child("address").child("state").setValue("Karnataka");
+                            mRef.child("address").child("pincode").setValue("null");
+                            mRef.child("address").child("isVerified").setValue("false");
+
+                            sharedPreferences = getContext().getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("Name", name);
+                            editor.putString("contact", mobile);
+                            editor.putString("email", email);
+                            editor.putString("addressline1", "null");
+                            editor.putString("addressline2", "null");
+                            editor.putString("city", "Bengaluru");
+                            editor.putString("state", "Karnataka");
+                            editor.putString("pincode", "null");
+                            editor.putString("isVerified","false");
+                            editor.commit();
+
                             mAuth.getCurrentUser().sendEmailVerification();
+
                             mAuth.signOut();
 
                             mprogressDialog.dismiss();
@@ -203,13 +244,14 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
                                             Intent intent = new Intent(Intent.ACTION_MAIN);
                                             intent.addCategory(Intent.CATEGORY_APP_EMAIL);
                                             startActivity(intent);
+                                            replaceLoginFragment();
                                         }
                                     });
                             alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
                                     replaceLoginFragment();
+                                    dialog.cancel();
                                 }
                             });
 
@@ -218,7 +260,12 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
 
                         } else {
                             mprogressDialog.dismiss();
-                            AppPref.showAlertDialog(getContext(),"Error", "Failed to sign-up. Try again!");
+                            if (task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                AppPref.showAlertDialog(getContext(), "Error", "User with this email already exist.");
+                                //Toast.makeText(getContext(), "User with this email already exist.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                AppPref.showAlertDialog(getContext(), "Error", "Failed to sign-up. Try again!");
+                            }
                         }
                     }
                 });

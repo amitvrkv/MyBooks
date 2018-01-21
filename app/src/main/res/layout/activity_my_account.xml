@@ -61,7 +61,7 @@
             android:id="@+id/verify_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Red"
+            android:background="@color/Yellow"
             android:gravity="center"
             android:onClick="callNow"
             android:padding="2dp"

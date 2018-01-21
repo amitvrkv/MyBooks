@@ -7,10 +7,10 @@ package com.mybooks.mybooks.fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,11 +48,12 @@ import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.Utils.CustomToast;
 import com.mybooks.mybooks.Utils.Utils;
 import com.mybooks.mybooks.activities.HomeActivity;
-import com.mybooks.mybooks.activities.Login_2;
 import com.mybooks.mybooks.app_pref.AppPref;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class Login_Fragment extends Fragment implements OnClickListener {
     private static View view;
@@ -66,7 +68,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
     private ProgressDialog mprogressDialog;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
 
     public Login_Fragment() {
 
@@ -116,27 +118,38 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         }
 
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            mprogressDialog.show();
+            checkIfEmailVerified();
+        }
+
+        /*
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     mprogressDialog.show();
-                    Handler handler = new Handler();
-
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAuth.removeAuthStateListener(mAuthListener);
-                            checkIfEmailVerified();
-                        }
-                    },1500);
-
-                    //user_logged_in = true;
+                    //mAuth.removeAuthStateListener(mAuthListener);
+                    checkIfEmailVerified();
                 }
             }
         };
         mAuth.addAuthStateListener(mAuthListener);
+        */
+
+        checkIfUserLoginAgain();
+    }
+
+    private void checkIfUserLoginAgain() {
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getContext().getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+        if ( sharedPreferences.getString("email", null) == null) {
+            emailid.setText("");
+        } else {
+            emailid.setText(sharedPreferences.getString("email", null));
+        }
     }
 
     // Set Listeners
@@ -182,9 +195,9 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        //mAuth.removeAuthStateListener(mAuthListener);
         switch (v.getId()) {
             case R.id.loginBtn:
-                mAuth.removeAuthStateListener(mAuthListener);
                 checkValidation();
                 break;
 
@@ -200,7 +213,6 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                 break;
 
             case R.id.createAccount:
-
                 // Replace signup frgament with animation
                 fragmentManager
                         .beginTransaction()
@@ -236,8 +248,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                     "Your Email ID is Invalid.");
             // Else do login and do your stuff
         else {
-            Toast.makeText(getActivity(), "Do Login.", Toast.LENGTH_SHORT)
-                    .show();
+            //Toast.makeText(getActivity(), "Do Login.", Toast.LENGTH_SHORT).show();
             attempSignIn(getEmailId, getPassword);
         }
 
@@ -262,11 +273,14 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     }
 
     private void checkIfEmailVerified() {
+        //mAuth.removeAuthStateListener(mAuthListener);
+
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
             if (firebaseUser.isEmailVerified()) {
                 loadHomepage();
             } else {
+
                 mprogressDialog.dismiss();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setTitle("Alert");
@@ -277,6 +291,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 firebaseUser.sendEmailVerification();
                                 mAuth.signOut();
+
                                 Intent intent = new Intent(Intent.ACTION_MAIN);
                                 intent.addCategory(Intent.CATEGORY_APP_EMAIL);
                                 startActivity(intent);
@@ -285,6 +300,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                 alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        mAuth.signOut();
                         dialog.cancel();
                     }
                 });
@@ -296,22 +312,27 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     }
 
     public void loadHomepage() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+        //mAuth.removeAuthStateListener(mAuthListener);
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String live = String.valueOf(dataSnapshot.child("liveness").getValue());
                 if (live.equalsIgnoreCase("true")) {
-                    //mAuth.removeAuthStateListener(mAuthListener);
+
+                    databaseReference.removeEventListener(this);
+
                     startActivity(new Intent(getActivity(), HomeActivity.class));
-                    //finish();
+
                     mprogressDialog.dismiss();
                     getActivity().finish();
                 } else {
                     //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
                     mAuth.signOut();
                     mprogressDialog.dismiss();
-                    AppPref.showAlertDialog(getContext(),"Account Locked", "Your account is locked. Please contact our helpline.");
+                    AppPref.showAlertDialog(getContext(), "Account Locked", "Your account is locked. Please contact our helpline.");
+                    databaseReference.removeEventListener(this);
                 }
             }
 

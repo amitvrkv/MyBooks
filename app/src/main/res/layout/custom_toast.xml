@@ -13,6 +13,7 @@
         android:layout_centerHorizontal="true"
         android:drawableLeft="@drawable/error"
         android:drawablePadding="10dp"
+        android:drawableTint="@color/colorPrimary"
         android:gravity="center_vertical"
         android:padding="5dp"
         android:textColor="#c0392b"

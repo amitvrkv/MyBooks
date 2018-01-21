@@ -10,7 +10,7 @@
         android:id="@+id/filter_caption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorLightPrimary"
+        android:background="@color/white_greyish"
         android:gravity="center"
         android:padding="5dp"
         android:text="FILTER"

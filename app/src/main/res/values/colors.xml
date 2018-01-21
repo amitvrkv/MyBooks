@@ -2,11 +2,17 @@
 <resources>
     <!-- Start -->
 
+    <color name="colorPrimary">#F44336</color>
+    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="colorLightPrimary">#FFCDD2</color>
+    <!--
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
-
     <color name="colorAccent">#ff9500</color>
     <color name="colorLightPrimary">#B2DFDB</color>
+    -->
+
     <color name="colorTextIcon">#FFFFFF</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
