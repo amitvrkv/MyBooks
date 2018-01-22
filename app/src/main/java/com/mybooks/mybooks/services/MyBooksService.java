@@ -141,9 +141,9 @@ public class MyBooksService extends Service {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                //String number = String.valueOf(dataSnapshot.child("contact").getValue());
+                String number = String.valueOf(dataSnapshot.child("contact").getValue());
 
-                //isVerified(number);
+                isVerified(number);
             }
 
             @Override

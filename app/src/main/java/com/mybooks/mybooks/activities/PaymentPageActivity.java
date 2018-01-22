@@ -129,6 +129,14 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.placeOrderBtn:
+                if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")
+                        || sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")
+                        || sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")
+                        ) {
+                    Snackbar.make(parentLayoutView, "Please updated delivery address.", Snackbar.LENGTH_SHORT).show();
+                    break;
+                }
+
                 if (mModeCOD.isChecked()) {
                     progressDialog.setTitle("Please wait...");
                     progressDialog.setMessage("Placing your order,\nPlease do not close this window.");
@@ -137,6 +145,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                     getAppLiveness("Cash on delivery");
                 } else
                     Snackbar.make(parentLayoutView, "Please select mode of payment", Snackbar.LENGTH_SHORT).show();
+
                 break;
 
             case R.id.payment_applyPromocode:
@@ -145,6 +154,38 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    public String setAddress() {
+        address = "";
+        address = address + sharedPreferences.getString("Name", null);
+        address = address + "\n" + sharedPreferences.getString("contact", null);
+
+        if (sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + "\n" + sharedPreferences.getString("addressline1", null);
+        }
+
+        if (sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + "\n" + sharedPreferences.getString("addressline2", null);
+        }
+
+        address = address + "\n" + sharedPreferences.getString("city", null);
+
+        if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + " - " + sharedPreferences.getString("pincode", null);
+        }
+
+        address = address + "\n" + sharedPreferences.getString("state", null);
+        //mDeliveryAddress.setText(address);
+
+        mDeliveryAddress.setText(address);
+        return address;
+    }
+    /*
     public String setAddress() {
         address = "";
         address = address + sharedPreferences.getString("Name", null);
@@ -157,6 +198,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         mDeliveryAddress.setText(address);
         return address;
     }
+    */
 
     public void getAppLiveness(final String mop) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs");
@@ -204,7 +246,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 ordernumber[0] = ordernumber[0] + 1;
                 databaseReference.setValue(String.valueOf(ordernumber[0]));
 
-                placeOrderOnFirebase( getOrderId( String.valueOf(ordernumber[0]) ), paymentmode);
+                placeOrderOnFirebase(getOrderId(String.valueOf(ordernumber[0])), paymentmode);
             }
 
             @Override
@@ -219,7 +261,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         int setLen = 10 - len;
         String final_order_id = "0000000000";
         final_order_id = "OD" + final_order_id.substring(0, setLen) + orderId;
-        return  final_order_id;
+        return final_order_id;
     }
 
     //Updataing order details on firebase

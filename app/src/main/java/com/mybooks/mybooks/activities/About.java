@@ -9,14 +9,21 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.mybooks.mybooks.BuildConfig;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.app_pref.MyFormat;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class About extends AppCompatActivity {
 
 
     private Intent intent;
+
+    Object createdTimestamp;
 
 
     @Override
@@ -46,8 +53,6 @@ public class About extends AppCompatActivity {
 
     public void startTransaction(View view){
         Toast.makeText(getApplicationContext(), "startTransaction", Toast.LENGTH_SHORT).show();
-
-        
     }
 
 }

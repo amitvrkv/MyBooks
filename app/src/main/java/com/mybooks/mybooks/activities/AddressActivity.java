@@ -117,19 +117,19 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             isVerified = sharedPreferences.getString("isVerified", null);
         }
 
-        if ( sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null) == "null") {
+        if ( sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
             mDelHouseNameNumber.setText("");
         } else {
             mDelHouseNameNumber.setText(sharedPreferences.getString("addressline1", null));
         }
 
-        if ( sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null) == "null") {
+        if ( sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
             mDelLocality.setText("");
         } else {
             mDelLocality.setText(sharedPreferences.getString("addressline2", null));
         }
 
-        if ( sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null) == "null") {
+        if ( sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
             mDelPincode.setText("");
         } else {
             mDelPincode.setText(sharedPreferences.getString("pincode", null));

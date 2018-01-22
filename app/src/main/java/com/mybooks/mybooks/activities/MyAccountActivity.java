@@ -100,10 +100,27 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         address = "";
         address = address + sharedPreferences.getString("Name", null);
         address = address + "\n" + sharedPreferences.getString("contact", null);
-        address = address + "\n" + sharedPreferences.getString("addressline1", null);
-        address = address + "\n" + sharedPreferences.getString("addressline2", null);
+
+        if (sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + "\n" + sharedPreferences.getString("addressline1", null);
+        }
+
+        if (sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + "\n" + sharedPreferences.getString("addressline2", null);
+        }
+
         address = address + "\n" + sharedPreferences.getString("city", null);
-        address = address + " - " + sharedPreferences.getString("pincode", null);
+
+        if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
+
+        } else {
+            address = address + " - " + sharedPreferences.getString("pincode", null);
+        }
+
         address = address + "\n" + sharedPreferences.getString("state", null);
         //mDeliveryAddress.setText(address);
 

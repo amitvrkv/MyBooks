@@ -1,4 +1,4 @@
-package com.mybooks.mybooks.fragment;
+package com.mybooks.mybooks.fragment.login_2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.Utils.Utils;
 import com.mybooks.mybooks.activities.HomeActivity;
 import com.mybooks.mybooks.app_pref.AppPref;
+import com.mybooks.mybooks.fragment.login_2.Login_Fragment;
 
 /**
  * Created by am361000 on 15/01/18.
@@ -34,7 +35,7 @@ public class SplashScreen extends Fragment {
 
     private ProgressDialog mprogressDialog;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    //private FirebaseAuth.AuthStateListener mAuthListener;
 
     public SplashScreen() {
 

@@ -24,12 +24,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:gravity="center"
+        android:gravity="bottom | center_horizontal"
         android:text="Version"
         android:textStyle="bold" />
 
 
     <Button
+        android:visibility="gone"
         android:onClick="startTransaction"
         android:layout_alignParentBottom="true"
         android:text="Pay"

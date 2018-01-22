@@ -42,8 +42,6 @@ import com.mybooks.mybooks.models.ModelProductList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MyCartNew extends AppCompatActivity implements View.OnClickListener {
 
@@ -270,7 +268,7 @@ public class MyCartNew extends AppCompatActivity implements View.OnClickListener
                     /* hide show book type selection view*/
                     int new_price = Integer.parseInt(modelProductList.getF8());
                     int old_price = Integer.parseInt(modelProductList.getF9());
-                    if (new_price == old_price) {
+                    if (new_price == old_price || old_price == 0) {
                         LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.cart_product_booktype);
                         linearLayout.setVisibility(View.GONE);
                     } else {
@@ -301,7 +299,6 @@ public class MyCartNew extends AppCompatActivity implements View.OnClickListener
                             setGrandTotal();
                         }
                     });
-
 
                     if (type.get(position).equalsIgnoreCase("New")) {
                         updateDatabase(modelProductList.getF11(), "booktype", "New");

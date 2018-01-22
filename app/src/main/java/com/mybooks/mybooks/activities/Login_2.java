@@ -1,26 +1,15 @@
 package com.mybooks.mybooks.activities;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.Utils.Utils;
-import com.mybooks.mybooks.app_pref.AppPref;
-import com.mybooks.mybooks.fragment.Login_Fragment;
-import com.mybooks.mybooks.fragment.SplashScreen;
+import com.mybooks.mybooks.fragment.login_2.Login_Fragment;
+import com.mybooks.mybooks.fragment.login_2.SplashScreen;
 
 public class Login_2 extends AppCompatActivity {
 

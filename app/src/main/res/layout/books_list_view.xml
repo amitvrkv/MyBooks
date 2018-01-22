@@ -151,7 +151,8 @@
                         android:id="@+id/p_f9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="\u20B9 F9"
+                        android:text="F9"
+                        android:layout_marginRight="5dp"
                         android:textColor="@color/Green"
                         android:textSize="14dp" />
 
@@ -159,7 +160,6 @@
                         android:id="@+id/p_f8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:gravity="center"
                         android:text="F8"
                         android:textColor="@color/Yellow"

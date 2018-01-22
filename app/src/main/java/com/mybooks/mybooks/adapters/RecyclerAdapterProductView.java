@@ -97,19 +97,18 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         final int new_p = Integer.parseInt(modelProductList.getF8().trim());
         final int old_p = Integer.parseInt(modelProductList.getF9().trim());
         holder.mrp_price.setText(modelProductList.getF7());
-        holder.new_price.setText(modelProductList.getF8());
-        holder.old_price.setText("\u20B9" + modelProductList.getF9());
 
-        /*
-        if (mrp_p == 0 || new_p == 0 || old_p == 0) {
-            Toast.makeText(ctx.getApplicationContext(), modelProductList.getF2(), Toast.LENGTH_SHORT).show();
-            holder.addToCartButton.setText("CUSTOM ORDER");
-            holder.addToCartButton.setTextColor(Color.RED);
-            holder.mrp_price.setText("NA");
-            holder.new_price.setText("NA");
-            holder.old_price.setText("\u20B9" + " NA");
+        if (old_p == 0) {
+            holder.new_price.setText("\u20B9" + modelProductList.getF8());
+            holder.old_price.setVisibility(View.GONE);
+        } else {
+            holder.new_price.setText("\u20B9" + modelProductList.getF8());
+            holder.new_price.setPaintFlags(holder.new_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.old_price.setText("\u20B9" + modelProductList.getF9());
         }
-        */
+        //holder.new_price.setText(modelProductList.getF8());
+        //holder.old_price.setText("\u20B9" + modelProductList.getF9());
+
 
         /* set book cover*/
         if (modelProductList.getF13() == null) {
@@ -170,7 +169,7 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
 
                 int new_price = Integer.parseInt(modelProductList.getF8());
                 int old_price = Integer.parseInt(modelProductList.getF9());
-                if (new_price == old_price) {
+                if (new_price == old_price || old_price == 0) {
                     addProductToCart(ctx, holder.mBookImage, modelProductList.getF11(), "New", String.valueOf(new_price));
                 } else {
                     addProductToCart(ctx, holder.mBookImage, modelProductList.getF11(), "Old", String.valueOf(old_price));
@@ -223,18 +222,19 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
         checkCartandWishlist(holder, ctx, modelProductList.getF11());
     }
 
-    /* */
+    /* Update the carat and wishlist on every 500 ms*/
     public void checkCartandWishlist(final MyHolder holder, Context ctx, final String key) {
         final SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
 
         final SQLiteDatabase sqLiteDatabaseWishlist = SQLiteDatabase.openOrCreateDatabase(ctx.getString(R.string.database_path), null);
-        sqLiteDatabaseWishlist.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
 
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+
+                sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
+                sqLiteDatabaseWishlist.execSQL("CREATE TABLE IF NOT EXISTS WISHLIST(key VARCHAR);");
 
                 Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + key + "'", null);
                 Cursor cursorWishlist = sqLiteDatabaseWishlist.rawQuery("Select * from WISHLIST WHERE key = '" + key + "'", null);
@@ -252,12 +252,11 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
 
                 cursor.close();
                 cursorWishlist.close();
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 500);
             }
         };
-        handler.postDelayed(runnable, 100);
+        handler.postDelayed(runnable, 500);
     }
-
 
     public void loadBookDetails(Context ctx, String key) {
         Intent intent = new Intent(ctx, Individual_book_details.class);
@@ -407,7 +406,9 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             old_price.setText("");
             new_price = (TextView) mview.findViewById(R.id.p_f8);
             new_price.setText("");
-            new_price.setPaintFlags(new_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            //new_price.setPaintFlags(new_price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
             outofstockimg = (ImageView) mview.findViewById(R.id.outofstock);
 
             addToCartButton = (TextView) mview.findViewById(R.id.addToCartButton);

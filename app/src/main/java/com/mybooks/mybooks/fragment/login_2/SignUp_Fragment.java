@@ -1,4 +1,4 @@
-package com.mybooks.mybooks.fragment;
+package com.mybooks.mybooks.fragment.login_2;
 
 /**
  * Created by am361000 on 15/01/18.
@@ -29,21 +29,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mybooks.mybooks.R;
 import com.mybooks.mybooks.Utils.CustomToast;
 import com.mybooks.mybooks.Utils.Utils;
-import com.mybooks.mybooks.activities.Login_2;
 import com.mybooks.mybooks.app_pref.AppPref;
+import com.mybooks.mybooks.fragment.login_2.Login_Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
 

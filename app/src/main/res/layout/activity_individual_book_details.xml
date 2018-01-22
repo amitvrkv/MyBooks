@@ -447,8 +447,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerInside"
-            />
+           />
 
+        <ImageView
+            android:tint="@color/white"
+            android:rotation="-45"
+            android:alpha="0.6"
+            android:layout_centerVertical="true"
+            android:src="@drawable/shopyclub"
+            android:layout_width="match_parent"
+            android:layout_height="50dp" />
 
     </RelativeLayout>
 
