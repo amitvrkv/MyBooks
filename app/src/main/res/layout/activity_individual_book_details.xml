@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mybooks.mybooks.activities.Individual_book_details">
+    tools:context="com.mybooks.in.mybooks.activities.Individual_book_details">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -70,6 +70,12 @@
                         android:tint="@color/Pink"
                         android:visibility="gone" />
 
+                    <ImageView
+                        android:id="@+id/outofstock"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/outofstock" />
+
                 </RelativeLayout>
 
                 <View
@@ -103,20 +109,23 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:textColor="@color/Green"
                             android:id="@+id/book_old_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="₹ NA"
+                            android:layout_marginRight="5dp"
                             android:textSize="20dp" />
 
                         <TextView
+                            android:textColor="@color/Yellow"
                             android:id="@+id/book_new_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="5dp"
                             android:text="NA" />
 
                         <TextView
+                            android:textColor="@color/Red"
                             android:id="@+id/book_mrp_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -399,6 +408,7 @@
             android:background="@drawable/gradient_grey" />
 
         <Button
+            android:enabled="false"
             android:id="@+id/btn_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -408,6 +418,7 @@
             android:text="ADD TO CART" />
 
         <Button
+            android:enabled="false"
             android:id="@+id/btn_buy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -442,21 +453,20 @@
             android:layout_centerInParent="true" />
 
         <ImageView
-            android:foregroundGravity="center"
             android:id="@+id/book_image_large"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"
-           />
+            android:foregroundGravity="center"
+            android:scaleType="centerInside" />
 
         <ImageView
-            android:tint="@color/white"
-            android:rotation="-45"
-            android:alpha="0.6"
-            android:layout_centerVertical="true"
-            android:src="@drawable/shopyclub"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:alpha="0.6"
+            android:rotation="-45"
+            android:src="@drawable/shopyclub"
+            android:tint="@color/white" />
 
     </RelativeLayout>
 

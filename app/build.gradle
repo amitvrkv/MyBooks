@@ -5,7 +5,7 @@ android {
     //buildToolsVersion "25.0.3"
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.mybooks.mybooks"
+        applicationId "in.shopy"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -49,16 +49,13 @@ dependencies {
     //Paytm
     //compile files('libs/PGSDK_V2.1.jar')
 
-    //Pay u money
-    //compile('com.payumoney.sdkui:plug-n-play:1.0.0') {
-    //  transitive = true;
-    //  exclude module: 'payumoney-sdk'
-    //}
+    /*
     compile('com.payumoney.sdkui:plug-n-play:1.0.0') {
         transitive = true;
         exclude module: 'payumoney-sdk'
     }
     compile 'com.payumoney.core:payumoney-sdk:7.0.1'
+    */
 
     //pinch zoom
     compile 'com.commit451:PhotoView:1.2.4'

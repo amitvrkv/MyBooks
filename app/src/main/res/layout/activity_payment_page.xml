@@ -4,7 +4,7 @@
     android:id="@+id/paymentActicityParentView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mybooks.mybooks.activities.PaymentPageActivity">
+    tools:context="com.mybooks.in.mybooks.activities.PaymentPageActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"

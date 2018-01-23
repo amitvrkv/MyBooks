@@ -8,50 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:198921384034:android:35c0d478c892e03b",
-        "android_client_info": {
-          "package_name": "com.mybooks.mybooks"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "198921384034-7f06qbjitaegi08d0l3ldsg2n22oc8hj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mybooks.mybooks",
-            "certificate_hash": "3e8386096b6a6dcf02a24fb8873a59147d47aa02"
-          }
-        },
-        {
-          "client_id": "198921384034-kqvu3kliqj7r9iebqua65h05v80e0dcp.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBQ08dBZ5hYDS5C2y3PjU2yQ4Ou7yzBu8g"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "198921384034-kqvu3kliqj7r9iebqua65h05v80e0dcp.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:198921384034:android:eef634100c8a03a0",
         "android_client_info": {
           "package_name": "com.mybooks.mybooks_admin"
@@ -88,6 +44,68 @@
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198921384034:android:f6543d453a035f0d",
+        "android_client_info": {
+          "package_name": "com.mybooks.mybooks_server"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198921384034-kqvu3kliqj7r9iebqua65h05v80e0dcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ08dBZ5hYDS5C2y3PjU2yQ4Ou7yzBu8g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198921384034:android:41833b6aa7b2e5b5",
+        "android_client_info": {
+          "package_name": "in.shopy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198921384034-kqvu3kliqj7r9iebqua65h05v80e0dcp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ08dBZ5hYDS5C2y3PjU2yQ4Ou7yzBu8g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

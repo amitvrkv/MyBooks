@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mybooks.mybooks">
+    package="in.shopy">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -8,45 +8,40 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name=".app_pref.MyBooks"
+        android:name="in.shopy.app_pref.MyBooks"
         android:allowBackup="false"
-        android:icon="@drawable/shopyclubicon"
+        android:icon="@drawable/shopyclub_white_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LoginActivity"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity
-            android:name=".activities.HomeActivity"
+            android:name="in.shopy.activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.BooksListPageNew"
+            android:name="in.shopy.activities.BooksListPageNew"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.AddressActivity" />
-        <activity android:name=".activities.BlogActivity" />
-        <activity android:name=".activities.PaymentPageActivity" />
-        <activity android:name=".activities.OrderDetailsActivity" />
-        <activity android:name=".activities.MyAccountActivity" />
+        <activity android:name="in.shopy.activities.AddressActivity" />
+        <activity android:name="in.shopy.activities.BlogActivity" />
+        <activity android:name="in.shopy.activities.PaymentPageActivity" />
+        <activity android:name="in.shopy.activities.OrderDetailsActivity" />
+        <activity android:name="in.shopy.activities.MyAccountActivity" />
 
-        <service android:name=".services.MyBooksService" />
+        <service android:name="in.shopy.services.MyBooksService" />
 
-        <activity android:name=".activities.Individual_book_details" />
-        <activity android:name=".activities.MyCartNew" />
-        <activity android:name=".activities.About" />
+        <activity android:name="in.shopy.activities.Individual_book_details" />
+        <activity android:name="in.shopy.activities.MyCartNew" />
+        <activity android:name="in.shopy.activities.About" />
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.OrderMainPage" />
-        <activity android:name=".activities.CustomOrderMainPage" />
-        <activity android:name=".activities.CustomOrderAddProduct" />
-        <activity android:name=".activities.OrderCustomDetailsActivity" />
-        <activity
-            android:name=".activities.OrderPageActivity"
-            android:exported="true" />
-        <activity android:name=".activities.Login_2">
+        <activity android:name="in.shopy.activities.OrderMainPage" />
+        <activity android:name="in.shopy.activities.CustomOrderMainPage" />
+        <activity android:name="in.shopy.activities.CustomOrderAddProduct" />
+        <activity android:name="in.shopy.activities.OrderCustomDetailsActivity" />
+
+        <activity android:name="in.shopy.activities.Login_2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

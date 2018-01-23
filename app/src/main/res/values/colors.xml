@@ -29,6 +29,7 @@
 
 
     <color name="Light_Grey">#e8e8e8</color>
+    <color name="dark_gray">#BDBDBD</color>
 
     <!-- test-->
     <color name="background_color">#009688</color>

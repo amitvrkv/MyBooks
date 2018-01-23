@@ -19,6 +19,7 @@
             android:background="@android:color/white">
 
             <AutoCompleteTextView
+                android:theme="@style/Autocomplete"
                 android:cursorVisible="false"
                 android:id="@+id/search_data"
                 android:layout_width="match_parent"
