@@ -38,11 +38,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
+import in.shopy.Utils.MySharedPreference;
+
 public class PaymentPageActivity extends AppCompatActivity implements View.OnClickListener {
 
     SharedPreferences sharedPreferences;
     View parentLayoutView;
     DatabaseReference databaseReference;
+    CheckBox checkBoxWallet;
     private ProgressDialog progressDialog;
     private ProgressDialog promoProgressDialog;
     private TextView mDeliveryAddress, mUpdateAddressBtn;
@@ -50,15 +53,16 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     private RadioButton mModeCOD;
     private String address;
     //Bill
-    private int total = 0;
     private int min_order = 0;
+    private int total = 0;
     private int delivery_charge = 0;
     private int discount = 0;
+    private int grandtotal = 0;
     private int wallet_amt = 0;
+    private int payable_amt = 0;
     //Promo
     private String promocode = "null";
     private int my_count;
-    private int payable_amt = 0;
     private TextView payment_applyPromocode;
 
     public static String getDate() {
@@ -90,6 +94,8 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
         payment_applyPromocode = (TextView) findViewById(in.shopy.R.id.payment_applyPromocode);
         payment_applyPromocode.setOnClickListener(this);
+
+        checkBoxWallet = (CheckBox) findViewById(in.shopy.R.id.walletAmt);
 
         setCharges();
 
@@ -128,10 +134,7 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case in.shopy.R.id.placeOrderBtn:
-                if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")
-                        || sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")
-                        || sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")
-                        ) {
+                if ( ! MySharedPreference.isDeliveryAddressCorrect(getApplicationContext())) {
                     Snackbar.make(parentLayoutView, "Please updated delivery address.", Snackbar.LENGTH_SHORT).show();
                     break;
                 }
@@ -155,49 +158,17 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
 
     public String setAddress() {
         address = "";
-        address = address + sharedPreferences.getString("Name", null);
-        address = address + "\n" + sharedPreferences.getString("contact", null);
 
-        if (sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
-
+        if ( ! MySharedPreference.isDeliveryAddressCorrect(getApplicationContext())) {
+            address = "Please update your delivery address.";
         } else {
-            address = address + "\n" + sharedPreferences.getString("addressline1", null);
+            address = MySharedPreference.getAddress(getApplicationContext());
         }
-
-        if (sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
-
-        } else {
-            address = address + "\n" + sharedPreferences.getString("addressline2", null);
-        }
-
-        address = address + "\n" + sharedPreferences.getString("city", null);
-
-        if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
-
-        } else {
-            address = address + " - " + sharedPreferences.getString("pincode", null);
-        }
-
-        address = address + "\n" + sharedPreferences.getString("state", null);
-        //mDeliveryAddress.setText(address);
 
         mDeliveryAddress.setText(address);
+
         return address;
     }
-    /*
-    public String setAddress() {
-        address = "";
-        address = address + sharedPreferences.getString("Name", null);
-        address = address + "\n" + sharedPreferences.getString("addressline1", null);
-        address = address + "\n" + sharedPreferences.getString("addressline2", null);
-        address = address + "\n" + sharedPreferences.getString("city", null);
-        address = address + " - " + sharedPreferences.getString("pincode", null);
-        address = address + "\n" + sharedPreferences.getString("state", null);
-        address = address + "\n" + sharedPreferences.getString("contact", null);
-        mDeliveryAddress.setText(address);
-        return address;
-    }
-    */
 
     public void getAppLiveness(final String mop) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Configs");
@@ -205,13 +176,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String live = String.valueOf(dataSnapshot.child("app_liveness").getValue());
+                String error_msg = String.valueOf(dataSnapshot.child("error_msg").getValue());
+
                 if (live.equalsIgnoreCase("true")) {
                     placeOrder(mop);
                 } else {
-                    //Toast.makeText(getApplicationContext(), "Somthing went wrong.\nOrder can not be place at this movement", Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(),
-                            "We've temporarily suspended our operations and are not taking any request until further notice.\nInconvenience is highly regretted.",
-                            Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                 }
             }
@@ -280,6 +250,10 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
         databaseReference.child("total").setValue("" + total);
         databaseReference.child("deliverycharge").setValue("" + delivery_charge);
         databaseReference.child("discount").setValue("" + discount);
+
+        databaseReference.child("grandtotal").setValue("" + (total + delivery_charge - discount));
+        databaseReference.child("walletamt").setValue("" + wallet_amt);
+
         databaseReference.child("payable_amount").setValue("" + payable_amt);
 
         databaseReference.child("paymentmode").setValue(paymentmode);

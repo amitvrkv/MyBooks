@@ -74,39 +74,6 @@ public class SplashScreen extends Fragment {
         } else {
             loadLoginFragment();
         }
-
-        /*
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    if (user.isEmailVerified()) {
-
-                        mAuth.removeAuthStateListener(mAuthListener);
-
-                        Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                loadHomepage();
-                            }
-                        };
-                        handler.postDelayed(runnable, 2000);
-                    } else {
-
-                        mAuth.removeAuthStateListener(mAuthListener);
-                        loadLoginFragment();
-                    }
-                } else {
-                    mAuth.removeAuthStateListener(mAuthListener);
-                    loadLoginFragment();
-                }
-            }
-        };
-        mAuth.addAuthStateListener(mAuthListener);
-        */
-
     }
 
     public void loadLoginFragment() {
@@ -126,6 +93,11 @@ public class SplashScreen extends Fragment {
     }
 
     public void loadHomepage() {
+        startActivity(new Intent(getActivity(), HomeActivity.class));
+//        mprogressDialog.dismiss();
+        getActivity().finish();
+
+        /*
         mprogressDialog = new ProgressDialog(getContext());
         mprogressDialog.setTitle("Please wait.");
         mprogressDialog.setMessage("Verifying your account...");
@@ -163,5 +135,6 @@ public class SplashScreen extends Fragment {
 
             }
         });
+        */
     }
 }

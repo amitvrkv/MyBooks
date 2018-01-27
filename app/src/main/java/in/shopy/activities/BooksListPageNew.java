@@ -87,14 +87,20 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
         floatingActionButtonFilter = (FloatingActionButton) findViewById(R.id.floatingActionButtonFilter);
         floatingActionButtonFilter.setOnClickListener(this);
 
+        //final TextView floatingActionButtonLabel = (TextView) findViewById(R.id.floatingActionButtonLabel);
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy > 0 && floatingActionButtonFilter.getVisibility() == View.VISIBLE) {
+
+                    //floatingActionButtonLabel.setVisibility(View.GONE);
                     floatingActionButtonFilter.hide();
                 } else if (dy < 0 && floatingActionButtonFilter.getVisibility() != View.VISIBLE) {
+
+                    //floatingActionButtonLabel.setVisibility(View.VISIBLE);
                     floatingActionButtonFilter.show();
                 }
             }
@@ -169,19 +175,6 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
 
         setCartCount();
 
-        /*
-        setFilter();
-        setCartCount();
-        //setAutoCompleteTextViewListForCourses();
-
-        Bundle bundle = getIntent().getExtras();
-        String key = bundle.getString("f");
-        if (key.equals("all")) {
-            setDataOnPageStart();
-        } else if (key.equals("wishlist")) {
-            productByWishlist();
-        }
-        */
     }
 
     @Override
@@ -220,6 +213,15 @@ public class BooksListPageNew extends AppCompatActivity implements View.OnClickL
             case R.id.doneFilter:
                 setDoneFilter();
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (recyclerView.getVisibility() == View.GONE) {
+            setDoneFilter();
+        } else {
+            super.onBackPressed();
         }
     }
 

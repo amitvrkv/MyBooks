@@ -34,6 +34,7 @@ public class MyFormat {
             m.appendReplacement(
                     stringbf, m.group(1).toUpperCase() + m.group(2).toLowerCase());
         }
+
         return m.appendTail(stringbf).toString();
     }
 }

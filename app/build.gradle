@@ -40,7 +40,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.2.6' //Sign with google
     compile 'com.firebaseui:firebase-ui-database:0.4.1'
     compile 'com.google.firebase:firebase-messaging:10.2.6'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
+    //compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.github.bumptech.glide:glide:4.3.1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'jp.wasabeef:blurry:2.0.3'
     compile 'me.relex:circleindicator:1.2.2@aar' //<< Crousal

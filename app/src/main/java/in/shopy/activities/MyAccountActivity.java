@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import in.shopy.Utils.MySharedPreference;
+
 public class MyAccountActivity extends AppCompatActivity implements View.OnClickListener {
 
     String address;
@@ -38,21 +40,11 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         setContentView(in.shopy.R.layout.activity_my_account);
         setToolbar();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.setCancelable(false);
+        initViews();
+        setListeners();
+
+
         progressDialog.show();
-
-        mName = (TextView) findViewById(in.shopy.R.id.myAccName);
-        mMobile = (TextView) findViewById(in.shopy.R.id.myAccContactNumber);
-        mEmail = (TextView) findViewById(in.shopy.R.id.myAccEmailId);
-        mDelAddress = (TextView) findViewById(in.shopy.R.id.myAccAddress);
-        mUpdateAddBtn = (TextView) findViewById(in.shopy.R.id.myAccUpdateAddBtn);
-        mUpdateAddBtn.setOnClickListener(this);
-
-        verify_btn = (TextView) findViewById(in.shopy.R.id.verify_btn);
-
-        sharedPreferences = getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
 
 
         if (sharedPreferences.getString("isVerified", null).equals("true")) {
@@ -62,8 +54,28 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
         }
 
         setMyAccDetails();
+
         setWallet();
         getCustomerCareNumber();
+    }
+
+    private void initViews() {
+        mName = (TextView) findViewById(in.shopy.R.id.myAccName);
+        mMobile = (TextView) findViewById(in.shopy.R.id.myAccContactNumber);
+        mEmail = (TextView) findViewById(in.shopy.R.id.myAccEmailId);
+        mDelAddress = (TextView) findViewById(in.shopy.R.id.myAccAddress);
+        mUpdateAddBtn = (TextView) findViewById(in.shopy.R.id.myAccUpdateAddBtn);
+        verify_btn = (TextView) findViewById(in.shopy.R.id.verify_btn);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.setCancelable(false);
+
+        sharedPreferences = getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+    }
+
+    private void setListeners() {
+        mUpdateAddBtn.setOnClickListener(this);
     }
 
     public void setToolbar() {
@@ -97,43 +109,35 @@ public class MyAccountActivity extends AppCompatActivity implements View.OnClick
 
     public String setAddress() {
         address = "";
-        address = address + sharedPreferences.getString("Name", null);
-        address = address + "\n" + sharedPreferences.getString("contact", null);
 
-        if (sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
-
+        if ( ! MySharedPreference.isDeliveryAddressCorrect(getApplicationContext())) {
+            address = "Please update your delivery address.";
         } else {
-            address = address + "\n" + sharedPreferences.getString("addressline1", null);
+            address = MySharedPreference.getAddress(getApplicationContext());
         }
 
-        if (sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
-
-        } else {
-            address = address + "\n" + sharedPreferences.getString("addressline2", null);
-        }
-
-        address = address + "\n" + sharedPreferences.getString("city", null);
-
-        if (sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
-
-        } else {
-            address = address + " - " + sharedPreferences.getString("pincode", null);
-        }
-
-        address = address + "\n" + sharedPreferences.getString("state", null);
         //mDeliveryAddress.setText(address);
 
         return address;
     }
 
     public void setMyAccDetails() {
-        if (sharedPreferences.getString("Name", null) == null) {
+        if (MySharedPreference.getDataFromAddress(getApplicationContext(), "Name") == null) {
             startActivity(new Intent(this, AddressActivity.class));
             finish();
             return;
         }
-        mName.setText(sharedPreferences.getString("Name", null).toUpperCase());
-        mMobile.setText(sharedPreferences.getString("contact", null));
+
+        mName.setText(MySharedPreference.getDataFromAddress(getApplicationContext(), "Name").toUpperCase());
+
+        if (sharedPreferences.getString("contact", null) == null
+                || sharedPreferences.getString("contact", null).equalsIgnoreCase("null")) {
+            mMobile.setVisibility(View.GONE);
+            verify_btn.setVisibility(View.GONE);
+        } else {
+            mMobile.setText(sharedPreferences.getString("contact", null));
+        }
+
         mEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
 
         mDelAddress.setText(setAddress());

@@ -8,46 +8,46 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name="in.shopy.app_pref.MyBooks"
+        android:name=".app_pref.MyBooks"
         android:allowBackup="false"
         android:icon="@drawable/shopyclub_white_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="in.shopy.activities.HomeActivity"
+            android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="in.shopy.activities.BooksListPageNew"
+            android:name=".activities.BooksListPageNew"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="in.shopy.activities.AddressActivity" />
-        <activity android:name="in.shopy.activities.BlogActivity" />
-        <activity android:name="in.shopy.activities.PaymentPageActivity" />
-        <activity android:name="in.shopy.activities.OrderDetailsActivity" />
-        <activity android:name="in.shopy.activities.MyAccountActivity" />
+        <activity android:name=".activities.AddressActivity" />
+        <activity android:name=".activities.BlogActivity" />
+        <activity android:name=".activities.PaymentPageActivity" />
+        <activity android:name=".activities.OrderDetailsActivity" />
+        <activity android:name=".activities.MyAccountActivity" />
 
-        <service android:name="in.shopy.services.MyBooksService" />
+        <service android:name=".services.MyBooksService" />
 
-        <activity android:name="in.shopy.activities.Individual_book_details" />
-        <activity android:name="in.shopy.activities.MyCartNew" />
-        <activity android:name="in.shopy.activities.About" />
+        <activity android:name=".activities.Individual_book_details" />
+        <activity android:name=".activities.MyCartNew" />
+        <activity android:name=".activities.About" />
         <activity
             android:name="com.paytm.pgsdk.PaytmPGActivity"
             android:configChanges="keyboardHidden|orientation|keyboard"
             android:screenOrientation="portrait" />
-        <activity android:name="in.shopy.activities.OrderMainPage" />
-        <activity android:name="in.shopy.activities.CustomOrderMainPage" />
-        <activity android:name="in.shopy.activities.CustomOrderAddProduct" />
-        <activity android:name="in.shopy.activities.OrderCustomDetailsActivity" />
-
-        <activity android:name="in.shopy.activities.Login_2">
+        <activity android:name=".activities.OrderMainPage" />
+        <activity android:name=".activities.CustomOrderMainPage" />
+        <activity android:name=".activities.CustomOrderAddProduct" />
+        <activity android:name=".activities.OrderCustomDetailsActivity" />
+        <activity android:name=".activities.Login_2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.PlaceOrder"></activity>
     </application>
 
 </manifest>

@@ -6,7 +6,9 @@ package in.shopy.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +17,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
-import in.shopy.activities.BooksListPageNew;
-
 import java.util.ArrayList;
+
+import in.shopy.R;
+import in.shopy.activities.BooksListPageNew;
 
 public class MyPagerAdapter extends PagerAdapter {
 
@@ -61,6 +67,7 @@ public class MyPagerAdapter extends PagerAdapter {
 
         //myImage.setImageResource(images.get(position));
 
+        /*
         Glide.with(context).load(arrayListImages.get(position))
                 .error(in.shopy.R.drawable.no_image_available)
                 .thumbnail(0.5f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -73,6 +80,27 @@ public class MyPagerAdapter extends PagerAdapter {
 
                     @Override
                     public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .into(myImage);
+        */
+        Glide.with(context)
+                .load(arrayListImages.get(position))
+                .apply(new RequestOptions()
+                        .error(R.drawable.no_image_available)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                )
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        progressBar.setVisibility(View.GONE);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBar.setVisibility(View.GONE);
                         return false;
                     }

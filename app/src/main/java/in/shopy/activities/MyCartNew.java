@@ -31,17 +31,19 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import in.shopy.R;
-import in.shopy.app_pref.MyFormat;
-import in.shopy.models.ModelProductList;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import in.shopy.R;
+import in.shopy.app_pref.MyFormat;
+import in.shopy.models.ModelProductList;
 
 public class MyCartNew extends AppCompatActivity implements View.OnClickListener {
 
@@ -254,14 +256,24 @@ public class MyCartNew extends AppCompatActivity implements View.OnClickListener
                     cart_product_mrp.setText(modelProductList.getF7());
 
                     if (modelProductList.getF13() == null) {
+
                         cart_product_image.setImageResource(R.drawable.no_image_available);
                     } else if (modelProductList.getF13().equals("na")) {
+
                         cart_product_image.setImageResource(R.drawable.no_image_available);
                     } else {
-                        //Picasso.with(context).load(modelProductList.getF13()).into(cart_product_image);
+                        /*
                         Glide.with(context).load(modelProductList.getF13())
                                 .error(R.drawable.no_image_available)
                                 .thumbnail(0.1f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(cart_product_image);
+                                */
+                        Glide.with(getApplicationContext())
+                                .load(modelProductList.getF13())
+                                .apply(new RequestOptions()
+                                        .error(R.drawable.no_image_available)
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                )
                                 .into(cart_product_image);
                     }
 

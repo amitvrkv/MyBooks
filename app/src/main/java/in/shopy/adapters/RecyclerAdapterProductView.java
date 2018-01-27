@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +23,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.List;
+
+import in.shopy.R;
 import in.shopy.activities.CustomOrderAddProduct;
 import in.shopy.activities.Individual_book_details;
 import in.shopy.anim.CircleAnimationUtil;
 import in.shopy.app_pref.MyFormat;
 import in.shopy.models.ModelProductList;
-
-import java.util.List;
 
 /**
  * Created by am361000 on 31/08/17.
@@ -80,7 +86,10 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             holder.mcourse.setVisibility(View.GONE);
         } else {
             holder.mcourse.setVisibility(View.VISIBLE);
-            holder.mcourse.setText(modelProductList.getF5());
+            if (modelProductList.getF5().length() > 5)
+                holder.mcourse.setText(MyFormat.capitalizeEveryWord(modelProductList.getF5()));
+            else
+                holder.mcourse.setText(modelProductList.getF5());
         }
         if (modelProductList.getF6().equalsIgnoreCase("na")) {
             holder.msem.setVisibility(View.GONE);
@@ -117,6 +126,8 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             holder.mBookImage.setImageResource(in.shopy.R.drawable.no_image_available);
             holder.loadimage_progress_bar.setVisibility(View.GONE);
         } else {
+
+            /*
             Glide.with(ctx).load(modelProductList.getF13())
                     .error(in.shopy.R.drawable.no_image_available)
                     .thumbnail(0.5f).crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -129,6 +140,29 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.loadimage_progress_bar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
+                    .into(holder.mBookImage);
+            */
+
+            Glide.with(ctx)
+                    .load(modelProductList.getF13())
+                    .apply(new RequestOptions()
+                            .override(150, 150)
+                            .error(R.drawable.sample_book_cover)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    )
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            holder.loadimage_progress_bar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                             holder.loadimage_progress_bar.setVisibility(View.GONE);
                             return false;
                         }
@@ -147,11 +181,14 @@ public class RecyclerAdapterProductView extends RecyclerView.Adapter<RecyclerAda
             SQLiteDatabase sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(ctx.getString(in.shopy.R.string.database_path), null);
             sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS P_CART(key VARCHAR, booktype VARCHAR, price VARCHAR, qty VARCHAR);");
             Cursor cursor = sqLiteDatabase.rawQuery("Select * from P_CART WHERE key = '" + modelProductList.getF11() + "'", null);
+
             if (cursor.getCount() > 0) {
                 holder.addToCartButton.setText("ADDED");
                 //holder.addToCartButton.setTextColor(Color.GREEN);
             }
+
             cursor.close();
+
         }
 
         /* ADD to cart button click handler*/

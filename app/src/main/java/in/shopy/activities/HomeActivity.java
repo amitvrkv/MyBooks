@@ -26,17 +26,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import in.shopy.R;
-import in.shopy.adapters.MyPagerAdapter;
-import in.shopy.services.MyBooksService;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import in.shopy.R;
+import in.shopy.Utils.MySharedPreference;
+import in.shopy.adapters.MyPagerAdapter;
+import in.shopy.app_pref.AppPref;
+import in.shopy.services.MyBooksService;
 import me.relex.circleindicator.CircleIndicator;
 
 public class HomeActivity extends AppCompatActivity
@@ -70,6 +75,16 @@ public class HomeActivity extends AppCompatActivity
 
         startService(new Intent(this, MyBooksService.class));
 
+        initViews();
+        setListeners();
+
+        setAdvertisements();
+        setAddress();
+        //checkPermission();
+        checkUserIfExist();
+    }
+
+    private void initViews() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -80,14 +95,12 @@ public class HomeActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        parentLayoutView = findViewById(R.id.drawer_layout);
+    }
+
+    private void setListeners() {
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setPadding(0, getStatusBarHeight(this), 0, 0);
-
-        parentLayoutView = findViewById(R.id.drawer_layout);
-
-        setAdvertisements();
-        setAddress();
-        //checkPermission();
     }
 
     private void setAddress() {
@@ -159,7 +172,8 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if (id == R.id.aboutMenu) {
-            startActivity(new Intent(this, About.class));
+            //startActivity(new Intent(this, About.class));
+            startActivity(new Intent(this, PlaceOrder.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -215,6 +229,7 @@ public class HomeActivity extends AppCompatActivity
             case R.id.logoutMenu:
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
+                MySharedPreference.clearSharedPreference(getApplicationContext());
                 startActivity(new Intent(getApplicationContext(), Login_2.class));
                 finish();
                 break;
@@ -293,7 +308,8 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        if (sharedPreferences.getString("Name", null) == null) {
+        if (sharedPreferences.getString("Name", null) == null
+                || sharedPreferences.getString("Name", null).equalsIgnoreCase("null")) {
             welcomeMsg.setText("There");
         } else {
             welcomeMsg.setText(sharedPreferences.getString("Name", null));
@@ -322,8 +338,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void setAdvertisements() {
-        //arrayListImageSrc.clear();
-        //arrayListGoto.clear();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("advertisements");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -347,19 +361,8 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initPager() {
-        //for(int i=0;i<XMEN.length;i++)
-        //  XMENArray.add(XMEN[i]);
 
         mPager = (ViewPager) findViewById(R.id.pager);
-
-        /*
-        mPager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "" + currentPage, Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
 
         mPager.setAdapter(new MyPagerAdapter(HomeActivity.this, arrayListImageSrc, arrayListGoto));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
@@ -383,27 +386,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
 
-        // Auto start of viewpager
-        /*
-        final Handler handler = new Handler();
-        final Runnable Update = new Runnable() {
-            public void run() {
-                if (currentPage == arrayListImageSrc.size()) {
-                    currentPage = 0;
-                }
-                mPager.setCurrentItem(currentPage++, true);
-            }
-        };
-
-        Timer swipeTimer = new Timer();
-        swipeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(Update);
-            }
-        }, 3000, 3000);
-        */
-
         final Handler handler = new Handler();
         final Runnable runnable = new Runnable() {
             @Override
@@ -419,55 +401,90 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    /*
-    private void checkPermission(){
-        ArrayList<String> arrPerm = new ArrayList<>();
+    private void checkUserIfExist() {
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            arrPerm.add(Manifest.permission.CALL_PHONE);
-        }
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference()
+                .child("User");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"))) {
 
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            arrPerm.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-
-        if(!arrPerm.isEmpty()) {
-            String[] permissions = new String[arrPerm.size()];
-            permissions = arrPerm.toArray(permissions);
-            ActivityCompat.requestPermissions(this, permissions, 10);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 10: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        String permission = permissions[i];
-                        if (Manifest.permission.CALL_PHONE.equals(permission)) {
-                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                                // you now have permission
+                    final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            String live = String.valueOf(dataSnapshot.child("liveness").getValue());
+                            if (live.equalsIgnoreCase("true")) {
+                                databaseReference.removeEventListener(this);
                             } else {
-                                Toast.makeText(getApplicationContext(), "CALL_PHONE", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
+                                AppPref.showAlertDialog(HomeActivity.this, "Account Locked", "Your account is locked. Please contact our helpline.");
+                                databaseReference.removeEventListener(this);
                             }
                         }
-                        if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permission)) {
-                            if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                                // you now have permission
-                            } else {
-                                Toast.makeText(getApplicationContext(), "ACCESS_FINE_LOCATION", Toast.LENGTH_SHORT).show();
-                            }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
-                    }
+                    });
+
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference mRef = mdatabase.getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
+                    mRef.child("wallet").setValue("0");
+                    mRef.child("liveness").setValue("true");
+
+                    String name_mobile = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                    String name = "null";
+                    String mobile = "null";
+                    Pattern p = Pattern.compile("([0-9])");
+                    Matcher m = p.matcher(name_mobile);
+
+                    if (name_mobile.length() > 10
+                            && m.find() ) {
+                        name = name_mobile.substring(0, name_mobile.length() - 11);
+                        mobile = name_mobile.substring(name_mobile.length() - 10);
+                    } else {
+                        name = name_mobile;
+                    }
+
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(name).build();
+                    FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+
+                    mRef.child("address").child("name").setValue("" + name);
+                    mRef.child("address").child("email").setValue("" + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    mRef.child("address").child("contact").setValue("" + mobile);
+                    mRef.child("address").child("addressline1").setValue("null");
+                    mRef.child("address").child("addressline2").setValue("null");
+                    mRef.child("address").child("city").setValue("Bengaluru");
+                    mRef.child("address").child("state").setValue("Karnataka");
+                    mRef.child("address").child("pincode").setValue("null");
+                    mRef.child("address").child("isVerified").setValue("false");
+
+
+                    SharedPreferences sharedPreferences;
+                    sharedPreferences = getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("Name", "" + name);
+                    editor.putString("contact", "" + mobile);
+                    editor.putString("email", "" + FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    editor.putString("addressline1", "null");
+                    editor.putString("addressline2", "null");
+                    editor.putString("city", "Bengaluru");
+                    editor.putString("state", "Karnataka");
+                    editor.putString("pincode", "null");
+                    editor.putString("isVerified", "false");
+                    editor.commit();
                 }
-                break;
             }
-        }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
-    */
 }

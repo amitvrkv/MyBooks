@@ -14,5 +14,7 @@ public class Utils {
     public static final String SignUp_Fragment = "SignUp_Fragment";
     public static final String ForgotPassword_Fragment = "ForgotPassword_Fragment";
 
-    public static final String Cart = "Cart";
+    public static final String DeliveryAddress = "DeliveryAddress";
+    public static final String BiilDetails = "BiilDetails";
+    public static final String Payment = "Payment";
 }

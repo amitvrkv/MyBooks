@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -51,6 +52,15 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
 
         setToolbar();
 
+        initViews();
+        setListeners();
+
+        sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+
+        getAddressFromServer();
+    }
+
+    private void initViews() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCancelable(false);
@@ -61,11 +71,10 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         mDelLocality = (TextView) findViewById(R.id.delLocality);
         mDelPincode = (TextView) findViewById(R.id.delPincode);
         mDelSaveBtn = (Button) findViewById(R.id.delSaveBtn);
+    }
+
+    private void setListeners() {
         mDelSaveBtn.setOnClickListener(this);
-
-        sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-
-        getAddressFromServer();
     }
 
     @Override
@@ -96,13 +105,17 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setField() {
-        if ( sharedPreferences.getString("Name", null) == null) {
+        if ( sharedPreferences.getString("Name", null) == null
+                || sharedPreferences.getString("Name", null).equalsIgnoreCase("null")
+                ) {
             mDelName.setText("");
         } else {
             mDelName.setText(sharedPreferences.getString("Name", null));
         }
 
-        if ( sharedPreferences.getString("contact", null) == null) {
+        if ( sharedPreferences.getString("contact", null) == null
+                || sharedPreferences.getString("contact", null).equalsIgnoreCase("null")
+                ) {
             mDelMobileNo.setText("");
             contact = "";
         } else {
@@ -116,19 +129,25 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
             isVerified = sharedPreferences.getString("isVerified", null);
         }
 
-        if ( sharedPreferences.getString("addressline1", null) == null || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")) {
+        if ( sharedPreferences.getString("addressline1", null) == null
+                || sharedPreferences.getString("addressline1", null).equalsIgnoreCase("null")
+                ) {
             mDelHouseNameNumber.setText("");
         } else {
             mDelHouseNameNumber.setText(sharedPreferences.getString("addressline1", null));
         }
 
-        if ( sharedPreferences.getString("addressline2", null) == null || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")) {
+        if ( sharedPreferences.getString("addressline2", null) == null
+                || sharedPreferences.getString("addressline2", null).equalsIgnoreCase("null")
+                ) {
             mDelLocality.setText("");
         } else {
             mDelLocality.setText(sharedPreferences.getString("addressline2", null));
         }
 
-        if ( sharedPreferences.getString("pincode", null) == null || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")) {
+        if ( sharedPreferences.getString("pincode", null) == null
+                || sharedPreferences.getString("pincode", null).equalsIgnoreCase("null")
+                ) {
             mDelPincode.setText("");
         } else {
             mDelPincode.setText(sharedPreferences.getString("pincode", null));
@@ -154,6 +173,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                 pincode = String.valueOf(dataSnapshot.child("pincode").getValue());
 
                 updateOnSharedPref();
+
                 setField();
             }
 
@@ -228,6 +248,11 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".","*")).child("address");
         databaseReference.child("name").setValue(name);
 
+        //USer profile
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name).build();
+        FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+
         databaseReference.child("contact").setValue(updated_contact);
         databaseReference.child("isVerified").setValue(isVerified);
 
@@ -242,6 +267,7 @@ public class AddressActivity extends AppCompatActivity implements View.OnClickLi
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "Address saved", Toast.LENGTH_SHORT).show();
                     updateOnSharedPref();
+                    finish();
                 } else {
                     Toast.makeText(getApplicationContext(), "Something went wrong. Try again.", Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();

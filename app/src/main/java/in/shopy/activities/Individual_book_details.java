@@ -19,15 +19,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import in.shopy.R;
 import in.shopy.app_pref.MyFormat;
 import in.shopy.models.ModelProductList;
-
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class Individual_book_details extends AppCompatActivity implements View.OnClickListener {
@@ -162,15 +163,24 @@ public class Individual_book_details extends AppCompatActivity implements View.O
 
 
                 //Set Image
-                if (modelProductList.getF13().equalsIgnoreCase("na"))
-                    //mBook_image.setVisibility(View.GONE);
+                if (modelProductList.getF13().equalsIgnoreCase("na")) {
+
                     mBook_image.setImageDrawable(getResources().getDrawable(in.shopy.R.drawable.no_image_available));
-                else
+                } else {
+                    /*
                     Glide.with(getApplicationContext()).load(modelProductList.getF13())
                             .error(in.shopy.R.drawable.no_image_available)
                             .crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(mBook_image);
-
+                            */
+                    Glide.with(getApplicationContext())
+                            .load(modelProductList.getF13())
+                            .apply(new RequestOptions()
+                                    .error(R.drawable.no_image_available)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            )
+                            .into(mBook_image);
+                }
                 //Set OFF
                 try {
                     int mrp = Integer.parseInt(modelProductList.getF7());
@@ -325,9 +335,19 @@ public class Individual_book_details extends AppCompatActivity implements View.O
         } else {
             relativeLayout_book_image_large.setVisibility(View.VISIBLE);
             scrollView.setVisibility(View.GONE);
+
+            /*
             Glide.with(getApplicationContext()).load(modelProductList.getF13())
                     .error(in.shopy.R.drawable.no_image_available)
                     .crossFade().diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(book_image_large);
+                    */
+            Glide.with(getApplicationContext())
+                    .load(modelProductList.getF13())
+                    .apply(new RequestOptions()
+                            .error(R.drawable.no_image_available)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    )
                     .into(book_image_large);
 
             PhotoViewAttacher photoAttacher;

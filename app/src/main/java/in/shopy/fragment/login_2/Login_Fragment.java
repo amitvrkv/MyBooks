@@ -31,31 +31,37 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import in.shopy.R;
 import in.shopy.Utils.CustomToast;
 import in.shopy.Utils.Utils;
 import in.shopy.activities.HomeActivity;
 import in.shopy.app_pref.AppPref;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public class Login_Fragment extends Fragment implements OnClickListener {
+    public static final int RC_SIGN_IN = 1;
     private static View view;
-
     private static EditText emailid, password;
     private static Button loginButton;
     private static TextView forgotPassword, signUp;
@@ -63,10 +69,12 @@ public class Login_Fragment extends Fragment implements OnClickListener {
     private static LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
-
+    ///
+    SignInButton btn_signInWithGoogle;
     private ProgressDialog mprogressDialog;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private GoogleApiClient mGoogleSignInClient;
+    ///
 
     public Login_Fragment() {
 
@@ -123,32 +131,11 @@ public class Login_Fragment extends Fragment implements OnClickListener {
             checkIfEmailVerified();
         }
 
-        /*
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    mprogressDialog.show();
-                    //mAuth.removeAuthStateListener(mAuthListener);
-                    checkIfEmailVerified();
-                }
-            }
-        };
-        mAuth.addAuthStateListener(mAuthListener);
-        */
-
+        /////
+        btn_signInWithGoogle = (SignInButton) view.findViewById(R.id.btn_signInWithGoogle);
+        /////
         checkIfUserLoginAgain();
-    }
 
-    private void checkIfUserLoginAgain() {
-        SharedPreferences sharedPreferences;
-        sharedPreferences = getContext().getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
-        if ( sharedPreferences.getString("email", null) == null) {
-            emailid.setText("");
-        } else {
-            emailid.setText(sharedPreferences.getString("email", null));
-        }
     }
 
     // Set Listeners
@@ -156,6 +143,7 @@ public class Login_Fragment extends Fragment implements OnClickListener {
         loginButton.setOnClickListener(this);
         forgotPassword.setOnClickListener(this);
         signUp.setOnClickListener(this);
+        btn_signInWithGoogle.setOnClickListener(this);
 
         // Set check listener over checkbox for showing and hiding password
         show_hide_password
@@ -190,11 +178,28 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
                     }
                 });
+
+
+    }
+
+    private void checkIfUserLoginAgain() {
+        SharedPreferences sharedPreferences;
+        sharedPreferences = getContext().getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
+        if (sharedPreferences.getString("email", null) == null) {
+            emailid.setText("");
+        } else {
+            emailid.setText(sharedPreferences.getString("email", null));
+        }
     }
 
     @Override
     public void onClick(View v) {
-        //mAuth.removeAuthStateListener(mAuthListener);
+
+        if (mGoogleSignInClient != null && mGoogleSignInClient.isConnected()) {
+            mGoogleSignInClient.stopAutoManage((getActivity()));
+            mGoogleSignInClient.disconnect();
+        }
+
         switch (v.getId()) {
             case in.shopy.R.id.loginBtn:
                 checkValidation();
@@ -219,9 +224,67 @@ public class Login_Fragment extends Fragment implements OnClickListener {
                         .replace(in.shopy.R.id.frameContainer, new SignUp_Fragment(),
                                 Utils.SignUp_Fragment).commit();
                 break;
+
+            case R.id.btn_signInWithGoogle:
+                signInWithGoogle();
+                break;
         }
 
     }
+
+    private void signInWithGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = new GoogleApiClient.Builder(getContext())
+                .enableAutoManage(getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Toast.makeText(getContext(), "onConnectionFailed", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleSignInClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+        //Toast.makeText(getContext(), "signInWithGoogle", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            // Google Sign In was successful, authenticate with Firebase
+            GoogleSignInAccount account = result.getSignInAccount();
+            if (account != null)
+                firebaseAuthWithGoogle(account);
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        mprogressDialog.setMessage("Signing in using " + account.getEmail());
+        mprogressDialog.show();
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    //Toast.makeText(getContext(), ">>" + FirebaseAuth.getInstance().getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                    mGoogleSignInClient.clearDefaultAccountAndReconnect();
+                    startActivity(new Intent(getActivity(), HomeActivity.class));
+                    mprogressDialog.dismiss();
+                }
+            }
+        });
+    }
+
 
     // Check Validation before login
     private void checkValidation() {
@@ -312,7 +375,10 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
     public void loadHomepage() {
         //mAuth.removeAuthStateListener(mAuthListener);
-
+        startActivity(new Intent(getActivity(), HomeActivity.class));
+        mprogressDialog.dismiss();
+        getActivity().finish();
+        /*
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", "*"));
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -340,7 +406,6 @@ public class Login_Fragment extends Fragment implements OnClickListener {
 
             }
         });
+        */
     }
-
-
 }

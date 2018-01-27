@@ -4,9 +4,6 @@ package in.shopy.fragment.login_2;
  * Created by am361000 on 15/01/18.
  */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,14 +32,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.UserProfileChangeRequest;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import in.shopy.Utils.CustomToast;
 import in.shopy.Utils.Utils;
 import in.shopy.app_pref.AppPref;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class SignUp_Fragment extends Fragment implements OnClickListener {
     private static View view;
@@ -51,16 +48,13 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
     private static TextView login;
     private static Button signUpButton;
     private static CheckBox terms_conditions;
-
-    private LinearLayout signup_layout;
     private static Animation shakeAnimation;
-
+    private static FragmentManager fragmentManager;
+    SharedPreferences sharedPreferences;
+    private LinearLayout signup_layout;
     private FirebaseAuth mAuth;
     private ProgressDialog mprogressDialog;
-
-    private static FragmentManager fragmentManager;
-
-    SharedPreferences sharedPreferences;
+    private boolean isOpened = false;
 
     public SignUp_Fragment() {
 
@@ -130,12 +124,23 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
 
             case in.shopy.R.id.already_user:
 
+                isOpened = false;
                 // Replace login fragment
                 //new MainActivity().replaceLoginFragment();
                 replaceLoginFragment();
                 break;
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (isOpened)
+            replaceLoginFragment();
+        else
+            isOpened = true;
     }
 
     // Check Validation Method
@@ -196,7 +201,7 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
+                            /*
                             FirebaseDatabase mdatabase = FirebaseDatabase.getInstance();
                             DatabaseReference mRef = mdatabase.getReference().child("User").child(email.replace(".", "*"));
                             mRef.child("wallet").setValue("0");
@@ -214,6 +219,7 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
 
                             sharedPreferences = getContext().getSharedPreferences(getString(in.shopy.R.string.sharedPrefDeliveryAddress), MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
+
                             editor.putString("Name", name);
                             editor.putString("contact", mobile);
                             editor.putString("email", email);
@@ -254,6 +260,41 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
 
                             AlertDialog alertDialog = alertDialogBuilder.create();
                             alertDialog.show();
+                            */
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(name + ":" + mobile).build();
+                            FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdates);
+
+                            mAuth.getCurrentUser().sendEmailVerification();
+
+                            mAuth.signOut();
+
+                            mprogressDialog.dismiss();
+
+                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+                            alertDialogBuilder.setTitle("Alert");
+                            alertDialogBuilder.setMessage("Successfully signed up.\nPlease verify your Email ID.");
+                            alertDialogBuilder.setPositiveButton("VERIFY NOW",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                                            intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+                                            arg0.cancel();
+                                            startActivity(intent);
+                                            replaceLoginFragment();
+                                        }
+                                    });
+                            alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    replaceLoginFragment();
+                                    dialog.cancel();
+                                }
+                            });
+
+                            AlertDialog alertDialog = alertDialogBuilder.create();
+                            alertDialog.show();
 
                         } else {
                             mprogressDialog.dismiss();
@@ -264,6 +305,7 @@ public class SignUp_Fragment extends Fragment implements OnClickListener {
                                 AppPref.showAlertDialog(getContext(), "Error", "Failed to sign-up. Try again!");
                             }
                         }
+
                     }
                 });
     }
