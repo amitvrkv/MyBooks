@@ -216,13 +216,7 @@ public class PaymentPage extends Fragment implements View.OnClickListener {
     //Updataing order details on firebase
     public void placeOrderOnFirebase() {
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        //FirebaseDatabase.getInstance().getReference()
-          //      .child("ORDER")
-            //    .child("MYORDER")
-              //  .child(BillDetails.getOrderid())
-                //.setValue();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("");
 
     }
 }
