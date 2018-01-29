@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mybooks.in.mybooks.activities.About">
+    tools:context="in.shopy.activities.About">
 
     <include
         android:id="@+id/toolbar"
@@ -11,32 +11,31 @@
 
 
     <ImageView
-        android:padding="50dp"
-        android:layout_centerInParent="true"
         android:id="@+id/app_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:alpha="0.1"
+        android:padding="50dp"
         android:src="@drawable/shopyclub_circle" />
 
     <TextView
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
         android:id="@+id/version"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:gravity="bottom | center_horizontal"
+        android:layout_height="wrap_content"
         android:text="Version"
         android:textStyle="bold" />
 
 
     <Button
-        android:visibility="gone"
-        android:onClick="startTransaction"
-        android:layout_alignParentBottom="true"
-        android:text="Pay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-         />
+        android:layout_alignParentBottom="true"
+        android:onClick="startTransaction"
+        android:text="Pay"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

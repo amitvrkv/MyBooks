@@ -28,21 +28,20 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.4.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.google.firebase:firebase-database:10.2.6'
-    compile 'com.google.firebase:firebase-auth:10.2.6'
-    compile 'com.google.android.gms:play-services-auth:10.2.6' //Sign with google
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:cardview-v7:25.4.0'
+    compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0' //Sign with google
     compile 'com.firebaseui:firebase-ui-database:0.4.1'
-    compile 'com.google.firebase:firebase-messaging:10.2.6'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
     //compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.bumptech.glide:glide:4.3.1'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'jp.wasabeef:blurry:2.0.3'
     compile 'me.relex:circleindicator:1.2.2@aar' //<< Crousal
     testCompile 'junit:junit:4.12'

@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import in.shopy.R;
+import in.shopy.Utils.BillDetails;
 import in.shopy.app_pref.MyFormat;
 import in.shopy.models.ModelProductList;
 
@@ -154,6 +155,8 @@ public class MyCartNew extends AppCompatActivity implements View.OnClickListener
             } else if (mGrandTotal.getText().toString().equals("0")) {
                 return;
             }
+
+            BillDetails.setTotal(mGrandTotal.getText().toString());
 
             startActivity(new Intent(getApplicationContext(), PaymentPageActivity.class));
 

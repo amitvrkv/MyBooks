@@ -126,6 +126,12 @@ public class PaymentPageActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        startActivity(new Intent(this, PlaceOrder.class));
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case in.shopy.R.id.updateAddress:

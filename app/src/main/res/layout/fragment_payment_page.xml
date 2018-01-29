@@ -38,17 +38,21 @@
                 android:text="Total Payable Amount: 00" />
 
             <RadioGroup
+                android:id="@+id/radioGroup_mop"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/payable_amount">
 
                 <RadioButton
+                    android:id="@+id/onlinePayment"
+                    android:enabled="false"
                     android:text="Pay Online"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
                 <RadioButton
+                    android:id="@+id/cashOnDelivery"
                     android:layout_marginTop="7dp"
                     android:text="Cash on Delivery"
                     android:layout_width="match_parent"
@@ -80,7 +84,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/cancel"
             android:background="@color/colorAccent"
-            android:text="CONTINUE"
+            android:text="PLACE ORDER NOW"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

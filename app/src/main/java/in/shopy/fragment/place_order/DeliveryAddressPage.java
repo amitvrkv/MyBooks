@@ -44,6 +44,8 @@ public class DeliveryAddressPage extends Fragment implements View.OnClickListene
 
         initViews();
         setListeners();
+        setInitValue();
+
         setAddress();
 
         return view;
@@ -72,6 +74,14 @@ public class DeliveryAddressPage extends Fragment implements View.OnClickListene
         btn_continue.setOnClickListener(this);
         cancel.setOnClickListener(this);
         updateAddress.setOnClickListener(this);
+    }
+
+    private void setInitValue() {
+        in.shopy.Utils.BillDetails.setDiscount("0");
+        in.shopy.Utils.BillDetails.setWalletamt("0");
+        in.shopy.Utils.BillDetails.setAppliedPromo("NA");
+
+        in.shopy.Utils.BillDetails.setDeliveryaddress(MySharedPreference.getAddress(getContext()));
     }
 
     @Override
@@ -133,5 +143,7 @@ public class DeliveryAddressPage extends Fragment implements View.OnClickListene
         name.setText(nameStr);
         address.setText(addressStr);
         mobileNumber.setText(mobileStr);
+
+        in.shopy.Utils.BillDetails.setDeliveryaddress(MySharedPreference.getAddress(getContext()));
     }
 }
